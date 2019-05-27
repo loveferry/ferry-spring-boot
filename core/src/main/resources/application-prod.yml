@@ -9,7 +9,7 @@ server:
 
 # 日志
 logging:
-  path: classpath:/log
+  path: /u01/ferry/ferry_log
   level:
     root: ERROR
     cn.org.ferry : ERROR
