@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.sys.mapper.ChinesePeopleMapper">
+    <resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.ChinesePeople">
+        <id column="id" property="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <result column="code" property="code" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="name" property="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.Sex" typeHandler="cn.org.ferry.system.mybatis.handler.SexHandler"/>
+        <result column="birth_date" property="birthDate" jdbcType="DATE" javaType="java.util.Date"/>
+    </resultMap>
+    
+    <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            id,name,code,birth_date,sex
+        from
+            chinese_people
+        <where> 1=1
+        <if test="name != null">
+            and name like concat('%',concat(#{name},'%'))
+        </if>
+        </where>
+        order by id
+    </select>
+</mapper>

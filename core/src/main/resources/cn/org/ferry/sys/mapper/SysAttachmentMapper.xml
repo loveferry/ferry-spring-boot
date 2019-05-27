@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.sys.mapper.SysAttachmentMapper">
+    <resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysAttachment">
+        <id column="attachment_id" property="attachmentId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <result column="attachment_name" property="attachmentName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="source_type" property="sourceType" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="source_key" property="sourceKey" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="enable_flag" property="enableFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.EnableFlag" typeHandler="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
+    </resultMap>
+
+</mapper>

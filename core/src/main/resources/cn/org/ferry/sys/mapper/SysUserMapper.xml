@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.sys.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysUser">
+        <id column="user_id" property="userId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <result column="user_code" property="userCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="user_name_en" property="userNameEn" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="user_name_zh" property="userNameZh" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="user_sex" property="userSex" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.Sex" typeHandler="cn.org.ferry.system.mybatis.handler.SexHandler"/>
+        <result column="user_birthdate" property="userBirthdate" jdbcType="DATE" javaType="java.util.Date"/>
+        <result column="user_email" property="userEmail" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="user_family_address" property="userFamilyAddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    </resultMap>
+    
+</mapper>
