@@ -36,7 +36,7 @@
         </createTable>
     </changeSet>
     
-    <changeSet id="create_chinese_poeple_name_index" author="ferry">
+    <changeSet id="create_chinese_people_name_index" author="ferry">
         <createIndex tableName="chinese_people" indexName="ik_chinese_people_name">
             <column name="name"/>
             <column name="code"/>
