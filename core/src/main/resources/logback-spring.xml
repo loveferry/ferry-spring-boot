@@ -7,7 +7,7 @@
 			<pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger - %msg%n </pattern>
 		</encoder>
 	</appender>
-	
+	<springProperty scope="context" name="log.path" source="logging.path"/>
 	<!-- 不带过滤器，能记录所有级别的日志 -->
 	<appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>${log.path}/info.log</File>
