@@ -1,22 +1,76 @@
 package cn.org.ferry.system.dto;
 
-import lombok.Data;
-
 import java.util.List;
 
-@Data
 public class ResponseData {
-    private Integer code;  // 状态码
+    /**
+     * 状态码
+     */
+    private Integer code;
 
-    private String message;  // 提示信息
+    /**
+     * 提示信息
+     */
+    private String message;
 
-    private Boolean success = true;  // 调用接口成败标识
+    /**
+     * 调用接口成败标识
+     */
+    private Boolean success = true;
 
-    private List<?> maps;  // 返回数据
+    /**
+     * token
+     */
+    private String token;
+
+    /**
+     * 返回数据
+     */
+    private List<?> maps;
 
     public ResponseData(){}
 
     public ResponseData(List<?> maps){
+        this.maps = maps;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public List<?> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(List<?> maps) {
         this.maps = maps;
     }
 }

@@ -1,5 +1,6 @@
 package cn.org.ferry.system.dto;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,10 +12,6 @@ import java.util.Date;
 
 public class BaseDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    public static final int INSERT = 1;
-    public static final int UPDATE = 0;
-    public static final int DELETE = -1;
 
     public static final String CREATEDBY = "createdBy";
     public static final String CREATIONDATE = "creationDate";
@@ -28,6 +25,9 @@ public class BaseDTO implements Serializable {
     private Long lastUpdatedBy;
 
     private Date lastUpdateDate;
+
+    @Transient
+    private String _token;
 
     public Long getCreatedBy() {
         return createdBy;
@@ -59,5 +59,13 @@ public class BaseDTO implements Serializable {
 
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public String get_token() {
+        return _token;
+    }
+
+    public void set_token(String _token) {
+        this._token = _token;
     }
 }
