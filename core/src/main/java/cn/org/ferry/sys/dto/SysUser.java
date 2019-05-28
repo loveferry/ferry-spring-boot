@@ -33,6 +33,11 @@ public class SysUser extends BaseDTO {
     private String userCode;
 
     /**
+     * 系统用户密码
+     */
+    private String password;
+
+    /**
      * 系统用户名称(英文)
      */
     private String userNameEn;
@@ -51,7 +56,7 @@ public class SysUser extends BaseDTO {
     /**
      * 系统用户出生日期
      */
-    private Date userBirthdate;
+    private Date userBirthday;
 
     /**
      * 系统用户联系邮箱
