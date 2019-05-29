@@ -5,7 +5,6 @@ import cn.org.ferry.system.exception.ExcelException;
 import cn.org.ferry.system.utils.BeanUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -21,11 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class FileUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
@@ -40,7 +39,7 @@ public class FileUtils {
      * @param list     导出的数据集合
      * @param config   excel 导出的配置信息
      */
-    public static void exportExcelSheetByBaseDTO(String sheetName, List<? extends BaseDTO> list, ExcelConfig config, SXSSFWorkbook sheets) {
+    public static void exportExcelSheetByBaseDTO(List<? extends BaseDTO> list, ExcelConfig config, SXSSFWorkbook sheets) {
         if (null == config) {
             config = new ExcelConfig();
         }
@@ -52,7 +51,7 @@ public class FileUtils {
             }
             SXSSFSheet sheet;
             try {
-                sheet = sheets.createSheet(sheetName);
+                sheet = sheets.createSheet(config.getSheetName());
             }catch (IllegalArgumentException e){
                 sheet = sheets.createSheet(config.getSheetName()+(page+1));
             }

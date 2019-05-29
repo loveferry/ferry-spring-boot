@@ -23,23 +23,19 @@
             <column name="id" type="BIGINT" autoIncrement="true" remarks="pk">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_chinese_people_id"/>
             </column>
-            <column name="code" type="varchar(18)" remarks="code">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_chinese_people_code"/>
-            </column>
             <column name="name" type="varchar(100)" remarks="姓名"/>
             <column name="birth_date" type="DATE" remarks="出生日"/>
             <column name="sex" type="enum('MALE','FEMALE')" remarks="性别"/>
             <column name="created_by" type="BIGINT" defaultValue="-1" />
-            <column name="creation_date" type="DATE"  />
+            <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
             <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-            <column name="last_update_date" type="DATE" />
+            <column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
     
     <changeSet id="create_chinese_people_name_index" author="ferry">
         <createIndex tableName="chinese_people" indexName="ik_chinese_people_name">
             <column name="name"/>
-            <column name="code"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

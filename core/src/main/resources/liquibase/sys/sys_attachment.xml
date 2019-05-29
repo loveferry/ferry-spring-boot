@@ -28,9 +28,9 @@
             <column name="source_key" type="VARCHAR(100)" remarks="附件编码"/>
             <column name="enable_flag" type="ENUM('Y','N')" defaultValue="Y" remarks="启用标志"/>
             <column name="created_by" type="BIGINT" defaultValue="-1" />
-            <column name="creation_date" type="DATE"/>
+            <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
             <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-            <column name="last_update_date" type="DATE" />
+            <column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
  

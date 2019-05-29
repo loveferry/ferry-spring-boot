@@ -3,6 +3,7 @@ package cn.org.ferry.system.service.impl;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.mybatis.BaseMapper;
 import cn.org.ferry.system.service.BaseService;
+import cn.org.ferry.system.utils.BeanUtils;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,16 +78,17 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     private void updateBaseField(T t){
+        Date now = new Date();
         setBaseField(BaseDTO.CREATEDBY, 10001L, t.getClass(), t);
-        setBaseField(BaseDTO.CREATIONDATE, new Date(), t.getClass(), t);
+        setBaseField(BaseDTO.CREATIONDATE, now, t.getClass(), t);
         setBaseField(BaseDTO.LASTUPDATEDBY, 10001L, t.getClass(), t);
-        setBaseField(BaseDTO.LASTUPDATEDATE, new Date(), t.getClass(), t);
+        setBaseField(BaseDTO.LASTUPDATEDATE, now, t.getClass(), t);
     }
 
     private boolean setBaseField(String fieldName, Object value, Class cls, T t) {
         try {
-            if(null == cls.getDeclaredMethod(getMethodName(fieldName)).invoke(t)){
-                cls.getDeclaredMethod(setMethodName(fieldName), value.getClass()).invoke(t, value);
+            if(null == cls.getDeclaredMethod(BeanUtils.getMethodName(fieldName)).invoke(t)){
+                cls.getDeclaredMethod(BeanUtils.setMethodName(fieldName), value.getClass()).invoke(t, value);
             }
         }catch (NoSuchMethodException e) {
             if(cls == Object.class){
@@ -102,15 +104,5 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
             return false;
         }
         return true;
-    }
-
-    private String getMethodName(String fieldName){
-        String s = String.valueOf(fieldName.charAt(0));
-        return "get"+fieldName.replaceFirst(s, s.toUpperCase());
-    }
-
-    private String setMethodName(String fieldName){
-        String s = String.valueOf(fieldName.charAt(0));
-        return "set"+fieldName.replaceFirst(s, s.toUpperCase());
     }
 }

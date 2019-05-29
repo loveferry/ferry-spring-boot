@@ -19,8 +19,6 @@ public class ChinesePeople extends BaseDTO {
     @GeneratedValue(generator = "JDBC")
     private Long id;
 
-    private String code;
-
     private String name;
 
     @ColumnType(typeHandler = SexHandler.class)

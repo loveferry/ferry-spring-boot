@@ -4,13 +4,14 @@ import cn.org.ferry.sys.dto.ChinesePeople;
 import cn.org.ferry.system.service.BaseService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ChinesePeopleService extends BaseService<ChinesePeople> {
     /**
      * 批量生成人员信息
      */
-    void batchGenerate(int size);
+    void batchGenerate(int size) throws SQLException;
 
     /**
      * 导出指定页数的人员信息到excel
@@ -25,11 +26,6 @@ public interface ChinesePeopleService extends BaseService<ChinesePeople> {
      * 可以根据实体类的属性分页查询人员信息
      */
     List<ChinesePeople> query(ChinesePeople chinesePeople, int page, int pageSize);
-
-    /**
-     * 根据 code 查询个人信息
-     */
-    ChinesePeople queryByCode(String code);
 
     /**
      * 根据 name 查询个人信息

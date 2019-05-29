@@ -3,7 +3,6 @@
 <mapper namespace="cn.org.ferry.sys.mapper.ChinesePeopleMapper">
     <resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.ChinesePeople">
         <id column="id" property="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
-        <result column="code" property="code" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="name" property="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="sex" property="sex" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.Sex" typeHandler="cn.org.ferry.system.mybatis.handler.SexHandler"/>
         <result column="birth_date" property="birthDate" jdbcType="DATE" javaType="java.util.Date"/>
@@ -11,12 +10,13 @@
     
     <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
-            id,name,code,birth_date,sex
+            id,name,birth_date,sex
         from
             chinese_people
         <where> 1=1
         <if test="name != null">
-            and name like concat('%',concat(#{name},'%'))
+            <bind name="name" value="name+'%'"/>
+            and name like #{name}
         </if>
         </where>
         order by id

@@ -31,9 +31,9 @@
 			<column name="file_size" type="BIGINT" remarks="文件大小(字节)" defaultValue="-1"/>
 			<column name="file_type" type="VARCHAR(200)" remarks="文件类型"/>
 			<column name="created_by" type="BIGINT" defaultValue="-1" />
-			<column name="creation_date" type="DATE"  />
+			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-			<column name="last_update_date" type="DATE" />
+			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 		</createTable>
 	</changeSet>
 </databaseChangeLog>

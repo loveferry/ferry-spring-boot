@@ -140,7 +140,8 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
         excelConfig.setColumns(jsonObject.getJSONArray(ExcelConfig.FIELD_COLUMNS));
         excelConfig.init(sheets);
         for(Map.Entry<String, List<? extends BaseDTO>> entry: map.entrySet()){
-            FileUtils.exportExcelSheetByBaseDTO(entry.getKey(), entry.getValue(), excelConfig, sheets);
+            excelConfig.setSheetName(entry.getKey());
+            FileUtils.exportExcelSheetByBaseDTO(entry.getValue(), excelConfig, sheets);
         }
         FileUtils.outputResponse(response, sheets, excelConfig.getFileName());
     }

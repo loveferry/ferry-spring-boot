@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class ChinesePeopleController {
     @LoginRequired
     @RequestMapping("/batch/generate")
     @ResponseBody
-    public void batchGenerate(@RequestParam(defaultValue = "10000")int size){
+    public void batchGenerate(@RequestParam(defaultValue = "10000")int size) throws SQLException{
         chinesePeopleService.batchGenerate(size);
     }
 
@@ -56,17 +57,6 @@ public class ChinesePeopleController {
     @ResponseBody
     public List<ChinesePeople> query(ChinesePeople chinesePeople, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){
         return chinesePeopleService.query(chinesePeople, page, pageSize);
-    }
-
-    /**
-     * 根据身份证号码查询人员信息,此方法将查询的人员信息存储在redis中
-     * @param code 身份证号码
-     * @return 人员信息
-     */
-    @RequestMapping("/query/code")
-    @ResponseBody
-    public ChinesePeople query(String code){
-        return chinesePeopleService.queryByCode(code);
     }
 
     /**

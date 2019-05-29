@@ -15,11 +15,13 @@
 	</resultMap>
 	
 	<select id="queryByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select user_id,user_name_en,user_name_zh,password,user_birthday,user_code,user_email,user_family_address,user_phone,user_sex from sys_user where user_code = #{userCode}
+        select *
+        from sys_user
+        where user_code = #{userCode}
     </select>
 	
 	<select id="queryByUserNameZh" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select user_id,user_name_en,user_name_zh,password,user_birthday,user_code,user_email,user_family_address,user_phone,user_sex
+        select *
         from sys_user
         where 1=1 and
         <if test="userNameZh != null and userNameZh != ''">
