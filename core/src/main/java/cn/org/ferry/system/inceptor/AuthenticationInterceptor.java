@@ -3,7 +3,6 @@ package cn.org.ferry.system.inceptor;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
 import cn.org.ferry.system.annotation.LoginPass;
-import cn.org.ferry.system.annotation.LoginRequired;
 import cn.org.ferry.system.exception.TokenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -34,10 +33,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         if(method.isAnnotationPresent(LoginPass.class)){
-            return true;
-        }
-        LoginRequired methodAnnotation = method.getAnnotation(LoginRequired.class);
-        if(null == methodAnnotation){
             return true;
         }
         String _token = request.getHeader("_token");

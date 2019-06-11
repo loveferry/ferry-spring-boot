@@ -2,7 +2,6 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.sys.dto.ChinesePeople;
 import cn.org.ferry.sys.service.ChinesePeopleService;
-import cn.org.ferry.system.annotation.LoginRequired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +26,6 @@ public class ChinesePeopleController {
      * 批量生成人员信息
      * @param size 指定生成信息数量
      */
-    @LoginRequired
     @RequestMapping("/batch/generate")
     @ResponseBody
     public void batchGenerate(@RequestParam(defaultValue = "10000")int size) throws SQLException{
