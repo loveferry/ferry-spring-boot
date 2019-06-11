@@ -32,7 +32,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        if(method.isAnnotationPresent(LoginPass.class)){
+        if(method.isAnnotationPresent(LoginPass.class) || method.getDeclaringClass().isAnnotationPresent(LoginPass.class)){
             return true;
         }
         String _token = request.getHeader("_token");
