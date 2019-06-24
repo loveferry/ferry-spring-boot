@@ -8,7 +8,6 @@
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cn.org.ferry</groupId>
 	<artifactId>core</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
