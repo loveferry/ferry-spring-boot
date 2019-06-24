@@ -1,4 +1,4 @@
-package cn.org.ferry.system.config;
+package cn.org.ferry.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.context.annotation.Bean;
@@ -13,13 +13,13 @@ import javax.sql.DataSource;
 @Configuration
 public class LiquibaseConfiguration {
     /**
-     *  sys Liquibase
+     * sys Liquibase
      */
     @Bean
     public SpringLiquibase sysLiquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
         // 用户模块Liquibase文件路径
-        liquibase.setChangeLog("classpath:liquibase/sys/master.xml");
+        liquibase.setChangeLog("classpath:sys/master.xml");
         liquibase.setDataSource(dataSource);
         liquibase.setShouldRun(true);
         liquibase.setResourceLoader(new DefaultResourceLoader());

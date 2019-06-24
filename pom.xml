@@ -61,11 +61,6 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-		</dependency>
-		
-		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.54</version>
@@ -81,6 +76,6 @@
 	
 	<modules>
 		<module>core</module>
-		<!--<module>core-db</module>-->
+		<module>core-db</module>
 	</modules>
 </project>
