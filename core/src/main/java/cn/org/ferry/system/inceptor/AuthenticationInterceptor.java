@@ -35,6 +35,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(method.isAnnotationPresent(LoginPass.class) || method.getDeclaringClass().isAnnotationPresent(LoginPass.class)){
             return true;
         }
+        if(!method.getDeclaringClass().getPackage().getName().contains("cn.org.ferry")){
+            return true;
+        }
         String _token = request.getHeader("_token");
         if(StringUtils.isEmpty(_token)){
             response.setStatus(401);
