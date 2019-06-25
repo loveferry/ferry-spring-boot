@@ -40,8 +40,8 @@
 			</plugin>
 			
 			<!--maven 命令行方式启动-->
-			<!--mvn clean compile -pl core-db exec:java -Dexec.mainClass="cn.org.ferry.CoreDbApplication" -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/ferry -Dspring.datasource.username=ferry -Dspring.datasource.password=ferry-->
-			<!--mvn clean compile -pl core-db org.codehaus.mojo:exec-maven-plugin:java -Dexec.mainClass="cn.org.ferry.CoreDbApplication" -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/ferry -Dspring.datasource.username=ferry -Dspring.datasource.password=ferry-->
+			<!--mvn clean compile -pl core-db exec:java -Dexec.mainClass="cn.org.ferry.CoreDbApplication" -Dexec.cleanupDaemonThreads=false -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/ferry -Dspring.datasource.username=ferry -Dspring.datasource.password=ferry-->
+			<!--mvn clean compile -pl core-db org.codehaus.mojo:exec-maven-plugin:java -Dexec.mainClass="cn.org.ferry.CoreDbApplication" -Dexec.cleanupDaemonThreads=false -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/ferry -Dspring.datasource.username=ferry -Dspring.datasource.password=ferry-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -49,11 +49,16 @@
 				<executions>
 					<execution>
 						<id>build-datasource</id>
+						<!--绑定生命周期-->
+						<!--<phase>test</phase>-->
 						<goals>
+							<!--目标-->
 							<goal>java</goal>
 						</goals>
 						<configuration>
 							<mainClass>${start-class}</mainClass>
+							<!--不加这句，启动插件后，该java程序会异常关闭-->
+							<cleanupDaemonThreads>false</cleanupDaemonThreads>
 						</configuration>
 					</execution>
 				</executions>
