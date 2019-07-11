@@ -46,6 +46,7 @@ spring:
     port: 6379
     database: 3
     timeout: 5000ms
+    password: redis
     client-name: ferry
     jedis:
       pool:
