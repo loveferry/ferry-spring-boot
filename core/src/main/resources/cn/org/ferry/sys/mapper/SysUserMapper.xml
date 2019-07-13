@@ -19,16 +19,4 @@
         from sys_user
         where user_code = #{userCode}
     </select>
-	
-	<select id="queryByUserNameZh" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select *
-        from sys_user
-        where 1=1 and
-        <if test="userNameZh != null and userNameZh != ''">
-			user_name_zh = #{userNameZh}
-		</if>
-		<if test="userNameZh == null">
-			1=2
-		</if>
-	</select>
 </mapper>
