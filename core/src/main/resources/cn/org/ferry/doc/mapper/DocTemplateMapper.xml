@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.doc.mapper.DocTemplateMapper">
+	<resultMap id="BaseResultMap" type="cn.org.ferry.doc.dto.DocTemplate">
+		<id column="template_id" property="templateId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+		<result column="template_code" property="templateCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result column="template_name" property="templateName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result column="number_format_id" property="numberFormatId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+		<result column="date_format_id" property="dateFormatId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+	</resultMap>
+</mapper>
