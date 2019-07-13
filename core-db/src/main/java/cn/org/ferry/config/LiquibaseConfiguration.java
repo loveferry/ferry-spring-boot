@@ -28,4 +28,21 @@ public class LiquibaseConfiguration {
         liquibase.setDatabaseChangeLogLockTable("sys_changelog_lock_table");
         return liquibase;
     }
+
+    /**
+     * doc Liquibase
+     */
+    @Bean
+    public SpringLiquibase docLiquibase(DataSource dataSource) {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        // 用户模块Liquibase文件路径
+        liquibase.setChangeLog("classpath:doc/master.xml");
+        liquibase.setDataSource(dataSource);
+        liquibase.setShouldRun(true);
+        liquibase.setResourceLoader(new DefaultResourceLoader());
+        // 覆盖Liquibase changelog表名
+        liquibase.setDatabaseChangeLogTable("doc_changelog_table");
+        liquibase.setDatabaseChangeLogLockTable("doc_changelog_lock_table");
+        return liquibase;
+    }
 }
