@@ -17,10 +17,10 @@ public class CORSFilterConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置允许的网站域名，如果全允许则设为 *
-//        config.addAllowedOrigin("http://localhost:8080");
+        config.addAllowedOrigin("http://127.0.0.1:8080");
 //        config.addAllowedOrigin("http://104.198.87.241:8082");
 //        config.addAllowedOrigin("http://104.198.87.241:8080");
-        config.addAllowedOrigin("*");
+//        config.addAllowedOrigin("*");
         // 设置请求头允许范围
         config.addAllowedHeader("DNT");
         config.addAllowedHeader("X-Mx-ReqToken");
