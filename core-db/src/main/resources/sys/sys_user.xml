@@ -21,10 +21,10 @@
 	<changeSet id="create_sys_user" author="ferry">
 		<createTable tableName="sys_user" remarks="系统用户表">
 			<column name="user_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="pk_su_ui"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="sys_user_pk_ui"/>
 			</column>
 			<column name="user_code" type="VARCHAR(100)" remarks="用户编码">
-				<constraints nullable="false" unique="true" uniqueConstraintName="uk_su_uc"/>
+				<constraints nullable="false" unique="true" uniqueConstraintName="sys_user_uk_uc"/>
 			</column>
 			<column name="password" type="VARCHAR(100)" remarks="用户密码">
 				<constraints nullable="false"/>
@@ -45,9 +45,8 @@
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="insert_sys_user" author="ferry">
+	<changeSet id="init_sys_user" author="ferry">
 		<insert tableName="sys_user">
-			<column name="user_id" valueNumeric="1"/>
 			<column name="user_code" value="FERRY"/>
 			<column name="password" value="FERRY"/>
 			<column name="user_name_en" value="ferry"/>
@@ -57,6 +56,17 @@
 			<column name="user_email" value="ferry_sy@163.com"/>
 			<column name="user_phone" value="17512591407"/>
 			<column name="user_family_address" value="安徽省马鞍山市和县姥桥镇"/>
+		</insert>
+		<insert tableName="sys_user">
+			<column name="user_code" value="EVER"/>
+			<column name="password" value="EVER"/>
+			<column name="user_name_en" value="EVER"/>
+			<column name="user_name_zh" value="陈寅莹"/>
+			<column name="user_sex" value="FEMALE"/>
+			<column name="user_birthday" valueDate="1994-12-15"/>
+			<column name="user_email" value="892938772@qq.com"/>
+			<column name="user_phone" value="18861822241"/>
+			<column name="user_family_address" value="浙江省宁波市"/>
 		</insert>
 	</changeSet>
 </databaseChangeLog>

@@ -21,7 +21,7 @@
     <changeSet id="create_sys_attachment" author="ferry">
         <createTable tableName="sys_attachment" remarks="附件类型表">
             <column name="attachment_id" type="BIGINT" autoIncrement="true" remarks="pk">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_attachment_ai"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sys_attachment_pk_ai"/>
             </column>
             <column name="attachment_name" type="VARCHAR(200)" remarks="附件名称"/>
             <column name="source_type" type="VARCHAR(100)" remarks="附件类型"/>
@@ -32,6 +32,13 @@
             <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
             <column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
         </createTable>
+    </changeSet>
+    
+    <changeSet id="create_sys_attachment_index" author="ferry">
+        <createIndex tableName="sys_attachment" indexName="sys_attachment_ik_st_and_sk">
+            <column name="source_type"/>
+            <column name="source_key"/>
+        </createIndex>
     </changeSet>
  
 </databaseChangeLog>

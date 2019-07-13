@@ -21,7 +21,7 @@
 	<changeSet id="create_sys_file" author="ferry">
 		<createTable tableName="sys_file" remarks="文件表">
 			<column name="file_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="pk_sf_fi"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="sys_file_pk_fi"/>
 			</column>
 			<column name="attachment_id" type="BIGINT" remarks="附件id">
 				<constraints nullable="false"/>
