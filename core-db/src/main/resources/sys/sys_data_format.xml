@@ -46,47 +46,47 @@
             <column name="data_format" value="yyyy年MM月dd日 HH时mm分ss秒"/>
             <column name="description" value="2011年11月11日 11时11分11秒(二十四时制)"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yy/MM/dd"/>
+            <column name="data_format" value="yyyy/MM/dd"/>
             <column name="description" value="2011/11/11"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yy-MM-dd"/>
+            <column name="data_format" value="yyyy-MM-dd"/>
             <column name="description" value="2011-11-11"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="DATE"/>
             <column name="data_format" value="yyyy-MM-dd HH:mm:ss"/>
             <column name="description" value="2011-11-11 11:11:11(二十四时制)"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="DATE"/>
             <column name="data_format" value="yyyy年MM月dd日 HH时mm分ss秒 E"/>
             <column name="description" value="2011年11月11日 11时11分11秒 星期五(二十四时制)"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="DATE"/>
             <column name="data_format" value="yyyy年MM月dd日 HH时mm分ss秒 E"/>
             <column name="description" value="2011年11月11日 11时11分11秒 星期五(二十四时制)"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="NUMBER"/>
             <column name="data_format" value="000.00"/>
             <column name="description" value="整数位不足补0，小数位不足补0，小数位四舍五入保留两位有效数字"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="NUMBER"/>
             <column name="data_format" value="###.##"/>
             <column name="description" value="整数位按实际位数填充，小数位四舍五入保留两位有效数字"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="NUMBER"/>
             <column name="data_format" value="###,###.00"/>
             <column name="description" value="整数位按实际位数填充，千分位以逗号分隔，小数位四舍五入保留两位有效数字，不足补0"/>
         </insert>
-        <insert tableName="sys_date_format">
+        <insert tableName="sys_data_format">
             <column name="data_type" value="NUMBER"/>
             <column name="data_format" value="#0.00%"/>
             <column name="description" value="百分数显示"/>
