@@ -44,4 +44,15 @@
             <column name="sql_code"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet id="init_sys_sql_data" author="ferry">
+        <insert tableName="sys_sql">
+            <column name="sql_code" value="FERRY_NAME"/>
+            <column name="sql_name" value="FERRY名称"/>
+            <column name="sql" value="select su.user_name_zh from sys_user su where su.user_code = 'FERRY'"/>
+            <column name="description" value="查询ferry的中文名称"/>
+        </insert>
+    </changeSet>
+    
+    
 </databaseChangeLog>
