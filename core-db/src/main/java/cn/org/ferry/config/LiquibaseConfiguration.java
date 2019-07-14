@@ -24,8 +24,8 @@ public class LiquibaseConfiguration {
         liquibase.setShouldRun(true);
         liquibase.setResourceLoader(new DefaultResourceLoader());
         // 覆盖Liquibase changelog表名
-        liquibase.setDatabaseChangeLogTable("sys_changelog_table");
-        liquibase.setDatabaseChangeLogLockTable("sys_changelog_lock_table");
+        liquibase.setDatabaseChangeLogTable("changelog_table_sys");
+        liquibase.setDatabaseChangeLogLockTable("changelog_lock_table_sys");
         return liquibase;
     }
 
@@ -41,8 +41,8 @@ public class LiquibaseConfiguration {
         liquibase.setShouldRun(true);
         liquibase.setResourceLoader(new DefaultResourceLoader());
         // 覆盖Liquibase changelog表名
-        liquibase.setDatabaseChangeLogTable("doc_changelog_table");
-        liquibase.setDatabaseChangeLogLockTable("doc_changelog_lock_table");
+        liquibase.setDatabaseChangeLogTable("changelog_table_doc");
+        liquibase.setDatabaseChangeLogLockTable("changelog_lock_table_doc");
         return liquibase;
     }
 }
