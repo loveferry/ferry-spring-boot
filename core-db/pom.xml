@@ -71,8 +71,8 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>application.yml</include>
-					<!--这里不包含 sys 目录，则编译时不会生成该目录下的文件-->
 					<include>sys/**</include>
+					<include>doc/**</include>
 				</includes>
 			</resource>
 		</resources>
