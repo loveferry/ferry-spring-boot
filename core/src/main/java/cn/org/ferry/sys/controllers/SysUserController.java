@@ -2,14 +2,12 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
+import cn.org.ferry.system.annotation.LoginPass;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SysUserController {
@@ -21,7 +19,8 @@ public class SysUserController {
      * @param sysUser 员工代码和密码为必传项
      * @return 返回登陆信息
      */
-    @RequestMapping("/api/login")
+    @LoginPass
+    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData login(@RequestBody SysUser sysUser){
         String password = sysUser.getPassword();

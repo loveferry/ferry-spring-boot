@@ -18,22 +18,11 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
     @Autowired
     private SysAttachmentMapper iSysAttachmentMapper;
 
-    @Autowired
-    private SysFileService sysFileService;
-
     @Override
-    public List<SysFile> query(SysAttachment sysAttachment) {
-        List<SysAttachment> list = iSysAttachmentMapper.select(sysAttachment);
-        if(CollectionUtils.isEmpty(list)){
-            logger.debug("附件查询为空!");
-            return new ArrayList<>(0);
-        }
-        List<SysFile> sysFileList = new ArrayList<>(10);
-        for(SysAttachment attachment : list){
-            SysFile sysFile = new SysFile();
-            sysFile.setAttachmentId(attachment.getAttachmentId());
-            sysFileList.addAll(sysFileService.select(sysFile));
-        }
-        return sysFileList;
+    public SysAttachment queryBySourceTypeAndSourceKey(String sourceType, String sourceKey) {
+        SysAttachment attachment = new SysAttachment();
+        attachment.setSourceType(sourceType);
+        attachment.setSourceKey(sourceKey);
+        return iSysAttachmentMapper.selectOne(attachment);
     }
 }

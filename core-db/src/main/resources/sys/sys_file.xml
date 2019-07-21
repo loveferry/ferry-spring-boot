@@ -36,4 +36,10 @@
 			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 		</createTable>
 	</changeSet>
+	
+	<changeSet id="create_sys_file_index" author="ferry">
+		<createIndex tableName="sys_file" indexName="sys_file_ik_ai">
+			<column name="attachment_id"/>
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>

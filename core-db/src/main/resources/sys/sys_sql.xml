@@ -47,10 +47,22 @@
     
     <changeSet id="init_sys_sql_data" author="ferry">
         <insert tableName="sys_sql">
-            <column name="sql_code" value="FERRY_NAME"/>
-            <column name="sql_name" value="FERRY名称"/>
-            <column name="sql" value="select su.user_name_zh from sys_user su where su.user_code = 'FERRY'"/>
+            <column name="sql_code" value="FERRY_NAME_ZH"/>
+            <column name="sql_name" value="ferry的名称"/>
+            <column name="sql" value="select su.user_name_zh from sys_user su where su.user_code = ${userCode}"/>
             <column name="description" value="查询ferry的中文名称"/>
+        </insert>
+        <insert tableName="sys_sql">
+            <column name="sql_code" value="FERRY_HEIGHT"/>
+            <column name="sql_name" value="ferry的体重"/>
+            <column name="sql" value="select 117.236 from dual"/>
+            <column name="description" value="查询ferry的体重"/>
+        </insert>
+        <insert tableName="sys_sql">
+            <column name="sql_code" value="FERRY_BIRTHDAY"/>
+            <column name="sql_name" value="ferry的生日"/>
+            <column name="sql" value="select su.user_birthday from sys_user su where su.user_code = ${userCode}"/>
+            <column name="description" value="查询ferry的生日"/>
         </insert>
     </changeSet>
     

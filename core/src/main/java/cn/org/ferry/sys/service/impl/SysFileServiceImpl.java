@@ -1,21 +1,29 @@
 package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.sys.dto.SysAttachment;
+import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.mapper.SysFileMapper;
+import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import cn.org.ferry.sys.service.SysAttachmentService;
 import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.sys.utils.ExcelConfig;
 import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.dto.BaseDTO;
+import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
+import cn.org.ferry.system.sysenum.EnableFlag;
+import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import cn.org.ferry.system.utils.BeanUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -33,29 +41,47 @@ import java.util.Random;
 public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysFileService {
     private static final String msg = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!@#$%^&*()<>?:[]{}";
 
-    private static final String TEMP_FILE_PATH = "/u01/upload/test/";
+    @Value("${ferry.upload}")
+    private String UPLOAD_PATH;
+
     @Autowired
     private SysFileMapper sysFileMapper;
     @Autowired
     private SysAttachmentService sysAttachmentService;
+    @Autowired
+    private SysAttachmentCategoryService sysAttachmentCategoryService;
 
-    @Transactional
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean upload(List<MultipartFile> files, String sourceKey, String sourceType) {
-        SysAttachment attachment = new SysAttachment();
-        attachment.setSourceKey(sourceKey);
-        attachment.setSourceType(sourceType);
-        sysAttachmentService.insertSelective(attachment);
+    public boolean upload(List<MultipartFile> files, SysAttachment sysAttachment) throws FileException {
+        SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.query(sysAttachment.getSourceType());
+        if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
+            throw new FileException("该附件类型已被禁用！");
+        }
+        SysAttachment attachment = sysAttachmentService.queryBySourceTypeAndSourceKey(sysAttachment.getSourceType(), sysAttachment.getSourceKey());
+        if(null == attachment){
+            sysAttachmentService.insertSelective(sysAttachment);
+        }else{
+            sysAttachment.setAttachmentId(attachment.getAttachmentId());
+            sysAttachmentService.updateByPrimaryKey(sysAttachment);
+        }
+        if(IfOrNotFlag.Y == sysAttachmentCategory.getUniqueFlag()){
+            if(files.size() > 1){
+                throw new FileException("该类型的附件只允许上传一份!");
+            }
+            deleteByAttachmentId(sysAttachment.getAttachmentId());
+        }
         for(MultipartFile multipartFile : files){
             String name = getRandomString(16);
             SysFile sysFile = new SysFile();
             sysFile.setFileName(multipartFile.getOriginalFilename());
             sysFile.setFileType(multipartFile.getContentType());
-            sysFile.setFilePath(TEMP_FILE_PATH+name);
+            sysFile.setFilePath(UPLOAD_PATH+name);
             sysFile.setFileSize(multipartFile.getSize());
-            sysFile.setAttachmentId(attachment.getAttachmentId());
+            sysFile.setAttachmentId(sysAttachment.getAttachmentId());
             this.insertSelective(sysFile);
-            File dir = new File(TEMP_FILE_PATH);
+            File dir = new File(UPLOAD_PATH);
             if(!dir.exists()){
                 dir.mkdirs();
             }
@@ -98,6 +124,42 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<SysFile> query(SysFile sysFile) {
+        return sysFileMapper.query(sysFile);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteByAttachmentId(Long attachmentId) {
+        if(null == attachmentId){
+            throw new NullPointerException("missing attachment_id");
+        }
+        List<SysFile> sysFileList = sysFileMapper.queryByAttachmentId(attachmentId);
+        if(CollectionUtils.isEmpty(sysFileList)){
+            return ;
+        }
+        for (SysFile sysFile : sysFileList) {
+            File file = new File(sysFile.getFilePath());
+            if(file.exists()){
+                file.delete();
+            }
+            sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteFileByPrimaryKey(Long fileId) {
+        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
+        File file = new File(sysFile.getFilePath());
+        if(file.exists()){
+            file.delete();
+        }
+        sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
+        sysFileMapper.deleteByPrimaryKey(fileId);
     }
 
     private String getRandomString(int length){

@@ -3,6 +3,7 @@ package cn.org.ferry.doc.service.impl;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.mapper.DocTemplateMapper;
 import cn.org.ferry.doc.service.DocTemplateService;
+import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,4 +17,9 @@ import org.springframework.stereotype.Service;
 public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> implements DocTemplateService {
     @Autowired
     private DocTemplateMapper docTemplateMapper;
+
+    @Override
+    public SysFile generateWord(DocTemplate docTemplate) {
+        return null;
+    }
 }

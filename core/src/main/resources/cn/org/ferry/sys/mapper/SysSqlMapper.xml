@@ -8,4 +8,8 @@
 		<result column="sql" property="sql" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="description" property="description" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
+	
+	<select id="querySqlBySqlCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select sql from sys_sql ss where ss.sql_code = #{sqlCode}
+	</select>
 </mapper>

@@ -26,10 +26,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class FileUtils {
+public final class FileUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static final int ROW_ACCESS_WINDOW_SIZE = 100;
+
+    private FileUtils(){}
 
     /**
      * excel导出

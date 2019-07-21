@@ -28,7 +28,7 @@
 			</column>
 			<column name="param_name" type="VARCHAR(200)" remarks="参数名称"/>
 			<column name="book_mark" type="VARCHAR(200)" remarks="书签名称"/>
-			<column name="sql_code" type="BIGINT" remarks="数据源代码"/>
+			<column name="sql_code" type="VARCHAR(200)" remarks="数据源代码"/>
 			<column name="created_by" type="BIGINT" defaultValue="-1" />
 			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
@@ -46,5 +46,26 @@
 		<createIndex tableName="doc_template_param" indexName="doc_template_param_ik_bm">
 			<column name="book_mark"/>
 		</createIndex>
+	</changeSet>
+	
+	<changeSet id="init_doc_template_param_data" author="ferry">
+		<insert tableName="doc_template_param">
+			<column name="template_code" value="TEST"/>
+			<column name="param_name" value="ferry的生日"/>
+			<column name="book_mark" value="ferry的生日"/>
+			<column name="sql_code" value="FERRY_BIRTHDAY"/>
+		</insert>
+		<insert tableName="doc_template_param">
+			<column name="template_code" value="TEST"/>
+			<column name="param_name" value="ferry的体重"/>
+			<column name="book_mark" value="ferry的体重"/>
+			<column name="sql_code" value="FERRY_HEIGHT"/>
+		</insert>
+		<insert tableName="doc_template_param">
+			<column name="template_code" value="TEST"/>
+			<column name="param_name" value="ferry的名称"/>
+			<column name="book_mark" value="ferry的名称"/>
+			<column name="sql_code" value="FERRY_NAME_ZH"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>

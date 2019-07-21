@@ -5,6 +5,7 @@ import cn.org.ferry.system.mybatis.BaseMapper;
 import cn.org.ferry.system.service.BaseService;
 import cn.org.ferry.system.utils.BeanUtils;
 import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,14 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
 
     @Override
     public int insertSelective(T t) {
-        updateBaseField(t);
+        updateBaseField(t, INSERT);
         return mapper.insertSelective(t);
+    }
+
+    @Override
+    public int insert(T t) {
+        updateBaseField(t, INSERT);
+        return mapper.insert(t);
     }
 
     @Override
@@ -35,8 +42,14 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
 
     @Override
     public int updateByPrimaryKeySelective(T t) {
-        updateBaseField(t);
+        updateBaseField(t, UPDATE);
         return mapper.updateByPrimaryKeySelective(t);
+    }
+
+    @Override
+    public int updateByPrimaryKey(T t) {
+        updateBaseField(t, UPDATE);
+        return mapper.updateByPrimaryKey(t);
     }
 
     @Override
@@ -77,12 +90,15 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
         return selectCount(t);
     }
 
-    private void updateBaseField(T t){
+    private void updateBaseField(T t, String type){
         Date now = new Date();
-        setBaseField(BaseDTO.CREATEDBY, 10001L, t.getClass(), t);
-        setBaseField(BaseDTO.CREATIONDATE, now, t.getClass(), t);
-        setBaseField(BaseDTO.LASTUPDATEDBY, 10001L, t.getClass(), t);
-        setBaseField(BaseDTO.LASTUPDATEDATE, now, t.getClass(), t);
+        if(UPDATE.equals(type)){
+            setBaseField(BaseDTO.LASTUPDATEDBY, 10001L, t.getClass(), t);
+            setBaseField(BaseDTO.LASTUPDATEDATE, now, t.getClass(), t);
+        }else if(INSERT.equals(type)){
+            setBaseField(BaseDTO.CREATEDBY, 10001L, t.getClass(), t);
+            setBaseField(BaseDTO.CREATIONDATE, now, t.getClass(), t);
+        }
     }
 
     private boolean setBaseField(String fieldName, Object value, Class cls, T t) {

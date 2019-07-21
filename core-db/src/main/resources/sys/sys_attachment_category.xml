@@ -18,13 +18,17 @@
     
     <!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
     
-    <changeSet id="create_sys_attachment" author="ferry">
-        <createTable tableName="sys_attachment" remarks="附件表">
-            <column name="attachment_id" type="BIGINT" autoIncrement="true" remarks="pk">
+    <changeSet id="create_sys_attachment_category" author="ferry">
+        <createTable tableName="sys_attachment_category" remarks="附件类型表">
+            <column name="category_id" type="BIGINT" autoIncrement="true" remarks="pk">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="sys_attachment_pk_ai"/>
             </column>
-            <column name="source_type" type="VARCHAR(100)" remarks="附件类型"/>
-            <column name="source_key" type="VARCHAR(100)" remarks="附件编码"/>
+            <column name="category_name" type="VARCHAR(200)" remarks="类型名称"/>
+            <column name="source_type" type="VARCHAR(100)" remarks="附件类型">
+                <constraints nullable="false" unique="true" uniqueConstraintName="sys_attachment_category_uk_st"/>
+            </column>
+            <column name="enable_flag" type="ENUM('Y','N')" defaultValue="Y" remarks="启用标志"/>
+            <column name="unique_flag" type="ENUM('Y','N')" defaultValue="N" remarks="是否唯一"/>
             <column name="created_by" type="BIGINT" defaultValue="-1" />
             <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
             <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
@@ -32,8 +36,13 @@
         </createTable>
     </changeSet>
     
-    <changeSet id="create_sys_attachment_index" author="ferry">
-        <addUniqueConstraint tableName="sys_attachment" columnNames="source_type,source_key" constraintName="sys_attachment_uk_st_and_sk"/>
+    <changeSet id="init_sys_attachment_category_data" author="ferry">
+        <insert tableName="sys_attachment_category">
+            <column name="category_name" value="文档生成测试"/>
+            <column name="source_type" value="DOC_TEMPLATE_FERRY_TEST"/>
+            <column name="enable_flag" value="Y"/>
+            <column name="unique_flag" value="Y"/>
+        </insert>
     </changeSet>
  
 </databaseChangeLog>

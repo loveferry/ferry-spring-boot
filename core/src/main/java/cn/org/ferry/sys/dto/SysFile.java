@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 文件实体类 创建于 2018-09-22
@@ -29,5 +30,16 @@ public class SysFile extends BaseDTO {
     private Long fileSize;    // 文件大小(字节)
 
     private String fileType;   // 文件类型
+
+    @Transient
+    private String categoryName;  // 类型名称
+
+    @Transient
+    private String sourceKey;  // 附件编码
+
+    @Transient
+    private String sourceType;  // 附件类别
+
+
 
 }

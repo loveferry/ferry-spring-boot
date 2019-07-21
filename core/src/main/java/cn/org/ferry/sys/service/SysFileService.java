@@ -1,7 +1,9 @@
 package cn.org.ferry.sys.service;
 
+import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.system.dto.BaseDTO;
+import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.BaseService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,12 +18,29 @@ public interface SysFileService extends BaseService<SysFile> {
     /**
      * 文件上传
      */
-    boolean upload(List<MultipartFile> files, String sourceKey, String sourceType);
+    boolean upload(List<MultipartFile> files, SysAttachment sysAttachment) throws FileException;
 
     /**
      * 文件下载
      */
     void fileDownload(HttpServletResponse httpServletResponse, Long fileId);
+
+    /**
+     * 查询附件
+     */
+    List<SysFile> query(SysFile sysFile);
+
+    /**
+     * 删除文件
+     * @param attachmentId 参数必传，根据附件id删除sys_file表所有数据，并删除物理文件
+     */
+    void deleteByAttachmentId(Long attachmentId);
+
+    /**
+     * 删除文件表数据和物理文件
+     * @param fileId 文件表主键,必传
+     */
+    void deleteFileByPrimaryKey(Long fileId);
 
     /**
      * excel 导出, poi实现的百万级数据导出

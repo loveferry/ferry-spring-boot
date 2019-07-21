@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringTest {
     @Test
@@ -115,5 +117,19 @@ public class StringTest {
         StringBuilder msg = new StringBuilder("");
         System.out.println(msg.replace(0,1,"d"));
 
+    }
+
+
+    @Test
+    public void cdbksvdjs(){
+        String sql = "select * from sys_user where user_name_zh = ${userNameZh} and user_name_en = ${userNameEn}";
+        Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}");
+        Matcher matcher = pattern.matcher(sql);
+        while (matcher.find()){
+            String key = matcher.group(1);
+            System.out.println(key);
+        }
+        System.out.println(matcher.replaceAll("?"));
+        System.out.println(matcher);
     }
 }

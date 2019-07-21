@@ -8,6 +8,49 @@
         <result column="file_path" property="filePath" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="file_size" property="fileSize" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result column="file_type" property="fileType" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="source_key" property="sourceKey" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="source_type" property="sourceType" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </resultMap>
     
+    <select id="query" parameterType="cn.org.ferry.sys.dto.SysFile" resultMap="BaseResultMap">
+        select t1.* from (SELECT
+            sac.category_name,
+            sa.attachment_id,
+            sa.source_key,
+            sa.source_type,
+            sf.file_id,
+            sf.file_name,
+            sf.file_path,
+            sf.file_size,
+            sf.file_type
+        FROM
+            sys_attachment_category sac,
+            sys_attachment sa,
+            sys_file sf
+        WHERE
+            sac.enable_flag = 'Y'
+            AND sac.source_type = sa.source_type
+            AND sa.attachment_id = sf.attachment_id) t1
+        <where>
+            <if test="sourceType != null">
+                and t1.source_type = #{sourceType}
+            </if>
+            <if test="sourceKey != null">
+                and t1.source_key = #{sourceKey}
+            </if>
+            <if test="fileName != null">
+                and t1.file_name = #{fileName}
+            </if>
+            <if test="fileType != null">
+                and t1.file_type = #{fileType}
+            </if>
+        </where>
+        order by t1.file_id desc
+    </select>
+    
+    <select id="queryByAttachmentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from sys_file where attachment_id = #{attachmentId}
+    </select>
 </mapper>

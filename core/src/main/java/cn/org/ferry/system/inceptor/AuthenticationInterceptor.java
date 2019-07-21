@@ -41,7 +41,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         String _token = request.getHeader("_token");
         if(StringUtils.isEmpty(_token)){
             response.setStatus(401);
-            throw new TokenException(401, "无token，请重新登录");
+            throw new TokenException(401, "token认证失败，请重新登录");
         }
         SysUser user;
         try{

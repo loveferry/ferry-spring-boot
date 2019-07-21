@@ -56,3 +56,7 @@ spring:
         max-wait: 3000ms
   liquibase:
     enabled: false
+
+# 自定义的配置属性
+ferry:
+  upload: /u01/ferry/upload/

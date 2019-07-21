@@ -1,14 +1,13 @@
 package cn.org.ferry.system.controllers;
 
-import cn.org.ferry.sys.dto.SysUser;
+import cn.org.ferry.system.annotation.LoginPass;
 import cn.org.ferry.system.dto.ResponseData;
-import cn.org.ferry.system.sysenum.Sex;
+import cn.org.ferry.system.utils.TokenUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * created by 2018-09-11
@@ -19,29 +18,18 @@ import java.util.List;
 @Controller
 public class BaseControllers {
 
-    @RequestMapping("/test1")
+    @LoginPass
+    @RequestMapping(value = "/api/generate/token", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseData test1(){
-        SysUser sysUser = new SysUser();
-        sysUser.setUserId(101L);
-        sysUser.setUserNameZh("盛玉");
-        sysUser.setUserNameEn("ferry");
-        sysUser.setUserCode("KBUF");
-        sysUser.setUserSex(Sex.MALE);
-        List<SysUser> list = new ArrayList<>(1);
-        list.add(sysUser);
-        return new ResponseData(list);
-    }
-
-    @RequestMapping("/test2")
-    @ResponseBody
-    public SysUser test2(){
-        SysUser sysUser = new SysUser();
-        sysUser.setUserId(101L);
-        sysUser.setUserNameZh("盛玉");
-        sysUser.setUserNameEn("ferry");
-        sysUser.setUserCode("KBUF");
-        sysUser.setUserSex(Sex.MALE);
-        return sysUser;
+    public ResponseData generateToken(String userCode, String password){
+        ResponseData responseData = new ResponseData();
+        if(StringUtils.isEmpty(userCode) || StringUtils.isEmpty(password)){
+            responseData.setSuccess(false);
+            responseData.setMessage("token认证信息为空!");
+            return responseData;
+        }
+        responseData.setToken(TokenUtils.generateToken(userCode, password));
+        responseData.setMessage("token认证成功!");
+        return responseData;
     }
 }

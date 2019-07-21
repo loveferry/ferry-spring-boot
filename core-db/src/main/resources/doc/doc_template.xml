@@ -43,4 +43,13 @@
 			<column name="template_name"/>
 		</createIndex>
 	</changeSet>
+	
+	<changeSet id="init_doc_template_data" author="ferry">
+		<insert tableName="doc_template">
+			<column name="template_code" value="TEST"/>
+			<column name="template_name" value="测试"/>
+			<column name="number_format_id" value="10"/>
+			<column name="date_format_id" value="3"/>
+		</insert>
+	</changeSet>
 </databaseChangeLog>
