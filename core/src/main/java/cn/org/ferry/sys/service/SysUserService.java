@@ -1,7 +1,10 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.sys.dto.SysUser;
+import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.service.BaseService;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface SysUserService extends BaseService<SysUser> {
     /**
@@ -10,4 +13,9 @@ public interface SysUserService extends BaseService<SysUser> {
      * @return 用户个人信息
      */
     SysUser queryByUserCode(String userCode);
+
+    /**
+     * 登陆
+     */
+    ResponseData login(HttpServletRequest request, SysUser sysUser);
 }

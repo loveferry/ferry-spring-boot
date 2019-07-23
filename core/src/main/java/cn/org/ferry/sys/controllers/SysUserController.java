@@ -4,10 +4,10 @@ import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
 import cn.org.ferry.system.annotation.LoginPass;
 import cn.org.ferry.system.dto.ResponseData;
-import cn.org.ferry.system.utils.TokenUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class SysUserController {
@@ -22,22 +22,7 @@ public class SysUserController {
     @LoginPass
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData login(@RequestBody SysUser sysUser){
-        String password = sysUser.getPassword();
-        ResponseData responseData = new ResponseData();
-        sysUser = sysUserService.queryByUserCode(sysUser.getUserCode());
-        if(sysUser == null){
-            responseData.setSuccess(false);
-            responseData.setMessage("用户不存在或密码输入错误!");
-            return responseData;
-        }
-        if(!StringUtils.equals(password, sysUser.getPassword())){
-            responseData.setSuccess(false);
-            responseData.setMessage("用户不存在或密码输入错误!");
-            return responseData;
-        }
-        responseData.setToken(TokenUtils.generateToken(sysUser.getUserCode(), sysUser.getPassword()));
-        responseData.setMessage("登陆成功!");
-        return responseData;
+    public ResponseData login(HttpServletRequest request, @RequestBody SysUser sysUser){
+        return sysUserService.login(request, sysUser);
     }
 }

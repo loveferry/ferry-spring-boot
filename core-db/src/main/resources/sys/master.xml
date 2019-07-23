@@ -18,5 +18,6 @@
     <include file="sys_file.xml" relativeToChangelogFile="true" />
     <include file="sys_data_format.xml" relativeToChangelogFile="true" />
     <include file="sys_sql.xml" relativeToChangelogFile="true" />
+    <include file="login_log.xml" relativeToChangelogFile="true" />
     <include file="chinese_people.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
