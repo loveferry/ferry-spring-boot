@@ -52,6 +52,9 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
     @Override
     public boolean upload(List<MultipartFile> files, SysAttachment sysAttachment) throws FileException {
         SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.query(sysAttachment.getSourceType());
+        if(null == sysAttachmentCategory){
+            throw new FileException("文件类型不存在!");
+        }
         if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
             throw new FileException("该附件类型已被禁用！");
         }

@@ -4,6 +4,7 @@ import cn.org.ferry.system.annotation.LoginPass;
 import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.dto.ResponseData;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class BaseControllers {
+    @Autowired
+    private TokenTactics tokenTactics;
 
     @LoginPass
     @RequestMapping(value = "/api/generate/token", method = RequestMethod.GET)
@@ -28,7 +31,7 @@ public class BaseControllers {
             responseData.setMessage("token认证信息为空!");
             return responseData;
         }
-        responseData.setToken(TokenTactics.generateToken(userCode, password));
+        responseData.setToken(tokenTactics.generateToken(userCode, password));
         responseData.setMessage("token认证成功!");
         return responseData;
     }

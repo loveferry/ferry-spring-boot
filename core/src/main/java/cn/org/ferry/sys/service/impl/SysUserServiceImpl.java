@@ -45,7 +45,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             responseData.setMessage("用户不存在或密码输入错误!");
             return responseData;
         }
-        String token = TokenTactics.generateToken(sysUser.getUserCode(), sysUser.getPassword());
+        String token = tokenTactics.generateToken(sysUser.getUserCode(), sysUser.getPassword());
         String ip = NetWorkUtils.getIpAddress(request);
         loginLogService.insertLoginLog(sysUser.getUserCode(), ip, NetWorkUtils.getUserAgent(request));
         tokenTactics.setTokenToRedisWithPeriodOfValidity(ip+"_"+sysUser.getUserCode(), token);

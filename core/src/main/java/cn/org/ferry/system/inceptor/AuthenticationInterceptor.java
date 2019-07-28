@@ -30,6 +30,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private SysUserService sysUserService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private TokenTactics tokenTactics;
 
     // 在业务处理器处理请求之前被调用
     @Override
@@ -65,8 +67,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             String key = NetWorkUtils.getIpAddress(request)+"_"+user.getUserCode();
             String token = valueOperations.get(key);
             if(StringUtils.isNotEmpty(token) && StringUtils.equals(_token, token)){
-                token = TokenTactics.generateToken(user.getUserCode(), user.getPassword());
-                valueOperations.set(key, token);
+                token = tokenTactics.generateToken(user.getUserCode(), user.getPassword());
+                tokenTactics.setTokenToRedisWithPeriodOfValidity(key, token);
                 response.setStatus(TokenException.class.getAnnotation(ResponseStatus.class).code().value());
                 response.addHeader("_token", token);
                 response.getWriter().append("refresh token");

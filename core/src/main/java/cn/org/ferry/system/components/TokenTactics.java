@@ -29,12 +29,12 @@ public class TokenTactics {
      * @param id 用户
      * @param secret 私钥
      */
-    public static String generateToken(String id, String secret){
+    public String generateToken(String id, String secret){
         Date now = new Date();
         return JWT.create()
                 .withIssuedAt(now)  // 发行日期
                 .withAudience(id) // 用户
-                .withExpiresAt(new Date(now.getTime()+60*1000))  // 设置一个失效期
+                .withExpiresAt(new Date(now.getTime()+tokenPeriod.intValue()*1000))  // 设置一个失效期
                 .sign(Algorithm.HMAC256(secret));  // 设定一个算法,给定私钥通过算法生产token
     }
 
