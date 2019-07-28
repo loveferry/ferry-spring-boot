@@ -11,8 +11,8 @@ server:
 logging:
   path: log/core/
   level:
-    root: ERROR
-    cn.org.ferry : ERROR
+    root: DEBUG
+    cn.org.ferry : DEBUG
 
 
 
