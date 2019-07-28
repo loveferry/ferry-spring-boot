@@ -42,7 +42,7 @@ spring:
     password: ferry
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 127.0.0.1
+    host: 47.100.232.59
     port: 6379
     database: 3
     timeout: 5000ms
