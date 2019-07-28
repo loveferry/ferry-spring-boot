@@ -32,6 +32,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private TokenTactics tokenTactics;
+    private static final String _TOKEN = "_token";
 
     // 在业务处理器处理请求之前被调用
     @Override
@@ -48,16 +49,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(!method.getDeclaringClass().getPackage().getName().contains("cn.org.ferry")){
             return true;
         }
-        String _token = request.getHeader("_token");
+        String _token = request.getHeader(_TOKEN);
         if(StringUtils.isEmpty(_token)){
-            throw new TokenException("非法访问!");
+            throw new TokenException("unauthorized access!");
         }
         SysUser user;
         try{
             String userCode = JWT.decode(_token).getAudience().get(0);
             user = Optional.of(sysUserService.queryByUserCode(userCode)).get();
         }catch (JWTDecodeException e){
-            throw new TokenException("无效的token");
+            throw new TokenException("Invalid token");
         }
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).withAudience(user.getUserCode()).build();
         try {
@@ -70,11 +71,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 token = tokenTactics.generateToken(user.getUserCode(), user.getPassword());
                 tokenTactics.setTokenToRedisWithPeriodOfValidity(key, token);
                 response.setStatus(TokenException.class.getAnnotation(ResponseStatus.class).code().value());
-                response.addHeader("_token", token);
+                response.addHeader(_TOKEN, token);
                 response.getWriter().append("refresh token");
                 return false;
             }else{
-                throw new TokenException("无效的token!请重新登录!");
+                throw new TokenException("Invalid token! Please log in again!");
             }
         }
         return true;
