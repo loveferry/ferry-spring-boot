@@ -1,5 +1,7 @@
 package cn.org.ferry.system.config;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,15 +14,23 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 public class CORSFilterConfiguration {
+    @Value("${ferry.cors.allowedOrigins}")
+    private String allowedOrigins;
+
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置允许的网站域名，如果全允许则设为 *
-        config.addAllowedOrigin("http://127.0.0.1:8080");
-//        config.addAllowedOrigin("http://104.198.87.241:8082");
-//        config.addAllowedOrigin("http://104.198.87.241:8080");
-//        config.addAllowedOrigin("*");
+        if(StringUtils.isEmpty(allowedOrigins)){
+            config.addAllowedOrigin("*");
+        }else{
+            String[] allow_origins = allowedOrigins.split("\b");
+            for(int i = 0; i < allow_origins.length; i++){
+                config.addAllowedOrigin(allow_origins[i]);
+            }
+        }
+
         // 设置请求头允许范围
         config.addAllowedHeader("DNT");
         config.addAllowedHeader("X-Mx-ReqToken");
