@@ -11,7 +11,7 @@ server:
 logging:
   path: log/core/
   level:
-    root: DEBUG
+    root: INFO
     cn.org.ferry : DEBUG
 
 
@@ -42,7 +42,7 @@ spring:
     password: ferry
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 127.0.0.1
+    host: 47.100.232.59
     port: 6379
     database: 3
     timeout: 5000ms
@@ -62,4 +62,4 @@ spring:
 ferry:
   upload: /u01/ferry/upload/
   cors:
-    allowedOrigins: http://192.168.0.100:8082 http://104.198.87.241:8082
+    allowedOrigins: http://192.168.0.100:8082,http://104.198.87.241:8082

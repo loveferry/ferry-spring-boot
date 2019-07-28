@@ -62,4 +62,4 @@ spring:
 ferry:
   upload: /u01/ferry/upload/
   cors:
-    allowedOrigins: *
+    allowedOrigins:

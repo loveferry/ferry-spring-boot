@@ -25,7 +25,7 @@ public class CORSFilterConfiguration {
         if(StringUtils.isEmpty(allowedOrigins)){
             config.addAllowedOrigin("*");
         }else{
-            String[] allow_origins = allowedOrigins.split("\b");
+            String[] allow_origins = allowedOrigins.split(",");
             for(int i = 0; i < allow_origins.length; i++){
                 config.addAllowedOrigin(allow_origins[i]);
             }
