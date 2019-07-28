@@ -2,7 +2,6 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.sys.dto.ChinesePeople;
 import cn.org.ferry.sys.service.ChinesePeopleService;
-import cn.org.ferry.system.annotation.LoginPass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/chinese/people")
-@LoginPass
 public class ChinesePeopleController {
     @Autowired
     private ChinesePeopleService chinesePeopleService;
