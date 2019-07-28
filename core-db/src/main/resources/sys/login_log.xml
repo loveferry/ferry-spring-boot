@@ -27,6 +27,7 @@
             <column name="login_date" type="DATETIME" remarks="登陆时间"/>
             <column name="logout_date" type="DATETIME" remarks="登出时间"/>
             <column name="ip" type="VARCHAR(100)" remarks="登陆地址"/>
+            <column name="user_agent" type="VARCHAR(1000)" remarks="代理"/>
             <column name="created_by" type="BIGINT" defaultValue="-1" />
             <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
             <column name="last_updated_by" type="BIGINT" defaultValue="-1" />

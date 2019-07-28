@@ -1,8 +1,8 @@
 package cn.org.ferry.system.controllers;
 
 import cn.org.ferry.system.annotation.LoginPass;
+import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.dto.ResponseData;
-import cn.org.ferry.system.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +28,7 @@ public class BaseControllers {
             responseData.setMessage("token认证信息为空!");
             return responseData;
         }
-        responseData.setToken(TokenUtils.generateToken(userCode, password));
+        responseData.setToken(TokenTactics.generateToken(userCode, password));
         responseData.setMessage("token认证成功!");
         return responseData;
     }

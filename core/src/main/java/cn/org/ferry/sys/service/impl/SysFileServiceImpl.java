@@ -32,14 +32,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysFileService {
-    private static final String msg = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!@#$%^&*()<>?:[]{}";
 
     @Value("${ferry.upload}")
     private String UPLOAD_PATH;
@@ -73,7 +69,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             deleteByAttachmentId(sysAttachment.getAttachmentId());
         }
         for(MultipartFile multipartFile : files){
-            String name = getRandomString(16);
+            String name = UUID.randomUUID().toString();
             SysFile sysFile = new SysFile();
             sysFile.setFileName(multipartFile.getOriginalFilename());
             sysFile.setFileType(multipartFile.getContentType());
@@ -86,7 +82,6 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
                 dir.mkdirs();
             }
             File f = new File(dir.getAbsolutePath()+File.separator+name);
-            f = validataFileExists(f);
             try {
                 multipartFile.transferTo(f);
             } catch (IOException e) {
@@ -160,23 +155,6 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
         }
         sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
         sysFileMapper.deleteByPrimaryKey(fileId);
-    }
-
-    private String getRandomString(int length){
-        char[] cs = new char[length];
-        Random random = new Random();
-        for(int i= 0; i < cs.length; i++){
-            cs[i] = msg.charAt(random.nextInt(msg.length()));
-        }
-        return new String(cs);
-    }
-
-    private File validataFileExists(File file){
-        if(file.exists()){
-            file = new File(file.getPath()+File.separator+getRandomString(16));
-            file = validataFileExists(file);
-        }
-        return file;
     }
 
     @Override

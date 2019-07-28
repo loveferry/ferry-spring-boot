@@ -7,6 +7,7 @@
 		<result column="login_date" property="loginDate" jdbcType="DATE" javaType="java.util.Date"/>
 		<result column="logout_date" property="logoutDate" jdbcType="DATE" javaType="java.util.Date"/>
 		<result column="ip" property="ip" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result column="user_agent" property="userAgent" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 </mapper>

@@ -43,4 +43,9 @@ public class LoginLog extends BaseDTO {
      * 登陆地址
      */
     private String ip;
+
+    /**
+     * 代理
+     */
+    private String userAgent;
 }

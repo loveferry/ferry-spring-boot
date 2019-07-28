@@ -13,10 +13,11 @@ public class LoginLogServiceImpl extends BaseServiceImpl<LoginLog> implements Lo
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean insertLoginLog(String userCode, String ip) {
+    public boolean insertLoginLog(String userCode, String ip, String userAgent) {
         LoginLog loginLog = new LoginLog();
         loginLog.setUserCode(userCode);
         loginLog.setIp(ip);
+        loginLog.setUserAgent(userAgent);
         loginLog.setLoginDate(new Date());
         insert(loginLog);
         return true;

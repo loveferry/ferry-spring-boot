@@ -8,6 +8,7 @@ public interface LoginLogService extends BaseService<LoginLog> {
      * 插入登陆数据
      * @param userCode 登陆人的code
      * @param ip 登陆人的请求url
+     * @param userAgent 用户代理
      */
-    boolean insertLoginLog(String userCode, String ip);
+    boolean insertLoginLog(String userCode, String ip, String userAgent);
 }

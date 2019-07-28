@@ -1,18 +1,11 @@
 package cn.org.ferry.system.exception;
 
-public class TokenException extends RuntimeException {
-    private int errorCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-    public TokenException(int errorCode, String errorMessage){
+@ResponseStatus(code = HttpStatus.UNAUTHORIZED, reason = "TOKEN ERROR")
+public class TokenException extends BaseException {
+    public TokenException(String errorMessage){
         super(errorMessage);
-        this.errorCode = errorCode;
-    }
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
     }
 }

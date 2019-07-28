@@ -4,15 +4,15 @@ import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.mapper.SysUserMapper;
 import cn.org.ferry.sys.service.LoginLogService;
 import cn.org.ferry.sys.service.SysUserService;
+import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.utils.TokenUtils;
+import cn.org.ferry.system.utils.NetWorkUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -21,6 +21,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     private SysUserMapper sysUserMapper;
     @Autowired
     private LoginLogService loginLogService;
+    @Autowired
+    private TokenTactics tokenTactics;
 
     @Override
     public SysUser queryByUserCode(String userCode) {
@@ -43,8 +45,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             responseData.setMessage("用户不存在或密码输入错误!");
             return responseData;
         }
-        String token = TokenUtils.generateToken(sysUser.getUserCode(), sysUser.getPassword());
-        loginLogService.insertLoginLog(sysUser.getUserCode(), request.getRequestURL().toString());
+        String token = TokenTactics.generateToken(sysUser.getUserCode(), sysUser.getPassword());
+        String ip = NetWorkUtils.getIpAddress(request);
+        loginLogService.insertLoginLog(sysUser.getUserCode(), ip, NetWorkUtils.getUserAgent(request));
+        tokenTactics.setTokenToRedisWithPeriodOfValidity(ip+"_"+sysUser.getUserCode(), token);
         responseData.setToken(token);
         responseData.setMessage("登陆成功!");
         return responseData;
