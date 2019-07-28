@@ -39,6 +39,7 @@ public class CORSFilterConfiguration {
         config.addAllowedHeader("If-Modified-Since");
         config.addAllowedHeader("Cache-Control");
         config.addAllowedHeader("Content-Type");
+        config.addAllowedHeader("_token");
         // 设置请求方式的允许范围
         config.addAllowedMethod(HttpMethod.GET);
         config.addAllowedMethod(HttpMethod.POST);
