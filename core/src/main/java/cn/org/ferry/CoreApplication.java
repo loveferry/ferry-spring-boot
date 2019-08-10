@@ -1,8 +1,10 @@
 package cn.org.ferry;
 
+import cn.org.ferry.system.utils.PropertiesUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @MapperScan("cn.org.ferry.**.mapper")
@@ -13,8 +15,8 @@ public class CoreApplication {
 		SpringApplication springApplication = new SpringApplication(CoreApplication.class);
 		// 关闭 logo 显示效果
 //        springApplication.setBannerMode(Banner.Mode.OFF);
-		springApplication.run(args);
+		ConfigurableApplicationContext applicationContext = springApplication.run(args);
+		PropertiesUtils.init(applicationContext);
 	}
-
 }
 
