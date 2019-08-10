@@ -62,4 +62,8 @@ spring:
 ferry:
   upload: /u01/ferry/upload/
   cors:
-    allowedOrigins:
+    allowedOrigins: "*"
+    allowedHeaders: DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,If-Modified-Since,Cache-Control,Content-Type,_token
+    allowedMethod: GET,POST,OPTIONS,DELETE,PUT
+    maxAge: 1800
+    url: "/api/**"
