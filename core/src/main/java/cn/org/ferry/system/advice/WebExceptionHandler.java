@@ -2,6 +2,7 @@ package cn.org.ferry.system.advice;
 
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.exception.BaseException;
+import cn.org.ferry.system.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,4 +33,17 @@ public class WebExceptionHandler {
         responseData.setMessage(e.getMessage());
         return responseData;
     }
+
+    @ExceptionHandler
+    @ResponseBody
+    public ResponseData handlerException(CommonException e){
+        log.error("have an error {}", e);
+        ResponseData responseData = new ResponseData();
+        responseData.setSuccess(false);
+        responseData.setCode(e.getCode());
+        responseData.setMessage(e.getMessage());
+        return responseData;
+    }
+
+
 }

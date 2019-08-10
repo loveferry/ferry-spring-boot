@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.sys.mapper.SysGenerateTableMapper">
+    <resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysGenerateTable">
+        <id column="generate_id" property="generateId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <result column="generate_table" property="generateTable" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="controller_flag" property="controllerFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="service_flag" property="serviceFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="service_impl_flag" property="serviceImplFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="mapper_java_flag" property="mapperJavaFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="mapper_xml_flag" property="mapperXmlFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="entity_flag" property="entityFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+    
+        <result column="table_name" property="tableName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="table_comment" property="tableComment" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="column_name" property="columnName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="data_type" property="dataType" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="character_maximum_length" property="characterMaximumLength" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <result column="column_type" property="columnType" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="column_key" property="columnKey" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="column_comment" property="columnComment" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="nullable" property="nullable" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <select id="queryTablesLikeTableComment" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            table_name,
+            table_comment
+        from
+            information_schema.TABLES
+        where
+            table_schema = (select database())
+            and table_name not like 'changelog_%'
+        <if test="tableName != null">
+            <bind name="tableName" value="'%'+tableName+'%'"/>
+            and (table_name like #{tableName} or table_comment like #{tableName})
+        </if>
+    </select>
+    
+    <select id="queryTablesByTableComment" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            table_name,
+            table_comment
+        from
+            information_schema.TABLES
+        where
+            table_schema = (select database())
+            and table_name not like 'changelog_%'
+        <if test="tableName != null">
+            and table_name = #{tableName}
+        </if>
+    </select>
+    
+    <select id="queryTableColumnsByTableName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+           table_name,
+           column_name,
+           data_type,
+           character_maximum_length,
+           column_type,
+           column_key,
+           column_comment,
+           is_nullable as nullable
+    FROM
+         information_schema.COLUMNS
+    WHERE
+        TABLE_SCHEMA = (SELECT DATABASE())
+      AND TABLE_NAME = #{tableName}
+      and column_name not in ('created_by', 'creation_date', 'last_updated_by', 'last_update_date')
+    order by ordinal_position
+    </select>
+    
+</mapper>

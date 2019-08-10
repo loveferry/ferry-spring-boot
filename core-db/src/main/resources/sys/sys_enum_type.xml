@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+	
+	<!--一个<changeSet>标签对应一个变更集，由id、name、以及changelog的文件路径组成唯一标识。
+	changelog在执行的时候并不是按照id的顺序，而是按照changeSet在changelog中出现的顺序。
+	LiquiBase在执行changelog时，会在数据库中插入两张表：DATABASECHANGELOG和DATABASECHANGELOGLOCK，分别记录changelog的执行日志和锁日志。
+	LiquiBase在执行changelog中的changeSet时，会首先查看DATABASECHANGELOG表，如果已经执行过，则会跳过（除非changeSet的runAlways属性为true，后面会介绍），
+	如果没有执行过，则执行并记录changelog日志；changelog中的一个changeSet对应一个事务，在changeSet执行完后commit，如果出现错误则rollback；
+	<changeSet>标签的主要属性有：
+	runAlways：即使已经执行过，仍然每次都执行；注意: 由于DATABASECHANGELOG表中还记录了changeSet的MD5校验值MD5SUM，
+	如果changeSet的id和name没变，而内容变了，则由于MD5值变了，即使runAlways的值为True，执行也是失败的，会报错。这种情况应该使用runOnChange属性。
+	runOnChange：第一次的时候执行以及当changeSet的内容发生变化时执行。不受MD5校验值的约束。
+	runInTransaction：是否作为一个事务执行，默认为true。设置为false时需要小心：如果执行过程中出错了则不会rollback，数据库很可能处于不一致的状态；
+	<changeSet>下有一个重要的子标签<rollback>，即定义回滚的SQL语句。对于create table, rename column和add column等，LiquiBase会自动生成对应的rollback语句，而对于drop table、insert data等则需要显示定义rollback语句。-->
+	
+	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
+	
+	<changeSet id="create_sys_enum_type" author="ferry">
+		<createTable tableName="sys_enum_type" remarks="枚举类型定义表">
+			<column name="type_id" type="BIGINT" autoIncrement="true" remarks="pk">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="sys_enum_type_pk_eti"/>
+			</column>
+			<column name="type_code" type="VARCHAR(1000)" remarks="类型代码">
+				<constraints nullable="false"/>
+			</column>
+			<column name="java_type" type="VARCHAR(200)" remarks="Java类型(类全限定名)"/>
+			<column name="column_type" type="VARCHAR(200)" remarks="mysql类型"/>
+			<column name="type_handler" type="VARCHAR(200)" remarks="类型转化器(类全限定名)"/>
+			<column name="created_by" type="BIGINT" defaultValue="-1" />
+			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
+			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="init_sys_enum_type_data" author="ferry">
+		<insert tableName="sys_enum_type">
+			<column name="type_code" value="SEX"/>
+			<column name="java_type" value="cn.org.ferry.system.sysenum.Sex"/>
+			<column name="column_type" value="enum('MALE','FEMALE')"/>
+			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.SexHandler"/>
+		</insert>
+		<insert tableName="sys_enum_type">
+			<column name="type_code" value="if_or_not_flag"/>
+			<column name="java_type" value="cn.org.ferry.system.sysenum.IfOrNotFlag"/>
+			<column name="column_type" value="enum('Y','N')"/>
+			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+		</insert>
+		<insert tableName="sys_enum_type">
+			<column name="type_code" value="enable_flag"/>
+			<column name="java_type" value="cn.org.ferry.system.sysenum.EnableFlag"/>
+			<column name="column_type" value="enum('Y','N')"/>
+			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>

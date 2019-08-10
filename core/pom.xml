@@ -80,7 +80,13 @@
 			<artifactId>java-jwt</artifactId>
 			<version>3.8.0</version>
 		</dependency>
-	
+		
+		<!--Google guava工具类-->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>28.0-jre</version>
+		</dependency>
 	
 	</dependencies>
 	

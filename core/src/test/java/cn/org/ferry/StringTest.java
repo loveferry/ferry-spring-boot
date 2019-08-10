@@ -2,6 +2,7 @@ package cn.org.ferry;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -43,6 +44,13 @@ public class StringTest {
         first_name = first_name.replace('\n',',');
         first_name = first_name.replace(",","");
         System.out.println(first_name);
+
+    }
+
+    @Test
+    public void cbdsjhcs(){
+        StringBuilder stringBuilder = new StringBuilder();
+        System.out.println(stringBuilder.toString());
 
     }
 
@@ -131,5 +139,22 @@ public class StringTest {
         }
         System.out.println(matcher.replaceAll("?"));
         System.out.println(matcher);
+    }
+
+    @Test
+    public void csbcj(){
+        String msg = "cn.org.ferry.system.mybatis.handler.SexHandler";
+        int a = msg.lastIndexOf(".");
+        System.out.println(msg.substring(0, a));
+        System.out.println(msg.substring(a));
+
+    }
+
+    @Test
+    public void csjbc(){
+        Class<BigDecimal> cls = BigDecimal.class;
+        System.out.println(cls.getSimpleName());
+        System.out.println(cls.getName());
+
     }
 }
