@@ -48,7 +48,7 @@ spring:
     timeout: 5000ms
     password: redis
     client-name: ferry
-    token-period: 60
+    token-period: 900
     jedis:
       pool:
         max-active: 50
