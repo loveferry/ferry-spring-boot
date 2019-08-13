@@ -75,6 +75,8 @@ public class SysGenerateTableController {
             responseData.setMessage("控制器生成标志为\"是\"，但未给定控制器名称!");
             return responseData;
         }
-        return sysGenerateTableService.generate(sysGenerateTable);
+        sysGenerateTableService.generate(sysGenerateTable);
+        responseData.setSuccess(true);
+        return responseData;
     }
 }

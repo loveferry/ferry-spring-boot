@@ -67,7 +67,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
             String key = NetWorkUtils.getIpAddress(request)+"_"+user.getUserCode();
             String token = valueOperations.get(key);
-            if(StringUtils.isNotEmpty(token) && StringUtils.equals(_token, token)){
+            if(StringUtils.equals(_token, token)){
                 token = tokenTactics.generateToken(user.getUserCode(), user.getPassword());
                 tokenTactics.setTokenToRedisWithPeriodOfValidity(key, token);
                 response.setStatus(TokenException.class.getAnnotation(ResponseStatus.class).code().value());
