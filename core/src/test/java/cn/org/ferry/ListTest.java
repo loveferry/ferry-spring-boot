@@ -33,7 +33,12 @@ public class ListTest {
 
     @Test
     public void cjsdv(){
-        System.out.println(new ArrayListTest().count);
-
+        List<U> list = new ArrayList<>(10);
+        list.add(new U(1, "ferry"));
+        list.add(new U(2, "joyce"));
+        list.add(new U(3, "lucy"));
+        list.add(new U(1, "honey"));
+        list.forEach(item -> item.setId(10));
+        System.out.println(list);
     }
 }

@@ -87,6 +87,13 @@
 			<artifactId>guava</artifactId>
 			<version>28.0-jre</version>
 		</dependency>
+		
+		<!--docx4j-->
+		<dependency>
+			<groupId>org.docx4j</groupId>
+			<artifactId>docx4j</artifactId>
+			<version>6.1.2</version>
+		</dependency>
 	
 	</dependencies>
 	
