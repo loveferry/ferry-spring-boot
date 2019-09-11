@@ -1,5 +1,6 @@
 package cn.org.ferry.doc.utils.docx4j;
 
+import cn.org.ferry.system.annotations.NotNull;
 import cn.org.ferry.system.exception.FileException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.org.apache.poi.util.IOUtils;
 import org.docx4j.wml.CTBookmark;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
@@ -34,9 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * <p>
- * 使用 docx4j 生成文档的工具类
- * </p>
+ * <p>使用 docx4j 生成文档的工具类
  *
  * @author ferry ferry_sy@163.com
  * created by 2019/08/17 20:02
@@ -106,46 +106,68 @@ public final class Docx4jGenerateUtil {
     /**
      * 根据模版替换标签生成word文档
      * @param bookMarkMap 书签集合，key为书签名，value为书签对应要替换的值
-     * @param sourcePath 模版路径
+     * @param bookMarkTypeMap 书签类型集合，key为书签名，value为书签对应要类型
+     * @param templatePath 模版路径
      * @param targetPath 生成文档的目标路径
      * @throws FileException 统一抛出此异常
      */
-    public static void generateDocxWithReplaceBookMark(Map<String, Object> bookMarkMap, String sourcePath, String targetPath) throws FileException {
-        generateDocxWithReplaceBookMark(bookMarkMap, sourcePath, targetPath, false);
+    public static void generateDocxWithReplaceBookMark(@NotNull Map<String, Object> bookMarkMap,
+                                                       @NotNull Map<String, BookMarkType> bookMarkTypeMap,
+                                                       @NotNull String templatePath,
+                                                       @NotNull String targetPath) throws FileException {
+        generateDocxWithReplaceBookMark(bookMarkMap, bookMarkTypeMap, templatePath, targetPath, false);
     }
 
     /**
      * 根据模版替换标签生成word文档
      * @param bookMarkMap 书签集合，key为书签名，value为书签对应要替换的值
-     * @param sourcePath 模版路径
+     * @param bookMarkTypeMap 书签类型集合，key为书签名，value为书签对应要类型
+     * @param templatePath 模版路径
      * @param targetPath 生成文档的目标路径
      * @param isReplaceTarget 目标路径存在时是否替换
      * @throws FileException 统一抛出此异常
      */
-    public static void generateDocxWithReplaceBookMark(Map<String, Object> bookMarkMap, String sourcePath, String targetPath, boolean isReplaceTarget) throws FileException {
-        generateDocxWithReplaceBookMark(bookMarkMap, new File(sourcePath), new File(targetPath), isReplaceTarget);
+    public static void generateDocxWithReplaceBookMark(@NotNull Map<String, Object> bookMarkMap,
+                                                       @NotNull Map<String, BookMarkType> bookMarkTypeMap,
+                                                       @NotNull String templatePath,
+                                                       @NotNull String targetPath, boolean isReplaceTarget) throws FileException {
+        Objects.requireNonNull(templatePath, "模版路径不能为空");
+        Objects.requireNonNull(targetPath, "目标路径不能为空");
+
+        generateDocxWithReplaceBookMark(bookMarkMap, bookMarkTypeMap, new File(templatePath), new File(targetPath), isReplaceTarget);
     }
 
     /**
      * 根据模版替换标签生成word文档
      * @param bookMarkMap 书签集合，key为书签名，value为书签对应要替换的值
-     * @param sourceFile 模版文件
+     * @param bookMarkTypeMap 书签类型集合，key为书签名，value为书签对应要类型
+     * @param templateFile 模版文件
      * @param targetFile 生成文档的目标文件
      * @throws FileException 统一抛出此异常
      */
-    public static void generateDocxWithReplaceBookMark(Map<String, Object> bookMarkMap, File sourceFile, File targetFile) throws FileException {
-        generateDocxWithReplaceBookMark(bookMarkMap, sourceFile, targetFile, false);
+    public static void generateDocxWithReplaceBookMark(@NotNull Map<String, Object> bookMarkMap,
+                                                       @NotNull Map<String, BookMarkType> bookMarkTypeMap,
+                                                       @NotNull File templateFile,
+                                                       @NotNull File targetFile) throws FileException {
+        generateDocxWithReplaceBookMark(bookMarkMap, bookMarkTypeMap, templateFile, targetFile, false);
     }
 
     /**
      * 根据模版替换标签生成word文档
      * @param bookMarkMap 书签集合，key为书签名，value为书签对应要替换的值
-     * @param sourceFile 模版文件
+     * @param bookMarkTypeMap 书签类型集合，key为书签名，value为书签对应要类型
+     * @param templateFile 模版文件
      * @param targetFile 生成文档的目标文件
      * @param isReplaceTarget 目标文件存在时是否替换
      * @throws FileException 统一抛出此异常
      */
-    public static void generateDocxWithReplaceBookMark(Map<String, Object> bookMarkMap, File sourceFile, File targetFile, boolean isReplaceTarget) throws FileException {
+    public static void generateDocxWithReplaceBookMark(@NotNull Map<String, Object> bookMarkMap,
+                                                       @NotNull Map<String, BookMarkType> bookMarkTypeMap,
+                                                       @NotNull File templateFile,
+                                                       @NotNull File targetFile, boolean isReplaceTarget) throws FileException {
+        Objects.requireNonNull(templateFile, "模版文件不能为空");
+        Objects.requireNonNull(targetFile, "目标文件不能为空");
+
         if(targetFile.exists()){
             if(isReplaceTarget){
                 if(!targetFile.delete()){
@@ -162,15 +184,15 @@ public final class Docx4jGenerateUtil {
                 throw new FileException("file is already exists: " +targetFile.getAbsolutePath());
             }
         }
-        if(sourceFile.isDirectory()){
-            throw new FileException("required file but found directory: " + sourceFile.getAbsolutePath());
+        if(templateFile.isDirectory()){
+            throw new FileException("required file but found directory: " + templateFile.getAbsolutePath());
         }
         if(targetFile.isDirectory()){
             throw new FileException("required file but found directory: " + targetFile.getAbsolutePath());
         }
-        try (InputStream is = new FileInputStream(sourceFile);
+        try (InputStream is = new FileInputStream(templateFile);
              OutputStream os = new FileOutputStream(targetFile)){
-            generateDocxWithReplaceBookMark(bookMarkMap, is, os);
+            generateDocxWithReplaceBookMark(bookMarkMap, bookMarkTypeMap, is, os);
             os.flush();
         } catch (IOException e) {
             FileException fileException = new FileException("can not save to file");
@@ -182,28 +204,36 @@ public final class Docx4jGenerateUtil {
     /**
      * 根据模版替换标签生成word文档
      * @param bookMarkMap 书签集合，key为书签名，value为书签对应要替换的值
+     * @param bookMarkTypeMap 书签类型集合，key为书签名，value为书签对应要类型
      * @param is 模板输入流
      * @param os 文档输出流
      * @throws FileException 统一抛出此异常
      */
-    public static void generateDocxWithReplaceBookMark(Map<String, Object> bookMarkMap, InputStream is, OutputStream os) throws FileException {
-        if(null == bookMarkMap || bookMarkMap.size() == 0){
-            throw new NullPointerException();
-        }
-        Objects.requireNonNull(is);
-        Objects.requireNonNull(os);
+    public static void generateDocxWithReplaceBookMark(@NotNull Map<String, Object> bookMarkMap,
+                                                       @NotNull Map<String, BookMarkType> bookMarkTypeMap,
+                                                       @NotNull InputStream is,
+                                                       @NotNull OutputStream os) throws FileException {
+        Objects.requireNonNull(bookMarkMap, "书签-替换值值，键值对不能为空");
+        Objects.requireNonNull(bookMarkTypeMap, "书签-类型，键值对不能为空");
+        Objects.requireNonNull(is, "模版输入流不能为空");
+        Objects.requireNonNull(os, "目标输出流不能为空");
+
+        logger.info("\n\n\nreplace bookmark begin...");
 
         WordprocessingMLPackage mlPackage;
         try {
+            logger.info("load inputStream");
             mlPackage = WordprocessingMLPackage.load(is);
         } catch (Docx4JException e) {
             FileException fileException = new FileException("load .docx file error.");
             fileException.initCause(e);
             throw fileException;
         }
+        logger.info("get word mainDocumentPart");
         MainDocumentPart mainDocumentPart = mlPackage.getMainDocumentPart();
         List<Object> paragraphs;
         try {
+            logger.info("get word all paragraphs");
             paragraphs = mainDocumentPart.getContents().getBody().getContent();
         } catch (Docx4JException e) {
             FileException fileException = new FileException("get docx contents error");
@@ -216,7 +246,7 @@ public final class Docx4jGenerateUtil {
         // 提取书签并获取书签的游标
         RangeFinder rangeFinder = new RangeFinder("CTBookmark", "CTMarkupRange");
         new TraversalUtil(paragraphs, rangeFinder);
-
+        logger.info("the bookmark count: {}", rangeFinder.getStarts().size());
         for (int i = 0; i < rangeFinder.getStarts().size(); i++) {
             CTBookmark bookmark = rangeFinder.getStarts().get(i);
             for(Map.Entry<String, Object> entry : bookMarkMap.entrySet()){
@@ -234,8 +264,11 @@ public final class Docx4jGenerateUtil {
                             rangeEnd = j;
                         }
                     }
+                    logger.info("bookmark name is {}, replace value is {}, replace type is {}", bookmark.getName(),
+                            entry.getValue(), bookMarkTypeMap.get(entry.getKey()).getDescription());
                     // 书签替换
-                    BookMarkReplaceUtil.replace(bookmark, rangeStart, rangeEnd, entry.getValue());
+                    BookMarkReplaceUtil.replace(mlPackage, bookmark, rangeStart, rangeEnd, entry.getValue(), bookMarkTypeMap.get(entry.getKey()));
+                    logger.info("remove the bookmark that has been replaced");
                     // 移除书签
                     bookMarkParentList.remove(rangeEnd);
                     bookMarkParentList.remove(rangeStart);
@@ -245,22 +278,31 @@ public final class Docx4jGenerateUtil {
         }
 
         try {
+            logger.info("save to outputStream");
             mlPackage.save(os);
         } catch (Docx4JException e) {
             FileException fileException = new FileException("can not save to file");
             fileException.initCause(e);
             throw fileException;
         }
+        logger.info("replace bookmark end...\n\n\n");
     }
 
-    public static void main(String[] args) throws FileException {
-//        generateDocx();
+    public static void main(String[] args) throws Exception {
+//        File f = generateDocx();
+//        OutputStream os = new FileOutputStream("/Users/ferry/Downloads/test.pdf");
+//        Docx4J.toPDF(WordprocessingMLPackage.load(new File("/Users/ferry/Downloads/ferry2.docx")), os);
         Map<String, Object> bookMark = new HashMap<>();
         bookMark.put("tenant", "广州越秀");
         bookMark.put("contract_number", "YX20190901");
+        bookMark.put("image", IOUtils.toByteArray(new FileInputStream("/Users/ferry/Pictures/ferry.JPG")));
+        Map<String, BookMarkType> bookMarkType = new HashMap<>();
+        bookMarkType.put("tenant", BookMarkType.TEXT);
+        bookMarkType.put("contract_number", BookMarkType.TEXT);
+        bookMarkType.put("image", BookMarkType.IMAGE);
         String sourcePath = "/Users/ferry/Downloads/合同履行完毕及所有权转移确认书-YX.docx";
         String targetPath = "/Users/ferry/Downloads/合同履行完毕及所有权转移确认书-YX2.docx";
-        generateDocxWithReplaceBookMark(bookMark, sourcePath, targetPath, true);
+        generateDocxWithReplaceBookMark(bookMark, bookMarkType, sourcePath, targetPath, true);
     }
 }
 

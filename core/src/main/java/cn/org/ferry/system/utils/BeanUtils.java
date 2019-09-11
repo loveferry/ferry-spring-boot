@@ -1,22 +1,36 @@
 package cn.org.ferry.system.utils;
 
 import cn.org.ferry.system.dto.BaseDTO;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 实体类的工具类
  */
 
-@Slf4j
-public class BeanUtils {
+public final class BeanUtils {
+    public static final Integer INTEGER_0 = 0;
+    public static final Long LONG_0 = 0L;
+    public static final Double DOUBLE_0 = 0D;
+    public static final String EMPTY = "";
+
+    private static final Logger logger = LoggerFactory.getLogger(BeanUtils.class);
+
+    private BeanUtils(){}
+
     public static <T extends BaseDTO> List<Map<String, Object>> transfer(List<T> list){
-        if(null == list || list.size() == 0){
+        if(CollectionUtils.isEmpty(list)){
             return new ArrayList<>(0);
         }
         List<Map<String, Object>> resultList = new ArrayList<>(list.size());
@@ -25,7 +39,7 @@ public class BeanUtils {
                 Class cls = dto.getClass();
                 Field[] fields = getFields(cls);
                 if(null == fields || fields.length == 0){
-                    log.error("该实体类没有任何属性.");
+                    logger.error("该实体类没有任何属性.");
                     return new ArrayList<>(0);
                 }
                 Map<String, Object> map = new HashMap<>(fields.length);
@@ -36,7 +50,7 @@ public class BeanUtils {
                         method = cls.getMethod(getMethodName(fieldName), null);
                         map.put(fieldName, method.invoke(dto,null));
                     } catch (NoSuchMethodException e) {
-                        log.info("类 {} 没有属性 {} 的 get 方法", cls.getName(), fieldName);
+                        logger.info("类 {} 没有属性 {} 的 get 方法", cls.getName(), fieldName);
                     }
                 }
                 resultList.add(map);
@@ -101,7 +115,7 @@ public class BeanUtils {
             return false;
         }
         try{
-            long l = Long.parseLong(o.toString());
+            Long.valueOf(String.valueOf(o));
             return true;
         }catch (NumberFormatException e){
             return false;
@@ -113,7 +127,7 @@ public class BeanUtils {
             return false;
         }
         try{
-            double l = Double.parseDouble(o.toString());
+            Double.valueOf(String.valueOf(o));
             return true;
         }catch (NumberFormatException e){
             return false;
@@ -128,5 +142,9 @@ public class BeanUtils {
             return true;
         }
         return false;
+    }
+
+    public static <T> T ifnull(T t, T defaultValue){
+        return t == null ? defaultValue : t;
     }
 }

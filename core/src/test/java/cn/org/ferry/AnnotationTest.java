@@ -1,5 +1,6 @@
 package cn.org.ferry;
 
+import cn.org.ferry.system.annotations.NotNull;
 import org.junit.Test;
 
 import java.lang.annotation.*;
@@ -99,6 +100,17 @@ public class AnnotationTest {
         for (Path p : ps) {
             System.out.println(p.value());
         }
+    }
+
+
+    private String run(@NotNull String value){
+        return value;
+    }
+
+    @Test
+    public void dhsbuh(){
+        System.out.println(run(null));
+
     }
 
 }

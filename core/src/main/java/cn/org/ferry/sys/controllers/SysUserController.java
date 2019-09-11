@@ -2,7 +2,7 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
-import cn.org.ferry.system.annotation.LoginPass;
+import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.dto.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

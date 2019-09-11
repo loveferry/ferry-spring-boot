@@ -1,6 +1,6 @@
 package cn.org.ferry.system.controllers;
 
-import cn.org.ferry.system.annotation.LoginPass;
+import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.dto.ResponseData;
 import org.apache.commons.lang3.StringUtils;

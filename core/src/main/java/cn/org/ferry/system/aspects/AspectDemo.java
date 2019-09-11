@@ -1,4 +1,4 @@
-package cn.org.ferry.system.aspect;
+package cn.org.ferry.system.aspects;
 
 import cn.org.ferry.sys.dto.ChinesePeople;
 import org.aspectj.lang.annotation.*;

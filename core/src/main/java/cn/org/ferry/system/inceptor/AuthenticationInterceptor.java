@@ -2,7 +2,7 @@ package cn.org.ferry.system.inceptor;
 
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
-import cn.org.ferry.system.annotation.LoginPass;
+import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.exception.TokenException;
 import cn.org.ferry.system.utils.NetWorkUtils;

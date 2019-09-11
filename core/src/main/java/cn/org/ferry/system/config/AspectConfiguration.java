@@ -1,6 +1,6 @@
 package cn.org.ferry.system.config;
 
-import cn.org.ferry.system.aspect.AspectDemo;
+import cn.org.ferry.system.aspects.AspectDemo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
