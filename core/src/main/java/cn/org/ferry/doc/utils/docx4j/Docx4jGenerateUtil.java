@@ -12,8 +12,8 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-import org.docx4j.org.apache.poi.util.IOUtils;
 import org.docx4j.wml.CTBookmark;
+import org.docx4j.wml.CTMarkupRange;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
 import org.docx4j.wml.R;
@@ -30,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -246,32 +245,38 @@ public final class Docx4jGenerateUtil {
         // 提取书签并获取书签的游标
         RangeFinder rangeFinder = new RangeFinder("CTBookmark", "CTMarkupRange");
         new TraversalUtil(paragraphs, rangeFinder);
-        logger.info("the bookmark count: {}", rangeFinder.getStarts().size());
+        logger.info("the bookmark count: {}", rangeFinder.getStarts().size()-1);
         for (int i = 0; i < rangeFinder.getStarts().size(); i++) {
             CTBookmark bookmark = rangeFinder.getStarts().get(i);
             for(Map.Entry<String, Object> entry : bookMarkMap.entrySet()){
                 if(StringUtils.equals(entry.getKey(), bookmark.getName())){
-                    // 获取书签的父级标签
-                    List<Object> bookMarkParentList = TraversalUtil.getChildrenImpl(bookmark.getParent());
-                    int rangeStart = -1;
-                    int rangeEnd = -1;
-                    for (int j = 0; j < bookMarkParentList.size(); j++) {
-                        Object o = XmlUtils.unwrap(bookMarkParentList.get(j));
-                        if(bookmark.equals(o)){
-                            rangeStart = j;
-                        }
-                        if(rangeFinder.getEnds().get(i).equals(o)){
-                            rangeEnd = j;
-                        }
-                    }
                     logger.info("bookmark name is {}, replace value is {}, replace type is {}", bookmark.getName(),
                             entry.getValue(), bookMarkTypeMap.get(entry.getKey()).getDescription());
                     // 书签替换
-                    BookMarkReplaceUtil.replace(mlPackage, bookmark, rangeStart, rangeEnd, entry.getValue(), bookMarkTypeMap.get(entry.getKey()));
+                    BookMarkReplaceUtil.replace(mlPackage, bookmark, entry.getValue(), bookMarkTypeMap.get(entry.getKey()));
                     logger.info("remove the bookmark that has been replaced");
                     // 移除书签
-                    bookMarkParentList.remove(rangeEnd);
-                    bookMarkParentList.remove(rangeStart);
+                    for (CTMarkupRange end : rangeFinder.getEnds()) {
+                        if(end.getId().equals(bookmark.getId())){
+                            // 获取书签的父级标签
+                            List<Object> markupRangeList = TraversalUtil.getChildrenImpl(end.getParent());
+                            int index = -1;
+                            for (Object o : markupRangeList) {
+                                index++;
+                                if(XmlUtils.unwrap(o).equals(end)) break;
+                            }
+                            markupRangeList.remove(index);
+                            break;
+                        }
+                    }
+                    // 获取书签的父级标签
+                    List<Object> bookMarkList = TraversalUtil.getChildrenImpl(bookmark.getParent());
+                    int index = -1;
+                    for (Object o : bookMarkList) {
+                        index++;
+                        if(XmlUtils.unwrap(o).equals(bookmark)) break;
+                    }
+                    bookMarkList.remove(index);
                     break;
                 }
             }
@@ -286,23 +291,6 @@ public final class Docx4jGenerateUtil {
             throw fileException;
         }
         logger.info("replace bookmark end...\n\n\n");
-    }
-
-    public static void main(String[] args) throws Exception {
-//        File f = generateDocx();
-//        OutputStream os = new FileOutputStream("/Users/ferry/Downloads/test.pdf");
-//        Docx4J.toPDF(WordprocessingMLPackage.load(new File("/Users/ferry/Downloads/ferry2.docx")), os);
-        Map<String, Object> bookMark = new HashMap<>();
-        bookMark.put("tenant", "广州越秀");
-        bookMark.put("contract_number", "YX20190901");
-        bookMark.put("image", IOUtils.toByteArray(new FileInputStream("/Users/ferry/Pictures/ferry.JPG")));
-        Map<String, BookMarkType> bookMarkType = new HashMap<>();
-        bookMarkType.put("tenant", BookMarkType.TEXT);
-        bookMarkType.put("contract_number", BookMarkType.TEXT);
-        bookMarkType.put("image", BookMarkType.IMAGE);
-        String sourcePath = "/Users/ferry/Downloads/合同履行完毕及所有权转移确认书-YX.docx";
-        String targetPath = "/Users/ferry/Downloads/合同履行完毕及所有权转移确认书-YX2.docx";
-        generateDocxWithReplaceBookMark(bookMark, bookMarkType, sourcePath, targetPath, true);
     }
 }
 
