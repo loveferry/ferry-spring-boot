@@ -5,7 +5,16 @@
 		<id column="template_id" property="templateId" jdbcType="BIGINT" javaType="java.lang.Long"/>
 		<result column="template_code" property="templateCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="template_name" property="templateName" jdbcType="VARCHAR" javaType="java.lang.String"/>
-		<result column="number_format_id" property="numberFormatId" jdbcType="BIGINT" javaType="java.lang.Long"/>
-		<result column="date_format_id" property="dateFormatId" jdbcType="BIGINT" javaType="java.lang.Long"/>
 	</resultMap>
+	
+	<select id="queryByTemplateCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+			dt.template_id,
+			dt.template_code,
+			dt.template_name
+		from
+			doc_template dt
+		where
+			dt.template_code = #{templateCode}
+	</select>
 </mapper>

@@ -1,5 +1,7 @@
-package cn.org.ferry.doc.utils.docx4j;
+package cn.org.ferry.doc.utils;
 
+import cn.org.ferry.doc.dto.BookMarkType;
+import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.annotations.NotNull;
 import cn.org.ferry.system.exception.FileException;
 import org.apache.commons.collections4.CollectionUtils;
@@ -168,21 +170,13 @@ public final class Docx4jGenerateUtil {
         Objects.requireNonNull(targetFile, "目标文件不能为空");
 
         if(targetFile.exists()){
-            if(isReplaceTarget){
-                if(!targetFile.delete()){
-                    throw new FileException("file delete failure: " + targetFile.getAbsolutePath());
-                }
-                try {
-                    targetFile.createNewFile();
-                } catch (IOException e) {
-                    FileException fileException = new FileException("can not create file: " + targetFile.getAbsolutePath());
-                    fileException.initCause(e);
-                    throw fileException;
-                }
+            if(isReplaceTarget && !targetFile.delete()){
+                throw new FileException("file delete failure: " + targetFile.getAbsolutePath());
             }else{
                 throw new FileException("file is already exists: " +targetFile.getAbsolutePath());
             }
         }
+        FileUtils.createFile(targetFile.getAbsolutePath());
         if(templateFile.isDirectory()){
             throw new FileException("required file but found directory: " + templateFile.getAbsolutePath());
         }

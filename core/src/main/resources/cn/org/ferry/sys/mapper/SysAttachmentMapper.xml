@@ -7,4 +7,11 @@
         <result column="source_key" property="sourceKey" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </resultMap>
 
+    <select id="queryBySourceTypeAndSourceKey" resultMap="BaseResultMap">
+        select sa.attachment_id,sa.source_type,sa.source_key from sys_attachment sa where sa.source_type = #{sourceType} and sa.source_key = #{sourceKey}
+    </select>
+    
+    <select id="queryBySourceType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sa.attachment_id,sa.source_type,sa.source_key from sys_attachment sa where sa.source_type = #{sourceType}
+    </select>
 </mapper>

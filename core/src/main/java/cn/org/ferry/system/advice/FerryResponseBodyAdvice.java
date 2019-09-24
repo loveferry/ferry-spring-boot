@@ -44,9 +44,6 @@ public class FerryResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         if(null == responseData.getCode()){
             responseData.setCode(((ServletServerHttpResponse) serverHttpResponse).getServletResponse().getStatus());
         }
-        if(StringUtils.isEmpty(responseData.getMessage())){
-            responseData.setMessage("SUCCESS");
-        }
         if(StringUtils.isEmpty(responseData.getToken())){
 //            responseData.setToken();
         }

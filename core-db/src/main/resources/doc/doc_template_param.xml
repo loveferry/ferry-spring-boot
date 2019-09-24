@@ -26,6 +26,7 @@
 			<column name="template_code" type="VARCHAR(200)" remarks="模版代码">
 				<constraints nullable="false"/>
 			</column>
+			<column name="param_type" type="enum('TEXT','LIST','IMAGE')" defaultValue="TEXT" remarks="参数类型"/>
 			<column name="param_name" type="VARCHAR(200)" remarks="参数名称"/>
 			<column name="book_mark" type="VARCHAR(200)" remarks="书签名称"/>
 			<column name="sql_code" type="VARCHAR(200)" remarks="数据源代码"/>
@@ -50,22 +51,46 @@
 	
 	<changeSet id="init_doc_template_param_data" author="ferry">
 		<insert tableName="doc_template_param">
-			<column name="template_code" value="TEST"/>
-			<column name="param_name" value="ferry的生日"/>
-			<column name="book_mark" value="ferry的生日"/>
+			<column name="template_code" value="FERRY"/>
+			<column name="param_type" value="TEXT"/>
+			<column name="param_name" value="姓名"/>
+			<column name="book_mark" value="姓名"/>
+			<column name="sql_code" value="USER_NAME_ZH"/>
+		</insert>
+		<insert tableName="doc_template_param">
+			<column name="template_code" value="FERRY"/>
+			<column name="param_type" value="TEXT"/>
+			<column name="param_name" value="电话"/>
+			<column name="book_mark" value="电话"/>
+			<column name="sql_code" value="USER_PHONE"/>
+		</insert>
+		<insert tableName="doc_template_param">
+			<column name="template_code" value="FERRY"/>
+			<column name="param_type" value="TEXT"/>
+			<column name="param_name" value="邮箱"/>
+			<column name="book_mark" value="邮箱"/>
+			<column name="sql_code" value="USER_EMAIL"/>
+		</insert>
+		<insert tableName="doc_template_param">
+			<column name="template_code" value="FERRY"/>
+			<column name="param_type" value="TEXT"/>
+			<column name="param_name" value="生日"/>
+			<column name="book_mark" value="生日"/>
 			<column name="sql_code" value="FERRY_BIRTHDAY"/>
 		</insert>
 		<insert tableName="doc_template_param">
-			<column name="template_code" value="TEST"/>
-			<column name="param_name" value="ferry的体重"/>
-			<column name="book_mark" value="ferry的体重"/>
-			<column name="sql_code" value="FERRY_HEIGHT"/>
+			<column name="template_code" value="FERRY"/>
+			<column name="param_type" value="IMAGE"/>
+			<column name="param_name" value="头像"/>
+			<column name="book_mark" value="头像"/>
+			<column name="sql_code" value="FERRY_IMAGE"/>
 		</insert>
 		<insert tableName="doc_template_param">
-			<column name="template_code" value="TEST"/>
-			<column name="param_name" value="ferry的名称"/>
-			<column name="book_mark" value="ferry的名称"/>
-			<column name="sql_code" value="FERRY_NAME_ZH"/>
+			<column name="template_code" value="FERRY"/>
+			<column name="param_type" value="LIST"/>
+			<column name="param_name" value="文件列表"/>
+			<column name="book_mark" value="文件列表"/>
+			<column name="sql_code" value="FILE_LIST"/>
 		</insert>
 	</changeSet>
 </databaseChangeLog>

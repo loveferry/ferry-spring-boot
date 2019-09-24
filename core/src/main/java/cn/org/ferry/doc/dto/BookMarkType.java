@@ -1,4 +1,4 @@
-package cn.org.ferry.doc.utils.docx4j;
+package cn.org.ferry.doc.dto;
 
 /**
  * <p>书签类型枚举类
@@ -9,7 +9,7 @@ package cn.org.ferry.doc.utils.docx4j;
 
 public enum BookMarkType {
     TEXT("文本"),
-    GRID("表格"),
+    LIST("列表"),
     IMAGE("图片");
 
     private String description;

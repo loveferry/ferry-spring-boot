@@ -2,6 +2,7 @@ package cn.org.ferry;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
@@ -51,6 +52,9 @@ public class StringTest {
     public void cbdsjhcs(){
         StringBuilder stringBuilder = new StringBuilder();
         System.out.println(stringBuilder.toString());
+
+        Long[] s = new Long[1000];
+        System.out.println(s.length);
 
     }
 
@@ -122,8 +126,8 @@ public class StringTest {
 
     @Test
     public void vbsdjbvsj(){
-        StringBuilder msg = new StringBuilder("");
-        System.out.println(msg.replace(0,1,"d"));
+        File file = new File("/Users/ferry/workspace/ferry/ferry/core/src/test/java/cn/org/ferry/AnnotationTest.java");
+        System.out.println(file.getAbsolutePath());
 
     }
 

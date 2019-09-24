@@ -60,7 +60,7 @@ spring:
 
 # 自定义的配置属性
 ferry:
-  upload: /u01/ferry/upload/
+  upload: /u01/ferry/upload
   cors:
     allowedOrigins: "*"
     allowedHeaders: DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,If-Modified-Since,Cache-Control,Content-Type,_token

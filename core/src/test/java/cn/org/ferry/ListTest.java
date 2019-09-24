@@ -5,6 +5,7 @@ import lombok.Data;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,5 +41,12 @@ public class ListTest {
         list.add(new U(1, "honey"));
         list.forEach(item -> item.setId(10));
         System.out.println(list);
+    }
+
+    @Test
+    public void dbsjabka(){
+        List list = new ArrayList();
+        System.out.println(list.getClass().getSuperclass().equals(Collection.class));
+
     }
 }

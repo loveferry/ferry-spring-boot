@@ -1,5 +1,6 @@
-package cn.org.ferry.doc.utils.docx4j;
+package cn.org.ferry.doc.utils;
 
+import cn.org.ferry.doc.dto.BookMarkType;
 import cn.org.ferry.system.annotations.NotNull;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.utils.BeanUtils;
@@ -84,7 +85,7 @@ public final class BookMarkReplaceUtil {
                 }
                 replaceImage(mlPackage, bookmark, bs);
                 break;
-            case GRID:
+            case LIST:
                 if(!(value instanceof List)){
                     throw new FileException("表格类型非法，当前类型为："+value.getClass().getName());
                 }

@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashMap;
-
 /**
  * @author ferry ferry_sy@163.com
  * @date 2019/07/14
@@ -24,6 +22,6 @@ public class SysSqlServiceImplTest {
     @Test
     public void executeSqlTest() throws Exception{
         String sql = "select ";
-        sysSqlService.execute(sql, new HashMap<>());
+//        sysSqlService.execute(sql, new HashMap<>());
     }
 }

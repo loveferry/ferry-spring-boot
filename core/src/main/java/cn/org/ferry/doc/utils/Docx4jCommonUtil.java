@@ -1,4 +1,4 @@
-package cn.org.ferry.doc.utils.docx4j;
+package cn.org.ferry.doc.utils;
 
 import cn.org.ferry.system.annotations.NotNull;
 import org.apache.commons.collections4.CollectionUtils;

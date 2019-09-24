@@ -1,8 +1,8 @@
 package cn.org.ferry.doc.controllers;
 
+import cn.org.ferry.doc.dto.BookMarkType;
 import cn.org.ferry.doc.service.DocTemplateService;
-import cn.org.ferry.doc.utils.docx4j.BookMarkType;
-import cn.org.ferry.doc.utils.docx4j.Docx4jGenerateUtil;
+import cn.org.ferry.doc.utils.Docx4jGenerateUtil;
 import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.exception.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +38,18 @@ public class DocTemplateController {
         String templatePath = String.valueOf(map.get("templatePath"));
         String targetPath = String.valueOf(map.get("targetPath"));
         Docx4jGenerateUtil.generateDocxWithReplaceBookMark(bookMarkValue, bookMarkTypeMap, templatePath, targetPath, true);
+    }
+
+    /**
+     * 根据模版生成word
+     */
+    @RequestMapping(value = "/api/doc/generate", method = RequestMethod.POST)
+    @ResponseBody
+    public void generateWord(@RequestBody Map<String, Object> map) {
+        String templateCode = String.valueOf(map.getOrDefault("templateCode", ""));
+        String sourceType = String.valueOf(map.getOrDefault("sourceType", ""));
+        String sourceKey = String.valueOf(map.getOrDefault("sourceKey", ""));
+        Map<String, Object> params = (Map)map.getOrDefault("params", new HashMap<>(0));
+        docTemplateService.generateWord(templateCode, sourceType, sourceKey, params);
     }
 }

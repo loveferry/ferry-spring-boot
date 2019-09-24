@@ -7,6 +7,11 @@
         <result column="source_type" property="sourceType" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="enable_flag" property="enableFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.EnableFlag" typeHandler="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
         <result column="unique_flag" property="uniqueFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="attachment_path" property="attachmentPath" jdbcType="VARCHAR" />
     </resultMap>
 
+    <select id="queryBySourceType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sac.category_id,sac.category_name,sac.source_type,sac.enable_flag,sac.unique_flag,sac.attachment_path
+        from sys_attachment_category sac where sac.source_type = #{sourceType}
+    </select>
 </mapper>

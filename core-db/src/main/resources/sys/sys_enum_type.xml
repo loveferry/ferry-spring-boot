@@ -55,5 +55,11 @@
 			<column name="column_type" value="enum('Y','N')"/>
 			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
 		</insert>
+		<insert tableName="sys_enum_type">
+			<column name="type_code" value="book_mark_type"/>
+			<column name="java_type" value="cn.org.ferry.doc.dto.BookMarkType"/>
+			<column name="column_type" value="enum('TEXT','LIST','IMAGE')"/>
+			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.BookMarkTypeHandler"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>

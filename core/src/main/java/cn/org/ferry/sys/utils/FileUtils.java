@@ -2,6 +2,7 @@ package cn.org.ferry.sys.utils;
 
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.exception.ExcelException;
+import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.utils.BeanUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +16,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 public final class FileUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
@@ -294,5 +296,39 @@ public final class FileUtils {
             cell.setCellValue(value.toString());
         }
         cell.setCellStyle(style);
+    }
+
+    public static File createFile(String filePath) throws FileException {
+        File file = new File(filePath);
+        if(file.exists()){
+            return file;
+        }
+        if(file.isDirectory()){
+            if(file.mkdirs()){
+                return file;
+            }else{
+                throw new FileException("directory create failure");
+            }
+        }
+        createDirectory(file.getParent());
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            FileException fileException = new FileException("can not create file: " + file.getAbsolutePath());
+            fileException.initCause(e);
+            throw fileException;
+        }
+        return file;
+    }
+
+    public static File createDirectory(String filePath) throws FileException {
+        File file = new File(filePath);
+        if(file.exists()){
+            return file;
+        }
+        if(file.mkdirs()){
+            return file;
+        }
+        throw new FileException("directory create failure");
     }
 }

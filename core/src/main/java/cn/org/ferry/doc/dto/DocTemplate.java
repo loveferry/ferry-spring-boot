@@ -31,14 +31,4 @@ public class DocTemplate extends BaseDTO {
      * 模版名称
      */
     private String templateName;
-
-    /**
-     * 数值格式化id
-     */
-    private Long numberFormatId;
-
-    /**
-     * 日期格式化id
-     */
-    private Long dateFormatId;
 }

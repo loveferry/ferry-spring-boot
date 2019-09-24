@@ -2,6 +2,7 @@ package cn.org.ferry.doc.mapper;
 
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.system.mybatis.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author ferry ferry_sy@163.com
@@ -9,5 +10,8 @@ import cn.org.ferry.system.mybatis.BaseMapper;
  * @description
  */
 public interface DocTemplateMapper extends BaseMapper<DocTemplate> {
-
+    /**
+     * 查找模版
+     */
+    DocTemplate queryByTemplateCode(@Param("templateCode") String templateCode);
 }

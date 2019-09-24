@@ -31,9 +31,11 @@ public class SysAttachmentCategory extends BaseDTO {
 
     private String sourceType;  // 附件类型
 
+    private String attachmentPath;  // 附件相对目录
+
     @ColumnType(typeHandler = EnableFlagHandler.class)
     private EnableFlag enableFlag;  // 启用标志
 
     @ColumnType(typeHandler = IfOrNotFlagHandler.class)
-    private IfOrNotFlag uniqueFlag;  // 启用标志
+    private IfOrNotFlag uniqueFlag;  // 唯一标志
 }

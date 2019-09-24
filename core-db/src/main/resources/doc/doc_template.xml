@@ -29,8 +29,6 @@
 			<column name="template_name" type="VARCHAR(200)" remarks="模版名称">
 				<constraints nullable="false"/>
 			</column>
-			<column name="number_format_id" type="BIGINT" remarks="数值格式化id"/>
-			<column name="date_format_id" type="BIGINT" remarks="日期格式化id"/>
 			<column name="created_by" type="BIGINT" defaultValue="-1" />
 			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
@@ -46,10 +44,8 @@
 	
 	<changeSet id="init_doc_template_data" author="ferry">
 		<insert tableName="doc_template">
-			<column name="template_code" value="TEST"/>
-			<column name="template_name" value="测试"/>
-			<column name="number_format_id" value="10"/>
-			<column name="date_format_id" value="3"/>
+			<column name="template_code" value="FERRY"/>
+			<column name="template_name" value="ferry文档模版"/>
 		</insert>
 	</changeSet>
 </databaseChangeLog>

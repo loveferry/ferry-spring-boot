@@ -5,11 +5,11 @@ import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.BaseService;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文件处理的接口层
@@ -18,17 +18,22 @@ public interface SysFileService extends BaseService<SysFile> {
     /**
      * 文件上传
      */
-    boolean upload(List<MultipartFile> files, SysAttachment sysAttachment) throws FileException;
+    void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment);
 
     /**
      * 文件下载
      */
-    void fileDownload(HttpServletResponse httpServletResponse, Long fileId);
+    void download(HttpServletResponse httpServletResponse, Long fileId) throws FileException;
 
     /**
-     * 查询附件
+     * 向附件表，文件表插入记录
+     * @param sourceType 附件类型
+     * @param sourceKey 附件编码
+     * @param filePath 文件路径
+     * @param fileName 文件名称
+     * @param contentType 文件类型
      */
-    List<SysFile> query(SysFile sysFile);
+    void insertFileAndAttachment(String sourceType, String sourceKey, String filePath, String fileName, String contentType);
 
     /**
      * 删除文件
@@ -41,6 +46,21 @@ public interface SysFileService extends BaseService<SysFile> {
      * @param fileId 文件表主键,必传
      */
     void deleteFileByPrimaryKey(Long fileId);
+
+    /**
+     * 通过附件ID查询文件
+     * @param attachmentId 附件id
+     * @return 返回文件列表
+     */
+    List<SysFile> queryByAttachmentId(Long attachmentId);
+
+    /**
+     * 根据附件类型，附件编码查询文件列表
+     * @param sourceType 附件类型
+     * @param sourceKey 附件编码
+     * @return 文件列表
+     */
+    List<SysFile> queryBySourceTypeAndSourceKey(String sourceType, String sourceKey);
 
     /**
      * excel 导出, poi实现的百万级数据导出

@@ -1,14 +1,15 @@
 package cn.org.ferry.doc.service.impl;
 
-import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.DocTemplateParam;
-import cn.org.ferry.doc.mapper.DocTemplateMapper;
+import cn.org.ferry.doc.exceptions.DocException;
 import cn.org.ferry.doc.mapper.DocTemplateParamMapper;
 import cn.org.ferry.doc.service.DocTemplateParamService;
-import cn.org.ferry.doc.service.DocTemplateService;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import javax.annotation.Resource;
 
 /**
  * @author ferry ferry_sy@163.com
@@ -17,6 +18,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DocTemplateParamServiceImpl extends BaseServiceImpl<DocTemplateParam> implements DocTemplateParamService {
-    @Autowired
+    @Resource
     private DocTemplateParamMapper docTemplateParamMapper;
+
+    @Override
+    public List<DocTemplateParam> queryByTemplateCode(String templateCode) {
+        if(StringUtils.isEmpty(templateCode)){
+            throw new DocException("模版编码为空");
+        }
+        return docTemplateParamMapper.queryByTemplateCode(templateCode);
+    }
 }

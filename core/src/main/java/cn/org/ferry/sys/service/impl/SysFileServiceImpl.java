@@ -3,6 +3,7 @@ package cn.org.ferry.sys.service.impl;
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
+import cn.org.ferry.sys.exceptions.AttachmentException;
 import cn.org.ferry.sys.mapper.SysFileMapper;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import cn.org.ferry.sys.service.SysAttachmentService;
@@ -12,33 +13,41 @@ import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.sysenum.EnableFlag;
 import cn.org.ferry.system.sysenum.IfOrNotFlag;
-import cn.org.ferry.system.utils.BeanUtils;
+import cn.org.ferry.system.utils.PropertiesUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysFileService {
-
-    @Value("${ferry.upload}")
-    private String UPLOAD_PATH;
+    private static final Logger logger = LoggerFactory.getLogger(SysFileServiceImpl.class);
 
     @Autowired
     private SysFileMapper sysFileMapper;
@@ -50,57 +59,52 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean upload(List<MultipartFile> files, SysAttachment sysAttachment) throws FileException {
-        SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.query(sysAttachment.getSourceType());
-        if(null == sysAttachmentCategory){
-            throw new FileException("文件类型不存在!");
-        }
-        if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
-            throw new FileException("该附件类型已被禁用！");
-        }
+    public void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment) {
+        List<MultipartFile> files = ((StandardMultipartHttpServletRequest) httpServletRequest).getFiles("files");
+        SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sysAttachment.getSourceType());
         SysAttachment attachment = sysAttachmentService.queryBySourceTypeAndSourceKey(sysAttachment.getSourceType(), sysAttachment.getSourceKey());
         if(null == attachment){
             sysAttachmentService.insertSelective(sysAttachment);
         }else{
             sysAttachment.setAttachmentId(attachment.getAttachmentId());
-            sysAttachmentService.updateByPrimaryKey(sysAttachment);
+            sysAttachmentService.updateByPrimaryKeySelective(sysAttachment);
         }
         if(IfOrNotFlag.Y == sysAttachmentCategory.getUniqueFlag()){
             if(files.size() > 1){
-                throw new FileException("该类型的附件只允许上传一份!");
+                throw new AttachmentException("该类型的附件只允许上传一份!");
             }
             deleteByAttachmentId(sysAttachment.getAttachmentId());
         }
+        String uploadPath = PropertiesUtils.getProperty("ferry.upload")+sysAttachmentCategory.getAttachmentPath();
         for(MultipartFile multipartFile : files){
             String name = UUID.randomUUID().toString();
             SysFile sysFile = new SysFile();
             sysFile.setFileName(multipartFile.getOriginalFilename());
             sysFile.setFileType(multipartFile.getContentType());
-            sysFile.setFilePath(UPLOAD_PATH+name);
+            sysFile.setFilePath(uploadPath+File.separator+name);
             sysFile.setFileSize(multipartFile.getSize());
             sysFile.setAttachmentId(sysAttachment.getAttachmentId());
             this.insertSelective(sysFile);
-            File dir = new File(UPLOAD_PATH);
+            File dir = new File(uploadPath);
             if(!dir.exists()){
                 dir.mkdirs();
             }
-            File f = new File(dir.getAbsolutePath()+File.separator+name);
+            File f = new File(sysFile.getFilePath());
             try {
                 multipartFile.transferTo(f);
             } catch (IOException e) {
-                logger.error("文件上传出错", e);
-                e.printStackTrace();
-                return false;
+                AttachmentException ata = new AttachmentException("文件上传出错");
+                ata.initCause(e);
+                throw ata;
             }
         }
-        return true;
     }
 
     @Override
-    public void fileDownload(HttpServletResponse httpServletResponse, Long fileId) {
+    public void download(HttpServletResponse httpServletResponse, Long fileId) throws FileException{
         SysFile sysFile = this.selectByPrimaryKey(fileId);
         if(null == sysFile){
-            throw new IllegalArgumentException("未找到文件");
+            throw new FileException("未找到文件");
         }
         File file = new File(sysFile.getFilePath());
         try (FileInputStream fis = new FileInputStream(file);
@@ -113,27 +117,60 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             httpServletResponse.setContentLength(fileLength);
             if(fileLength>0){
                 byte[] bs = new byte[1024];
-                int length = -1;
+                int length;
                 while(-1 != (length = fis.read(bs))){
                     sos.write(bs, 0, length);
                 }
                 sos.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            FileException fileException = new FileException("文件下载错误");
+            fileException.initCause(e);
+            throw fileException;
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<SysFile> query(SysFile sysFile) {
-        return sysFileMapper.query(sysFile);
+    public void insertFileAndAttachment(String sourceType, String sourceKey, String filePath, String fileName, String contentType) {
+        File file = new File(filePath);
+        if(!file.exists()){
+            throw new AttachmentException("文件不存在："+filePath);
+        }
+        if(file.isDirectory()){
+            throw new AttachmentException("不是一个文件："+filePath);
+        }
+        SysAttachment sysAttachment = sysAttachmentService.queryBySourceTypeAndSourceKey(sourceType, sourceKey);
+        SysFile sysFile = new SysFile();
+        sysFile.setFileType(contentType);
+        sysFile.setFilePath(filePath);
+        sysFile.setFileName(fileName);
+        sysFile.setFileSize(file.length());
+
+        if(null == sysAttachment){
+            sysAttachment = new SysAttachment();
+            sysAttachment.setSourceKey(sourceKey);
+            sysAttachment.setSourceType(sourceType);
+            sysAttachmentService.insertSelective(sysAttachment);
+            sysFile.setAttachmentId(sysAttachment.getAttachmentId());
+            insertSelective(sysFile);
+        }else{
+            sysFile.setAttachmentId(sysAttachment.getAttachmentId());
+            SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sourceType);
+            if(sysAttachmentCategory.getUniqueFlag() == IfOrNotFlag.N){
+                insertSelective(sysFile);
+            }else{
+                deleteByAttachmentId(sysAttachment.getAttachmentId());
+                insertSelective(sysFile);
+            }
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteByAttachmentId(Long attachmentId) {
         if(null == attachmentId){
-            throw new NullPointerException("missing attachment_id");
+            throw new AttachmentException("附件id为空");
         }
         List<SysFile> sysFileList = sysFileMapper.queryByAttachmentId(attachmentId);
         if(CollectionUtils.isEmpty(sysFileList)){
@@ -156,8 +193,25 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
         if(file.exists()){
             file.delete();
         }
-        sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
         sysFileMapper.deleteByPrimaryKey(fileId);
+    }
+
+    @Override
+    public List<SysFile> queryByAttachmentId(Long attachmentId) {
+        Objects.requireNonNull(attachmentId, "附件id为空");
+        return sysFileMapper.queryByAttachmentId(attachmentId);
+    }
+
+    @Override
+    public List<SysFile> queryBySourceTypeAndSourceKey(String sourceType, String sourceKey) {
+        if(org.springframework.util.StringUtils.isEmpty(sourceType)){
+            throw new AttachmentException("附件类型为空");
+        }
+        if(StringUtils.isEmpty(sourceKey)){
+            throw new AttachmentException("附件编码为空");
+        }
+        sysAttachmentCategoryService.validata(sourceType);
+        return sysFileMapper.queryBySourceTypeAndSourceKey(sourceType, sourceKey);
     }
 
     @Override

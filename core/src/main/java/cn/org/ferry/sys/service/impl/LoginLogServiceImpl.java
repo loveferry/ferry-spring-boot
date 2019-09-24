@@ -19,7 +19,7 @@ public class LoginLogServiceImpl extends BaseServiceImpl<LoginLog> implements Lo
         loginLog.setIp(ip);
         loginLog.setUserAgent(userAgent);
         loginLog.setLoginDate(new Date());
-        insert(loginLog);
+        insertSelective(loginLog);
         return true;
     }
 }

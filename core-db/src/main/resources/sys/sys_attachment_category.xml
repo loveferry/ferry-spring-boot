@@ -29,6 +29,9 @@
             </column>
             <column name="enable_flag" type="ENUM('Y','N')" defaultValue="Y" remarks="启用标志"/>
             <column name="unique_flag" type="ENUM('Y','N')" defaultValue="N" remarks="是否唯一"/>
+            <column name="attachment_path" type="VARCHAR(200)">
+                <constraints nullable="false" />
+            </column>
             <column name="created_by" type="BIGINT" defaultValue="-1" />
             <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
             <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
@@ -38,10 +41,11 @@
     
     <changeSet id="init_sys_attachment_category_data" author="ferry">
         <insert tableName="sys_attachment_category">
-            <column name="category_name" value="文档生成测试"/>
-            <column name="source_type" value="DOC_TEMPLATE_FERRY_TEST"/>
+            <column name="category_name" value="文档模版"/>
+            <column name="source_type" value="DOC_TEMPLATE"/>
             <column name="enable_flag" value="Y"/>
             <column name="unique_flag" value="Y"/>
+            <column name="attachment_path" value="/doc/template"/>
         </insert>
     </changeSet>
  
