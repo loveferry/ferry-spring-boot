@@ -67,10 +67,8 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         if(StringUtils.isEmpty(sourceType)){
             throw new AttachmentException("目标附件代码为空");
         }
-        // 模版数据
-        DocTemplate docTemplate = docTemplateMapper.queryByTemplateCode(templateCode);
         // 获取模版文件
-        List<SysFile> sysFileList = sysFileService.queryBySourceTypeAndSourceKey(DOC_TEMPLATE_ATTACHMENT_CATEGORY, docTemplate.getTemplateCode());
+        List<SysFile> sysFileList = sysFileService.queryBySourceTypeAndSourceKey(DOC_TEMPLATE_ATTACHMENT_CATEGORY, templateCode);
         if(CollectionUtils.isEmpty(sysFileList)){
             throw new DocException("模版文档不存在");
         }
@@ -96,7 +94,7 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         }
         try {
             Docx4jGenerateUtil.generateDocxWithReplaceBookMark(bookMarkParams, bookMarkTypes, templateSysFile.getFilePath(), targetPath, true);
-            sysFileService.insertFileAndAttachment(sourceType, sourceKey, targetPath, docTemplate.getTemplateName(),
+            sysFileService.insertFileAndAttachment(sourceType, sourceKey, targetPath, templateSysFile.getFileName(),
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         } catch (FileException e) {
             DocException docException = new DocException(e.getMessage());

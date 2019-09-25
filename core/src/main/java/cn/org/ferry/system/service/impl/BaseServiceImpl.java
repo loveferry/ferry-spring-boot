@@ -99,7 +99,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
             setBaseField(BaseDTO.LASTUPDATEDATE, now, t.getClass(), t);
         }else if(INSERT.equals(type)){
             setBaseField(BaseDTO.CREATEDBY, 10001L, t.getClass(), t);
-            setBaseField(BaseDTO.CREATIONDATE, now, t.getClass(), t);
+//            setBaseField(BaseDTO.CREATIONDATE, now, t.getClass(), t);
         }
     }
 

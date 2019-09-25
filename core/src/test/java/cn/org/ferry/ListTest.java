@@ -49,4 +49,18 @@ public class ListTest {
         System.out.println(list.getClass().getSuperclass().equals(Collection.class));
 
     }
+
+
+    @Test
+    public void chsiud(){
+        List<String> list = new ArrayList<>(4);
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        list.remove(2);
+        list.add(2,"2");
+        System.out.println(list);
+
+    }
 }

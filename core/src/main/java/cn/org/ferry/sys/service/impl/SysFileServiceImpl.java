@@ -61,6 +61,9 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
     @Override
     public void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment) {
         List<MultipartFile> files = ((StandardMultipartHttpServletRequest) httpServletRequest).getFiles("files");
+        if(CollectionUtils.isEmpty(files)){
+            throw new AttachmentException("上传附件为空!");
+        }
         SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sysAttachment.getSourceType());
         SysAttachment attachment = sysAttachmentService.queryBySourceTypeAndSourceKey(sysAttachment.getSourceType(), sysAttachment.getSourceKey());
         if(null == attachment){

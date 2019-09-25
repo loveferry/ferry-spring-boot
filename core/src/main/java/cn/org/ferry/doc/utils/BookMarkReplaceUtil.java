@@ -232,21 +232,35 @@ public final class BookMarkReplaceUtil {
         if(CollectionUtils.isEmpty(list)){
             return ;
         }
+        // 表格
         Tbl table = Docx4jCommonUtil.getFirstElementByParent(bookmark.getParent(), Tbl.class);
-        Tr templateTr = dealAndReturnTemplateTr(table);
-        for (Object o : list) {
+        // 模版行
+        Tr templateTr = Docx4jCommonUtil.getFirstElementByParent(bookmark.getParent(), Tr.class);
+        // 模版行的下标
+        int templateIndex = -1;
+        for (int i = 0; i < table.getContent().size(); i++) {
+            if(XmlUtils.unwrap(table.getContent().get(i)).equals(templateTr)){
+                templateIndex = i;
+            }
+        }
+        // 移除模版行
+        table.getContent().remove(templateIndex);
+        // 模版行处理
+        dealTemplateTr(templateTr);
+        for(int i = 0; i < list.size(); i++){
+            Object o = list.get(i);
             if(!(o instanceof LinkedHashMap)){
                 throw new FileException("行记录请使用LinkedHashMap集合存储！");
             }
             LinkedHashMap map = (LinkedHashMap)o;
             Tr tr = XmlUtils.deepCopy(templateTr);
             List<Tc> tcs = Docx4jCommonUtil.getAllElementByChildren(tr, Tc.class);
-            int i = 0;
+            int j = 0;
             for(Object mapEntry : map.entrySet()){
                 Map.Entry entry = (Map.Entry)mapEntry;
                 String value = BeanUtils.ifnull(entry.getValue(), BeanUtils.EMPTY).toString();
 
-                P p = Docx4jCommonUtil.getAllElementByChildren(tcs.get(i), P.class).get(0);
+                P p = Docx4jCommonUtil.getAllElementByChildren(tcs.get(j), P.class).get(0);
                 R r = Docx4jCommonUtil.getAllElementByChildren(p, R.class).get(0);
                 List<Text> textList = Docx4jCommonUtil.getAllElementByChildren(r, Text.class);
                 if(CollectionUtils.isNotEmpty(textList)){
@@ -254,9 +268,9 @@ public final class BookMarkReplaceUtil {
                 }else{
                     r.getContent().add(Docx4jCommonUtil.initText(value));
                 }
-                i++;
+                j++;
             }
-            table.getContent().add(tr);
+            table.getContent().add(templateIndex+i, tr);
         }
     }
 
@@ -305,18 +319,7 @@ public final class BookMarkReplaceUtil {
      * 总是依据表格的最后一行的样式作为模版行
      * 在获取模版行之后将模版行删除
      */
-    private static Tr dealAndReturnTemplateTr(Tbl table){
-        List<Tr> trs = Docx4jCommonUtil.getAllElementByChildren(table, Tr.class);
-        Tr templateTr = trs.get(trs.size()-1);
-        int remove = -1;
-        for (int i = 0; i < table.getContent().size(); i++) {
-            if(XmlUtils.unwrap(table.getContent().get(i)).equals(templateTr)){
-                remove = i;
-            }
-        }
-        table.getContent().remove(remove);
-        // 对模版行进行深拷贝
-//        Tr templateTr = XmlUtils.deepCopy(tr);
+    private static void dealTemplateTr(Tr templateTr){
         // 获取行中所有的单元格
         List<Tc> tcs = Docx4jCommonUtil.getAllElementByChildren(templateTr, Tc.class);
         for (int i = 0; i < tcs.size(); i++) {
@@ -357,6 +360,5 @@ public final class BookMarkReplaceUtil {
                 }
             }
         }
-        return templateTr;
     }
 }

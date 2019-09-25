@@ -2,6 +2,7 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.service.SysFileService;
+import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.exception.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class SysFileController {
      * @param response 相应对象
      * @param fileId 文件表主键,必须传递该参数
      */
+    @LoginPass
     @RequestMapping("/api/sys/file/download")
     public void download(HttpServletResponse response, Long fileId) throws FileException {
         iSysFileService.download(response, fileId);
