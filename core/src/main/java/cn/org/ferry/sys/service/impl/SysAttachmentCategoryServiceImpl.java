@@ -7,6 +7,7 @@ import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
 import cn.org.ferry.system.sysenum.EnableFlag;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,7 +75,8 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
     }
 
     @Override
-    public List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory) {
+    public List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory, int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
         return sysAttachmentCategoryMapper.query(sysAttachmentCategory);
     }
 }

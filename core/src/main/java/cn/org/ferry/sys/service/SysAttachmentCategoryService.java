@@ -30,7 +30,7 @@ public interface SysAttachmentCategoryService extends BaseService<SysAttachmentC
     /**
      * 查询附件类型
      */
-    List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory);
+    List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory, int page, int pageSize);
 
 
 }
