@@ -4,6 +4,8 @@ import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.service.BaseService;
 
+import java.util.List;
+
 /**
  * 附件类型的接口层
  */
@@ -24,4 +26,11 @@ public interface SysAttachmentCategoryService extends BaseService<SysAttachmentC
      * 更新附件类型定义
      */
     ResponseData save(SysAttachmentCategory sysAttachmentCategory);
+
+    /**
+     * 查询附件类型
+     */
+    List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory);
+
+
 }

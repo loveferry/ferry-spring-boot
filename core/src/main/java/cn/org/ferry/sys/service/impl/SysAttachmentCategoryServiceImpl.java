@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachmentCategory> implements SysAttachmentCategoryService {
     @Autowired
@@ -53,11 +55,26 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
             responseData.setMessage("附件类型不能为空");
             return responseData;
         }
+        if(!sysAttachmentCategory.getAttachmentPath().startsWith("/")){
+            responseData.setSuccess(false);
+            responseData.setMessage("附件目录必须以\"/\"开头");
+            return responseData;
+        }
+        if(sysAttachmentCategory.getAttachmentPath().endsWith("/")){
+            responseData.setSuccess(false);
+            responseData.setMessage("附件目录不能以\"/\"结尾");
+            return responseData;
+        }
         if(null == sysAttachmentCategory.getCategoryId()){
             insertSelective(sysAttachmentCategory);
         }else{
             updateByPrimaryKeySelective(sysAttachmentCategory);
         }
         return responseData;
+    }
+
+    @Override
+    public List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory) {
+        return sysAttachmentCategoryMapper.query(sysAttachmentCategory);
     }
 }

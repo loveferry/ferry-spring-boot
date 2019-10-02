@@ -2,6 +2,7 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
+import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.dto.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,16 @@ public class SysAttachmentCategoryController extends BaseDTO {
     @ResponseBody
     public ResponseData save(HttpServletRequest httpServletRequest,@RequestBody SysAttachmentCategory sysAttachmentCategory){
         return sysAttachmentCategoryService.save(sysAttachmentCategory);
+    }
+
+    /**
+     * 查询附件类型
+     */
+    @LoginPass
+    @RequestMapping(value = "/api/attachment/category/query", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseData save(@RequestBody SysAttachmentCategory sysAttachmentCategory){
+        ResponseData responseData = new ResponseData(sysAttachmentCategoryService.query(sysAttachmentCategory));
+        return responseData;
     }
 }

@@ -14,4 +14,35 @@
         select sac.category_id,sac.category_name,sac.source_type,sac.enable_flag,sac.unique_flag,sac.attachment_path
         from sys_attachment_category sac where sac.source_type = #{sourceType}
     </select>
+    
+    <select id="query" parameterType="cn.org.ferry.sys.dto.SysAttachmentCategory" resultMap="BaseResultMap">
+        select
+            sac.category_id,
+            sac.category_name,
+            sac.source_type,
+            sac.enable_flag,
+            sac.unique_flag,
+            sac.attachment_path
+        from
+            sys_attachment_category sac
+        <where>
+            <if test="categoryId != null">
+                and sac.category_id = #{categoryId}
+            </if>
+            <if test="categoryName != null">
+                <bind name="categoryName" value="'%'+categoryName+'%'"/>
+                and sac.category_name like #{categoryName}
+            </if>
+            <if test="sourceType != null">
+                <bind name="sourceType" value="'%'+sourceType+'%'"/>
+                and sac.source_type like #{sourceType}
+            </if>
+            <if test="enableFlag != null">
+            and sac.enable_flag = #{enableFlag}
+            </if>
+            <if test="uniqueFlag != null">
+            and sac.unique_flag = #{uniqueFlag}
+            </if>
+        </where>
+    </select>
 </mapper>
