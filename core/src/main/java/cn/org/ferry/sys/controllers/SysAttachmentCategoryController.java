@@ -39,7 +39,7 @@ public class SysAttachmentCategoryController extends BaseDTO {
     @LoginPass
     @RequestMapping(value = "/api/attachment/category/query", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseData query(@RequestBody SysAttachmentCategory sysAttachmentCategory){
+    public ResponseData query(SysAttachmentCategory sysAttachmentCategory){
         return  new ResponseData(sysAttachmentCategoryService.query(sysAttachmentCategory));
     }
 }
