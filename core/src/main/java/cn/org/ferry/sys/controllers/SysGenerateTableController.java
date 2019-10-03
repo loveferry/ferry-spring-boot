@@ -3,14 +3,18 @@ package cn.org.ferry.sys.controllers;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.service.SysGenerateTableService;
 import cn.org.ferry.system.dto.ResponseData;
+import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +27,7 @@ public class SysGenerateTableController {
      */
     @RequestMapping(value = "/generate/code", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData generate(HttpServletRequest httpServletRequest,@RequestBody SysGenerateTable sysGenerateTable) throws IOException {
+    public ResponseData generate(HttpServletRequest httpServletRequest,@RequestBody SysGenerateTable sysGenerateTable) throws FileException {
         ResponseData responseData = new ResponseData();
         responseData.setSuccess(false);
         if(null == sysGenerateTable){

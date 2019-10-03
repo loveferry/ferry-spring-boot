@@ -73,6 +73,7 @@
 					<include>application.yml</include>
 					<include>sys/**</include>
 					<include>doc/**</include>
+					<include>log/**</include>
 				</includes>
 			</resource>
 		</resources>
