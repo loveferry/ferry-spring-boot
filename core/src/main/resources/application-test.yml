@@ -1,6 +1,6 @@
 # 服务
 server:
-  port: 9999
+  port: 6688
   session-timeout: 30
   tomcat:
     max-threads: 500
