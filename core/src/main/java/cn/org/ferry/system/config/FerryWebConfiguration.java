@@ -1,6 +1,6 @@
 package cn.org.ferry.system.config;
 
-import cn.org.ferry.system.inceptor.AuthenticationInterceptor;
+import cn.org.ferry.system.inceptors.AuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -18,7 +18,6 @@ public class FerryWebConfiguration implements WebMvcConfigurer {
     public AuthenticationInterceptor authenticationInterceptor() {
         return new AuthenticationInterceptor();
     }
-
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

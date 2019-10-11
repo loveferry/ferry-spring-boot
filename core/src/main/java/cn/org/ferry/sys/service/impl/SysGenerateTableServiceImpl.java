@@ -5,9 +5,11 @@ import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.mapper.SysGenerateTableMapper;
 import cn.org.ferry.sys.service.SysEnumTypeService;
 import cn.org.ferry.sys.service.SysGenerateTableService;
+import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.exception.CommonException;
+import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.mybatis.BaseMapper;
 import cn.org.ferry.system.service.BaseService;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
@@ -32,6 +34,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -52,12 +55,11 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     private static final String RESOURCE_PATH = "src"+File.separator+"main"+File.separator+"resources";
 
     @Override
-    public void generate(SysGenerateTable sysGenerateTable) throws IOException {
+    public void generate(SysGenerateTable sysGenerateTable) throws FileException {
         sysGenerateTable.setTableComment(sysGenerateTableMapper.queryTablesByTableComment(sysGenerateTable.getTableName()).getTableComment());
         List<SysGenerateTable> list = sysGenerateTableMapper.queryTableColumnsByTableName(sysGenerateTable.getTableName());
         if(CollectionUtils.isEmpty(list)){
-            log.error("未发现表 {} 上的字段", sysGenerateTable.getTableName());
-            throw new CommonException("未发现表"+sysGenerateTable.getTableName()+"上的字段");
+            throw new FileException("未发现表"+sysGenerateTable.getTableName()+"上的字段");
         }
         String dirPath = sysGenerateTable.getProjectPath()+File.separator+JAVA_PATH+File.separator+
                 sysGenerateTable.getPackagePath().replace(".", File.separator);
@@ -66,14 +68,20 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             String entity = buildEntity(sysGenerateTable, list);
             File entityFile = new File(dirPath+File.separator+"dto"+ File.separator+sysGenerateTable.getEntityName());
             if(entityFile.exists()){
-                throw new CommonException("实体类已存在");
-            }else if(entityFile.createNewFile()){
-                OutputStream os = new FileOutputStream(entityFile);
-                os.write(entity.getBytes());
-                os.flush();
-                os.close();
+                throw new FileException("实体类已存在");
             }else{
-                throw new CommonException("实体类创建失败");
+                FileUtils.createFile(entityFile.getAbsolutePath());
+                try {
+                    OutputStream os = new FileOutputStream(entityFile);
+                    os.write(entity.getBytes());
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    FileException fileException = new FileException("实体类文件创建异常!");
+                    fileException.initCause(e);
+                    throw fileException;
+                }
+
             }
         }
         // 生成mybatis接口类文件
@@ -81,14 +89,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             String mapperJava = buildMapperJava(sysGenerateTable);
             File mapperJavaFile = new File(dirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperJavaName());
             if(mapperJavaFile.exists()){
-                throw new CommonException("mybatis接口类文件已存在");
-            }else if(mapperJavaFile.createNewFile()){
-                OutputStream os = new FileOutputStream(mapperJavaFile);
-                os.write(mapperJava.getBytes());
-                os.flush();
-                os.close();
+                throw new FileException("mybatis接口类文件已存在");
             }else{
-                throw new CommonException("mybatis接口类文件创建失败");
+                FileUtils.createFile(mapperJavaFile.getAbsolutePath());
+                try {
+                    OutputStream os = new FileOutputStream(mapperJavaFile);
+                    os.write(mapperJava.getBytes());
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    FileException fileException = new FileException("mybatis接口类文件创建异常!");
+                    fileException.initCause(e);
+                    throw fileException;
+                }
             }
         }
         // 生成mybatis xml文件
@@ -98,14 +111,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             String mapperXml = buildMapperXml(sysGenerateTable, list);
             File mapperXmlFile = new File(resourcesDirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperXmlName());
             if(mapperXmlFile.exists()){
-                throw new CommonException("mybatis xml文件已存在");
-            }else if(mapperXmlFile.createNewFile()){
-                OutputStream os = new FileOutputStream(mapperXmlFile);
-                os.write(mapperXml.getBytes());
-                os.flush();
-                os.close();
+                throw new FileException("mybatis xml文件已存在");
             }else{
-                throw new CommonException("mybatis xml文件创建失败");
+                FileUtils.createFile(mapperXmlFile.getAbsolutePath());
+                try {
+                    OutputStream os = new FileOutputStream(mapperXmlFile);
+                    os.write(mapperXml.getBytes());
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    FileException fileException = new FileException("mybatis xml文件创建异常!");
+                    fileException.initCause(e);
+                    throw fileException;
+                }
             }
         }
         // 生成业务接口
@@ -113,14 +131,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             String service = buildService(sysGenerateTable);
             File serviceFile = new File(dirPath+File.separator+"service"+ File.separator+sysGenerateTable.getServiceName());
             if(serviceFile.exists()){
-                throw new CommonException("业务接口文件已存在");
-            }else if(serviceFile.createNewFile()){
-                OutputStream os = new FileOutputStream(serviceFile);
-                os.write(service.getBytes());
-                os.flush();
-                os.close();
+                throw new FileException("业务接口文件已存在");
             }else{
-                throw new CommonException("业务接口文件创建失败");
+                FileUtils.createFile(serviceFile.getAbsolutePath());
+                try {
+                    OutputStream os = new FileOutputStream(serviceFile);
+                    os.write(service.getBytes());
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    FileException fileException = new FileException("业务接口文件创建异常!");
+                    fileException.initCause(e);
+                    throw fileException;
+                }
             }
         }
         // 生成业务实现
@@ -129,14 +152,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             File serviceImplFile = new File(dirPath+File.separator+"service"+ File.separator+"impl"+
                     File.separator+sysGenerateTable.getServiceImplName());
             if(serviceImplFile.exists()){
-                throw new CommonException("业务实现文件已存在");
-            }else if(serviceImplFile.createNewFile()){
-                OutputStream os = new FileOutputStream(serviceImplFile);
-                os.write(serviceImpl.getBytes());
-                os.flush();
-                os.close();
+                throw new FileException("业务实现文件已存在");
             }else{
-                throw new CommonException("业务实现文件创建失败");
+                FileUtils.createFile(serviceImplFile.getAbsolutePath());
+                try {
+                    OutputStream os = new FileOutputStream(serviceImplFile);
+                    os.write(serviceImpl.getBytes());
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    FileException fileException = new FileException("业务实现文件创建异常!");
+                    fileException.initCause(e);
+                    throw fileException;
+                }
             }
         }
         // 生成控制器
@@ -145,14 +173,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             File controllerFile = new File(dirPath+File.separator+"controllers"+
                     File.separator+sysGenerateTable.getControllerName());
             if(controllerFile.exists()){
-                throw new CommonException("控制器文件已存在");
-            }else if(controllerFile.createNewFile()){
-                OutputStream os = new FileOutputStream(controllerFile);
-                os.write(controller.getBytes());
-                os.flush();
-                os.close();
+                throw new FileException("控制器文件已存在");
             }else{
-                throw new CommonException("控制器文件创建失败");
+                FileUtils.createFile(controllerFile.getAbsolutePath());
+                try {
+                    OutputStream os = new FileOutputStream(controllerFile);
+                    os.write(controller.getBytes());
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    FileException fileException = new FileException("控制器文件创建异常!");
+                    fileException.initCause(e);
+                    throw fileException;
+                }
             }
         }
     }
@@ -160,7 +193,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     /**
      * 构建实体类
      */
-    private String buildEntity(SysGenerateTable sysGenerateTable, List<SysGenerateTable> list){
+    private String buildEntity(SysGenerateTable sysGenerateTable, List<SysGenerateTable> list) throws FileException {
         StringBuilder entityFile = new StringBuilder();
         StringBuilder packages = new StringBuilder();
         StringBuilder entityBody = new StringBuilder();
@@ -181,7 +214,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     map.put("@GeneratedValue", true);
                     packages.append("import ").append(GeneratedValue.class.getName()).append(";\n");
                 }
-                entityBody.append("\t@Id\n\t@GeneratedValue\n");
+                entityBody.append("\t@Id\n\t@GeneratedValue(generator = \"JDBC\")\n");
             }else if(StringUtils.equals("NO", generateTable.getNullable())){
                 if(!map.getOrDefault("@NotNull", false)){
                     map.put("@NotNull", true);
@@ -254,7 +287,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     sysEnumType.setColumnType(generateTable.getColumnType());
                     List<SysEnumType> sysEnumTypeList = sysEnumTypeService.select(sysEnumType);
                     if(CollectionUtils.isEmpty(sysEnumTypeList)){
-                        throw new CommonException("字段 "+generateTable.getColumnName()+" 类型为 "+generateTable.getColumnType()+"，未在系统中定义此类型!");
+                        throw new FileException("字段 "+generateTable.getColumnName()+" 类型为 "+generateTable.getColumnType()+"，未在系统中定义此类型!");
                     }
                     sysEnumType = sysEnumTypeList.get(0);
                     try {
@@ -265,7 +298,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                         }
                         entityBody.append("\t@ColumnType(typeHandler = ").append(typeHandlerClass.getSimpleName()).append(".class)\n");
                     } catch (ClassNotFoundException e) {
-                        throw new CommonException("未找到 "+sysEnumType.getTypeHandler()+" 类!");
+                        throw new FileException("未找到 "+sysEnumType.getTypeHandler()+" 类!");
                     }
                     try {
                         Class javaTypeClass = Class.forName(sysEnumType.getJavaType());
@@ -275,7 +308,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                         }
                         columnJavaType = javaTypeClass.getSimpleName();
                     } catch (ClassNotFoundException e) {
-                        throw new CommonException("未找到 "+sysEnumType.getJavaType()+" 类!");
+                        throw new FileException("未找到 "+sysEnumType.getJavaType()+" 类!");
                     }
                     break;
                 case "char" :
@@ -376,7 +409,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = LocalDate.class.getName();
                     break;
                 case "datetime" :
-                    columnJdbcType = "DATETIME";
+                    columnJdbcType = "DATE";
                     columnJavaType = Date.class.getName();
                     break;
                 case "enum" :
@@ -406,7 +439,8 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 default:
                     break;
             }
-            mapperXmlFile.append("javaType=\"").append(columnJavaType).append("\"/>\n");
+            mapperXmlFile.append("javaType=\"").append(columnJavaType).append("\" ")
+                    .append("jdbcType=\"").append(columnJdbcType).append("\"/>\n");
         }
         mapperXmlFile.append("\t</resultMap>\n\n");
         mapperXmlFile.append("</mapper>");

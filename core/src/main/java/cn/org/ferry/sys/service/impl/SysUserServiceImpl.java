@@ -1,8 +1,8 @@
 package cn.org.ferry.sys.service.impl;
 
+import cn.org.ferry.log.service.LogLoginService;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.mapper.SysUserMapper;
-import cn.org.ferry.sys.service.LoginLogService;
 import cn.org.ferry.sys.service.SysUserService;
 import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.dto.ResponseData;
@@ -20,7 +20,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Autowired
     private SysUserMapper sysUserMapper;
     @Autowired
-    private LoginLogService loginLogService;
+    private LogLoginService logLoginService;
     @Autowired
     private TokenTactics tokenTactics;
 
@@ -47,7 +47,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         }
         String token = tokenTactics.generateToken(sysUser.getUserCode(), sysUser.getPassword());
         String ip = NetWorkUtils.getIpAddress(request);
-        loginLogService.insertLoginLog(sysUser.getUserCode(), ip, NetWorkUtils.getUserAgent(request));
+        logLoginService.insertLogLogin(sysUser.getUserCode(), ip, NetWorkUtils.getUserAgent(request));
         tokenTactics.setTokenToRedisWithPeriodOfValidity(ip+"_"+sysUser.getUserCode(), token);
         responseData.setToken(token);
         responseData.setMessage("登陆成功!");

@@ -57,9 +57,15 @@ spring:
   liquibase:
     enabled: false
 
+# cxf
+
+
+
 # 自定义的配置属性
 ferry:
   upload: /u01/ferry/upload
+  cxf:
+    path: /ws
   cors:
     allowedOrigins: "*"
     allowedHeaders: DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,If-Modified-Since,Cache-Control,Content-Type,_token

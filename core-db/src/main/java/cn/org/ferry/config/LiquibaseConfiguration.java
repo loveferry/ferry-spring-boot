@@ -18,7 +18,6 @@ public class LiquibaseConfiguration {
     @Bean
     public SpringLiquibase sysLiquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
-        // 用户模块Liquibase文件路径
         liquibase.setChangeLog("classpath:sys/master.xml");
         liquibase.setDataSource(dataSource);
         liquibase.setShouldRun(true);
@@ -35,7 +34,6 @@ public class LiquibaseConfiguration {
     @Bean
     public SpringLiquibase docLiquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
-        // 用户模块Liquibase文件路径
         liquibase.setChangeLog("classpath:doc/master.xml");
         liquibase.setDataSource(dataSource);
         liquibase.setShouldRun(true);
@@ -45,4 +43,22 @@ public class LiquibaseConfiguration {
         liquibase.setDatabaseChangeLogLockTable("changelog_lock_table_doc");
         return liquibase;
     }
+
+    /**
+     * log Liquibase
+     */
+    @Bean
+    public SpringLiquibase logLiquibase(DataSource dataSource) {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog("classpath:log/master.xml");
+        liquibase.setDataSource(dataSource);
+        liquibase.setShouldRun(true);
+        liquibase.setResourceLoader(new DefaultResourceLoader());
+        // 覆盖Liquibase changelog表名
+        liquibase.setDatabaseChangeLogTable("changelog_table_log");
+        liquibase.setDatabaseChangeLogLockTable("changelog_lock_table_log");
+        return liquibase;
+    }
+
+
 }
