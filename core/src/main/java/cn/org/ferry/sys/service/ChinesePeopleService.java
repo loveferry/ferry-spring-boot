@@ -3,14 +3,15 @@ package cn.org.ferry.sys.service;
 import cn.org.ferry.sys.dto.ChinesePeople;
 import cn.org.ferry.system.service.BaseService;
 
-import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
 public interface ChinesePeopleService extends BaseService<ChinesePeople> {
     /**
      * 批量生成人员信息
      */
+    @Deprecated
     void batchGenerate(int size) throws SQLException;
 
     /**

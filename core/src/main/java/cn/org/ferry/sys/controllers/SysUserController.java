@@ -21,7 +21,6 @@ public class SysUserController {
      */
     @LoginPass
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseData login(HttpServletRequest request, @RequestBody SysUser sysUser){
         return sysUserService.login(request, sysUser);
     }

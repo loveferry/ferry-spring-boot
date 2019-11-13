@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -26,7 +25,6 @@ public class SysGenerateTableController {
      * 代码生成器
      */
     @RequestMapping(value = "/generate/code", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseData generate(HttpServletRequest httpServletRequest,@RequestBody SysGenerateTable sysGenerateTable) throws FileException {
         ResponseData responseData = new ResponseData();
         responseData.setSuccess(false);

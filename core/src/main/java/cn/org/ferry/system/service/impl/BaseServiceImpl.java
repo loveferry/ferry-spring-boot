@@ -1,5 +1,6 @@
 package cn.org.ferry.system.service.impl;
 
+import cn.org.ferry.system.components.FerrySession;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.mybatis.BaseMapper;
 import cn.org.ferry.system.service.BaseService;

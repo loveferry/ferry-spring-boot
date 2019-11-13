@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -27,7 +26,6 @@ public class DocTemplateController {
 
     @LoginPass
     @RequestMapping(value = "/api/docx4j/replace", method = RequestMethod.POST)
-    @ResponseBody
     public void replace(@RequestBody Map<String, Object> map) throws FileException {
         Map<String, Object> bookMarkValue = (Map<String, Object>) (map.get("bookMarkValue"));
         Map<String, String> bookMarkTypeMapStr = (Map<String, String>) (map.get("bookMarkTypeMap"));
@@ -44,7 +42,6 @@ public class DocTemplateController {
      * 根据模版生成word
      */
     @RequestMapping(value = "/api/doc/generate", method = RequestMethod.POST)
-    @ResponseBody
     public void generateWord(@RequestBody Map<String, Object> map) {
         String templateCode = String.valueOf(map.getOrDefault("templateCode", ""));
         String sourceType = String.valueOf(map.getOrDefault("sourceType", ""));

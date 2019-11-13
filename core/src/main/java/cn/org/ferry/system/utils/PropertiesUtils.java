@@ -9,6 +9,8 @@ import org.springframework.core.env.Environment;
  * @description 属性工具类,在spring注册容器阶段不能通过此工具类获取属性
  */
 public final class PropertiesUtils {
+    public static final String DEFAULT_CHARSET = "UTF-8";
+
     private static Environment environment;
 
     private PropertiesUtils(){}

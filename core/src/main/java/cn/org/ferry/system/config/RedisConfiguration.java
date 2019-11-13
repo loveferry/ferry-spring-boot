@@ -21,7 +21,6 @@ public class RedisConfiguration {
     @Autowired
     private Environment environment;
 
-    @Autowired
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();

@@ -9,6 +9,7 @@ import cn.org.ferry.system.service.impl.BaseServiceImpl;
 import cn.org.ferry.system.sysenum.Sex;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ListOperations;
@@ -43,6 +44,8 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
     private SysFileService sysFileService;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private SqlSession sqlSession;
 
     @Value("${spring.datasource.url}")
     private String url;

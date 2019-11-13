@@ -5,13 +5,12 @@ import cn.org.ferry.sys.service.ChinesePeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 中国人民信息记录(低仿) 控制器层
@@ -28,7 +27,6 @@ public class ChinesePeopleController {
      * @param size 指定生成信息数量
      */
     @RequestMapping("/batch/generate")
-    @ResponseBody
     public void batchGenerate(@RequestParam(defaultValue = "10000")int size, HttpServletRequest httpServletRequest) throws SQLException{
         chinesePeopleService.batchGenerate(size);
     }
@@ -41,7 +39,6 @@ public class ChinesePeopleController {
      * @param pageSize 页面大小
      */
     @RequestMapping("/info/export")
-    @ResponseBody
     public void export(String config, HttpServletResponse response, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){
         chinesePeopleService.chinesePeopleExcelExport(response, config, page, pageSize);
     }
@@ -53,7 +50,6 @@ public class ChinesePeopleController {
      * @param pageSize 页面大小
      */
     @RequestMapping("/query")
-    @ResponseBody
     public List<ChinesePeople> query(ChinesePeople chinesePeople, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){
         return chinesePeopleService.query(chinesePeople, page, pageSize);
     }
@@ -66,7 +62,6 @@ public class ChinesePeopleController {
      * @return 返回相匹配的所有人员信息
      */
     @RequestMapping("/query/name")
-    @ResponseBody
     public List<ChinesePeople> queryByName(String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){
         return chinesePeopleService.queryByName(name, page, pageSize);
     }
