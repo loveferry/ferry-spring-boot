@@ -26,12 +26,12 @@
 			<column name="generate_table" type="VARCHAR(100)" remarks="表名">
 				<constraints nullable="false"/>
 			</column>
-			<column name="controller_flag" type="enum('Y','N')" remarks="控制器生成标志"/>
-			<column name="entity_flag" type="enum('Y','N')" remarks="实体类生成标志"/>
-			<column name="service_flag" type="enum('Y','N')" remarks="业务接口生成标志"/>
-			<column name="service_impl_flag" type="enum('Y','N')" remarks="业务实现生成标志"/>
-			<column name="mapper_java_flag" type="enum('Y','N')" remarks="mybatis接口生成标志"/>
-			<column name="mapper_xml_flag" type="enum('Y','N')" remarks="sql层生成标志"/>
+			<column name="controller_flag" type="VARCHAR(1)" remarks="控制器生成标志('Y','N')"/>
+			<column name="entity_flag" type="VARCHAR(1)" remarks="实体类生成标志('Y','N')"/>
+			<column name="service_flag" type="VARCHAR(1)" remarks="业务接口生成标志('Y','N')"/>
+			<column name="service_impl_flag" type="VARCHAR(1)" remarks="业务实现生成标志('Y','N')"/>
+			<column name="mapper_java_flag" type="VARCHAR(1)" remarks="mybatis接口生成标志('Y','N')"/>
+			<column name="mapper_xml_flag" type="VARCHAR(1)" remarks="sql层生成标志('Y','N')"/>
 			<column name="created_by" type="BIGINT" defaultValue="-1" />
 			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />

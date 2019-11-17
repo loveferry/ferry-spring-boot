@@ -31,7 +31,7 @@
 			</column>
 			<column name="user_name_en" type="VARCHAR(100)" remarks="用户名称(英文)"/>
 			<column name="user_name_zh" type="VARCHAR(100)" remarks="用户名称(简体中文)"/>
-			<column name="user_sex" type="enum('MALE','FEMALE')" remarks="用户性别" defaultValue="MALE">
+			<column name="user_sex" type="VARCHAR(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
 				<constraints nullable="false"/>
 			</column>
 			<column name="user_birthday" type="DATE" remarks="用户出生日期"/>

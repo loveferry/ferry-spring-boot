@@ -1,13 +1,12 @@
 package cn.org.ferry.sys.mapper;
 
 import cn.org.ferry.sys.dto.ChinesePeople;
-import cn.org.ferry.system.mybatis.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-public interface ChinesePeopleMapper extends BaseMapper<ChinesePeople> {
+public interface ChinesePeopleMapper{
     /**
      * 根据身份证号码查询人员信息
      */

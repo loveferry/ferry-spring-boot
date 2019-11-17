@@ -27,8 +27,8 @@
             <column name="source_type" type="VARCHAR(100)" remarks="附件类型">
                 <constraints nullable="false" unique="true" uniqueConstraintName="sys_attachment_category_uk_st"/>
             </column>
-            <column name="enable_flag" type="ENUM('Y','N')" defaultValue="Y" remarks="启用标志"/>
-            <column name="unique_flag" type="ENUM('Y','N')" defaultValue="N" remarks="是否唯一"/>
+            <column name="enable_flag" type="VARCHAR(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+            <column name="unique_flag" type="VARCHAR(1)" defaultValue="N" remarks="是否唯一('Y','N')"/>
             <column name="attachment_path" type="VARCHAR(200)">
                 <constraints nullable="false" />
             </column>

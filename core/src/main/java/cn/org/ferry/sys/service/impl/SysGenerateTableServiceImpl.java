@@ -7,10 +7,8 @@ import cn.org.ferry.sys.service.SysEnumTypeService;
 import cn.org.ferry.sys.service.SysGenerateTableService;
 import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.exception.CommonException;
 import cn.org.ferry.system.exception.FileException;
-import cn.org.ferry.system.mybatis.BaseMapper;
 import cn.org.ferry.system.service.BaseService;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
 import cn.org.ferry.system.sysenum.IfOrNotFlag;
@@ -27,26 +25,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.annotation.ColumnType;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.annotation.Resource;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Service
 @Slf4j
 public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTable> implements SysGenerateTableService {
-    @Autowired
+    @Resource
     private SysGenerateTableMapper sysGenerateTableMapper;
     @Autowired
     private SysEnumTypeService sysEnumTypeService;
@@ -279,10 +280,6 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = dateClass.getSimpleName();
                     break;
                 case "enum" :
-                    if(!map.getOrDefault("@ColumnType", false)){
-                        map.put("@ColumnType", true);
-                        packages.append("import ").append(ColumnType.class.getName()).append(";\n");
-                    }
                     SysEnumType sysEnumType = new SysEnumType();
                     sysEnumType.setColumnType(generateTable.getColumnType());
                     List<SysEnumType> sysEnumTypeList = sysEnumTypeService.select(sysEnumType);
@@ -345,12 +342,11 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         String dtoName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName());
         StringBuilder mapperJavaFile = new StringBuilder();
         mapperJavaFile.append("package ").append(sysGenerateTable.getPackagePath()).append(".mapper;\n\n")
-                .append("import ").append(BaseMapper.class.getName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(dtoName).append(";\n\n")
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" mybatis 接口层").append("\n").append(" */\n\n")
-                .append("public interface ").append(dtoName).append("Mapper extends BaseMapper<").append(dtoName).append("> {\n")
+                .append("public interface ").append(dtoName).append("{\n")
                 .append("\n")
                 .append("}");
         return mapperJavaFile.toString();

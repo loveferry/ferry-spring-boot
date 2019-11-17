@@ -1,6 +1,7 @@
 package cn.org.ferry.system.dto;
 
-import javax.persistence.Transient;
+import org.springframework.data.annotation.Transient;
+
 import java.io.Serializable;
 import java.util.Date;
 

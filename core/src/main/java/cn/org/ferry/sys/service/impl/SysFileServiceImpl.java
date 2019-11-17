@@ -184,19 +184,23 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             if(file.exists()){
                 file.delete();
             }
-            sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
+            // todo 待完善删除
+//            sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteFileByPrimaryKey(Long fileId) {
-        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
+        // todo 待完善查询
+//        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
+        SysFile sysFile = selectByPrimaryKey(fileId);
         File file = new File(sysFile.getFilePath());
         if(file.exists()){
             file.delete();
         }
-        sysFileMapper.deleteByPrimaryKey(fileId);
+        // todo 待完善删除
+//        sysFileMapper.deleteByPrimaryKey(fileId);
     }
 
     @Override

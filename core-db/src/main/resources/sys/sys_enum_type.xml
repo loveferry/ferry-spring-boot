@@ -40,25 +40,25 @@
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="SEX"/>
 			<column name="java_type" value="cn.org.ferry.system.sysenum.Sex"/>
-			<column name="column_type" value="enum('MALE','FEMALE')"/>
+			<column name="column_type" value="VARCHAR"/>
 			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.SexHandler"/>
 		</insert>
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="if_or_not_flag"/>
 			<column name="java_type" value="cn.org.ferry.system.sysenum.IfOrNotFlag"/>
-			<column name="column_type" value="enum('Y','N')"/>
+			<column name="column_type" value="VARCHAR"/>
 			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
 		</insert>
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="enable_flag"/>
 			<column name="java_type" value="cn.org.ferry.system.sysenum.EnableFlag"/>
-			<column name="column_type" value="enum('Y','N')"/>
+			<column name="column_type" value="VARCHAR"/>
 			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
 		</insert>
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="book_mark_type"/>
 			<column name="java_type" value="cn.org.ferry.doc.dto.BookMarkType"/>
-			<column name="column_type" value="enum('TEXT','LIST','IMAGE')"/>
+			<column name="column_type" value="VARCHAR"/>
 			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.BookMarkTypeHandler"/>
 		</insert>
 	</changeSet>

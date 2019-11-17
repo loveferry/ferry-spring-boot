@@ -1,13 +1,10 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.mybatis.handler.EnableFlagHandler;
-import cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler;
 import cn.org.ferry.system.sysenum.EnableFlag;
 import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tk.mybatis.mapper.annotation.ColumnType;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -33,9 +30,7 @@ public class SysAttachmentCategory extends BaseDTO {
 
     private String attachmentPath;  // 附件相对目录
 
-    @ColumnType(typeHandler = EnableFlagHandler.class)
     private EnableFlag enableFlag;  // 启用标志
 
-    @ColumnType(typeHandler = IfOrNotFlagHandler.class)
     private IfOrNotFlag uniqueFlag;  // 唯一标志
 }

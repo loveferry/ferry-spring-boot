@@ -1,7 +1,6 @@
 package cn.org.ferry.doc.mapper;
 
 import cn.org.ferry.doc.dto.DocTemplate;
-import cn.org.ferry.system.mybatis.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -9,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
  * @date 2019/07/13
  * @description
  */
-public interface DocTemplateMapper extends BaseMapper<DocTemplate> {
+public interface DocTemplateMapper{
     /**
      * 查找模版
      */
