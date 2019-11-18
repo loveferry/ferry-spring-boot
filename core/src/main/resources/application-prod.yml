@@ -37,12 +37,12 @@ pagehelper:
 # dataSource
 spring:
   datasource:
-    url: jdbc:mysql://163.177.139.184:3306/ferry
+    url: jdbc:mysql://106.13.78.137:3306/ferry
     username: ferry
     password: ferry
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 163.177.139.184
+    host: 106.13.78.137
     port: 6379
     database: 3
     timeout: 5000ms
