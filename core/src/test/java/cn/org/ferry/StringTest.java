@@ -161,4 +161,13 @@ public class StringTest {
         System.out.println(cls.getName());
 
     }
+
+    @Test
+    public void nacisjnis(){
+        StringBuffer sb = new StringBuffer("hehehe,");
+        sb.delete(sb.length()-1, sb.length());
+        System.out.println(sb)
+        ;
+
+    }
 }

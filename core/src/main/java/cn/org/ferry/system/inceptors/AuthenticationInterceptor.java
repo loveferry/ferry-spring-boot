@@ -5,6 +5,7 @@ import cn.org.ferry.sys.service.SysUserService;
 import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.exception.TokenException;
+import cn.org.ferry.system.utils.ConstantUtils;
 import cn.org.ferry.system.utils.NetWorkUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -32,7 +33,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private TokenTactics tokenTactics;
-    private static final String _TOKEN = "_token";
 
     // 在业务处理器处理请求之前被调用
     @Override
@@ -49,7 +49,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(!method.getDeclaringClass().getPackage().getName().contains("cn.org.ferry")){
             return true;
         }
-        String _token = request.getHeader(_TOKEN);
+        String _token = request.getHeader(ConstantUtils._TOKEN);
         if(StringUtils.isEmpty(_token)){
             throw new TokenException("unauthorized access!");
         }
@@ -71,7 +71,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 token = tokenTactics.generateToken(user.getUserCode(), user.getPassword());
                 tokenTactics.setTokenToRedisWithPeriodOfValidity(key, token);
                 response.setStatus(TokenException.class.getAnnotation(ResponseStatus.class).code().value());
-                response.addHeader(_TOKEN, token);
+                response.addHeader(ConstantUtils._TOKEN, token);
                 response.getWriter().append("refresh token");
                 return false;
             }else{
