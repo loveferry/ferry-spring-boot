@@ -102,7 +102,7 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
 
     @Override
     public List<ChinesePeople> queryByName(String name, int page, int pageSize) {
-        ListOperations<String, ChinesePeople> listOperations = redisTemplate.opsForList();
+        /*ListOperations<String, ChinesePeople> listOperations = redisTemplate.opsForList();
         if(redisTemplate.hasKey(name)){
             log.info("从缓存中查询数据...");
             return listOperations.range(name, (page-1)*pageSize, page*pageSize-1);
@@ -115,7 +115,16 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
         for (ChinesePeople chinesePeople : list) {
             listOperations.rightPush(name, chinesePeople);
         }
-        return listOperations.range(name, (page-1)*pageSize, page*pageSize-1);
+        return listOperations.range(name, (page-1)*pageSize, page*pageSize-1);*/
+
+//        PageHelper.startPage(page, pageSize);
+
+        List<ChinesePeople> list = chinesePeopleMapper.queryByName(name);
+        ChinesePeople chinesePeople = new ChinesePeople();
+        chinesePeople.setId(1011L);
+        list.add(chinesePeople);
+
+        return list;
     }
 
     @Override

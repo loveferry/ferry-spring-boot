@@ -9,6 +9,7 @@ mybatis:
   mapperLocations: classpath:cn/org/ferry/**/mapper/*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true   # 开启驼峰映射
+    cache-enabled: true
 mapper:
   mappers: cn.org.ferry.system.mybatis.BaseMapper
 
