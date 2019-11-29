@@ -26,14 +26,14 @@ public class ChinesePeopleSoapServiceImpl implements ChinesePeopleSoapService {
     private ChinesePeopleService chinesePeopleService;
 
     @Override
-    public OutHeaderMessage<ChinesePeople> query(InHeaderMessage inHeaderMessage, ChineseQueryBody chinessQueryBody) {
+    public OutHeaderMessage<ChinesePeople> query(InHeaderMessage inHeaderMessage, ChineseQueryBody chineseQueryBody) {
         logger.info("inHeaderMessage: {}", inHeaderMessage);
-        logger.info("chineseQueryBody: {}", chinessQueryBody);
+        logger.info("chineseQueryBody: {}", chineseQueryBody);
 
         OutHeaderMessage<ChinesePeople> outHeaderMessage =  new OutHeaderMessage<>();
         outHeaderMessage.setServerName("chineseQuery");
         outHeaderMessage.setStatus(SoapWebServiceCommon.Status.SUCCESS.name());
-        outHeaderMessage.setList(chinesePeopleService.queryByName(chinessQueryBody.getName(), 0, 0));
+        outHeaderMessage.setList(chinesePeopleService.queryByName(chineseQueryBody.getName(), 0, 0));
         logger.info("outHeaderMessage : {}", outHeaderMessage);
         return outHeaderMessage;
     }
