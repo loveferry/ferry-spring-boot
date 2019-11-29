@@ -2,7 +2,6 @@ package cn.org.ferry.system.inceptors;
 
 import cn.org.ferry.log.dto.LogSoap;
 import cn.org.ferry.log.service.LogSoapService;
-import org.apache.catalina.connector.ResponseFacade;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.interceptor.Fault;
@@ -40,8 +39,9 @@ public class SoapLogOutInterceptor extends AbstractSoapInterceptor<SoapMessage> 
     public void handleMessage(SoapMessage soapMessage) throws Fault {
         HttpServletResponse response = (HttpServletResponse)soapMessage.get(HTTP_RESPONSE);
         response.setContentType(RESPONSE_CONTENT_TYPE);
-        String serviceName = ((Class<?>)soapMessage.getExchange().getService().get("endpoint.class")).getAnnotation(WebService.class).serviceName();
+        String serviceName = ((Class<?>)soapMessage.getExchange().getService().get(ENDPOINT_CLASS)).getAnnotation(WebService.class).serviceName();
         MessageInfo messageInfo = (MessageInfo) soapMessage.get(MESSAGE_INFO);
+        LogSoap inputLogSoap = soapMessage.getExchange().get(LogSoap.class);
         LogSoap logSoap = new LogSoap();
         logSoap.setLogType(LOG_TYPE_SERVICE_OUT);
         logSoap.setServiceName(serviceName);
@@ -49,10 +49,10 @@ public class SoapLogOutInterceptor extends AbstractSoapInterceptor<SoapMessage> 
         logSoap.setContentType(response.getContentType());
         logSoap.setEncoding(response.getCharacterEncoding());
         logSoap.setProtocolHeaders(MIME_HEADERS);
-        if(response instanceof ResponseFacade){
-//            logSoap.setUrl(((ResponseFacade)response).);
+        if(inputLogSoap != null){
+            logSoap.setUrl(inputLogSoap.getUrl());
+            logSoap.setHttpMethod(inputLogSoap.getHttpMethod());
         }
-//        logSoap.setUrl();
         try {
             OutputStream os = soapMessage.getContent(OutputStream.class);
             CacheAndWriteOutputStream cwos = new CacheAndWriteOutputStream(os);
@@ -77,7 +77,7 @@ public class SoapLogOutInterceptor extends AbstractSoapInterceptor<SoapMessage> 
                 String xml = IOUtils.toString(cos.getInputStream());
                 logSoap.setContent(xml);
                 logSoapService.insertLogSoap(logSoap);
-                logger.debug("Soap报文:\n\n\n{}\n\n\n", xml);
+                logger.info("\n\n\nSoap报文:\n{}\n\n\n", xml);
             } catch (Exception e) {
                 logger.error("CXF记录日志错误: ", e);
             }

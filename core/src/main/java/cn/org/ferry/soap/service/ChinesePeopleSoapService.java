@@ -22,7 +22,8 @@ import javax.xml.bind.annotation.XmlElement;
         name = "ChinesePeopleService",  // wsdl:portType
         serviceName = "ChinesePeopleService",   // wsdl:service
         portName = "ChinesePeopleServicePort", // wsdl:port name
-        endpointInterface = "cn.org.ferry.soap.service.ChinesePeopleSoapService"
+        endpointInterface = "cn.org.ferry.soap.service.ChinesePeopleSoapService",
+        targetNamespace = "ferry"
 )
 public interface ChinesePeopleSoapService {
     /**

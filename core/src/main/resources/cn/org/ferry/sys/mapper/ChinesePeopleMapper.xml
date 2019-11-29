@@ -15,7 +15,7 @@
             chinese_people
         <where> 1=1
         <if test="name != null">
-            <bind name="name" value="name+'%'"/>
+            <bind name="name" value="'%'+name+'%'"/>
             and name like #{name}
         </if>
         </where>

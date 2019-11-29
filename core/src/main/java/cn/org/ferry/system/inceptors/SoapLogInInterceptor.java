@@ -2,17 +2,17 @@ package cn.org.ferry.system.inceptors;
 
 import cn.org.ferry.log.dto.LogSoap;
 import cn.org.ferry.log.service.LogSoapService;
+import cn.org.ferry.system.utils.NetWorkUtils;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.namespace.QName;
 
 /**
  * <p>基于 soap 协议的 web service 接口服务端请求进入日志记录拦截器
@@ -29,7 +29,7 @@ public class SoapLogInInterceptor extends AbstractSoapInterceptor<SoapMessage> {
 
     public SoapLogInInterceptor(){
         // 指定拦截器触发阶段
-        super(Phase.RECEIVE);
+        super(Phase.PRE_INVOKE);
     }
 
     @Override
@@ -38,23 +38,17 @@ public class SoapLogInInterceptor extends AbstractSoapInterceptor<SoapMessage> {
         String httpMethod = ifnull(soapMessage.get(HTTP_METHOD));
         String contentType = ifnull(soapMessage.get(CONTENT_TYPE));
         String protocolHeaders = ifnull(soapMessage.get(PROTOCOL_HEADERS));
-        String url = ifnull(soapMessage.get(URL));
-        String serviceName = ((Class<?>)soapMessage.getExchange().getService().get("endpoint.class")).getAnnotation(WebService.class).serviceName();
-        try {
-            String xml = copyInputStream(soapMessage, (CachedOutputStream cos) -> {
-                try {
-                    return IOUtils.toString(cos.getInputStream());
-                } catch (IOException e) {
-                    logger.error("get inputStream from CachedOutputStream error: {}", e);
-                    return "";
-                }
-            });
-            logger.debug("wsdl content: \n{}", xml);
-            LogSoap logSoap = new LogSoap(LOG_TYPE_SERVICE_IN, serviceName, serviceName, url, protocolHeaders, httpMethod, contentType, encoding, xml);
-            logSoapService.insertLogSoap(logSoap);
-            soapMessage.getExchange().put(LogSoap.class, logSoap);
-        } catch (IOException e) {
-            logger.error("soap web service log in interceptor error:{}", e);
+        String url = NetWorkUtils.getIpAddress((HttpServletRequest)soapMessage.get(HTTP_REQUEST));
+        String serviceName = ((Class<?>)soapMessage.getExchange().getService().get(ENDPOINT_CLASS)).getAnnotation(WebService.class).serviceName();
+        String operation = ((QName)soapMessage.get("javax.xml.ws.wsdl.operation")).getLocalPart();
+        String xml = "";
+        if(null != soapMessage.getExchange().get(INPUT_CONTENT)){
+            xml = soapMessage.getExchange().get(INPUT_CONTENT).toString();
         }
+        LogSoap logSoap = new LogSoap(LOG_TYPE_SERVICE_IN, serviceName, operation, url, protocolHeaders, httpMethod, contentType, encoding, xml);
+        logSoapService.insertLogSoap(logSoap);
+        soapMessage.getExchange().put(LogSoap.class, logSoap);
+
+        logger.debug("\n\n\nsoap service input content: \n{} \n\n\n", xml);
     }
 }

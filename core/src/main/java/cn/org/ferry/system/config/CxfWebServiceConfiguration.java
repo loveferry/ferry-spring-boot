@@ -1,6 +1,8 @@
 package cn.org.ferry.system.config;
 
 import cn.org.ferry.soap.service.ChinesePeopleSoapService;
+import cn.org.ferry.soap.service.PrjProjectSoapService;
+import cn.org.ferry.system.inceptors.SoapInInputStreamInterceptor;
 import cn.org.ferry.system.inceptors.SoapLogInInterceptor;
 import cn.org.ferry.system.inceptors.SoapLogOutInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
@@ -41,6 +43,14 @@ public class CxfWebServiceConfiguration {
     }
 
     /**
+     * soap 接口服务端流入拦截器
+     */
+    @Bean
+    public SoapInInputStreamInterceptor soapInInputStreamInterceptor(){
+        return new SoapInInputStreamInterceptor();
+    }
+
+    /**
      * soap接口服务端流入日志拦截器
      */
     @Bean
@@ -61,6 +71,18 @@ public class CxfWebServiceConfiguration {
     public Endpoint chinesePeopleEndPoint(ChinesePeopleSoapService chinesePeopleSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, chinesePeopleSoapService);
         endpoint.publish("/chinese");
+        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
+        endpoint.getInInterceptors().add(soapLogInInterceptor());
+        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+        return endpoint;
+    }
+
+    @Autowired
+    @Bean(name = "project")
+    public Endpoint projectEndPoint(PrjProjectSoapService prjProjectSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, prjProjectSoapService);
+        endpoint.publish("/project");
+        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
         endpoint.getInInterceptors().add(soapLogInInterceptor());
         endpoint.getOutInterceptors().add(soapLogOutInterceptor());
         return endpoint;
