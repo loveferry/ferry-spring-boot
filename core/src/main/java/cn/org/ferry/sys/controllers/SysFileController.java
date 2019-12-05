@@ -24,8 +24,6 @@ public class SysFileController {
      */
     @RequestMapping("/api/sys/file/upload")
     public void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment) {
-        ResponseData responseData = new ResponseData();
-        responseData.setSuccess(false);
         iSysFileService.upload(httpServletRequest, sysAttachment);
     }
 

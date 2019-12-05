@@ -30,8 +30,11 @@ public abstract class AbstractSoapInterceptor<E extends Message> extends Abstrac
     protected static final String URL = Message.REQUEST_URL;
     protected static final String MESSAGE_INFO = MessageInfo.class.getName();
     protected static final String HTTP_RESPONSE = "HTTP.RESPONSE";
+    protected static final String HTTP_REQUEST = "HTTP.REQUEST";
+    protected static final String ENDPOINT_CLASS = "endpoint.class";
     protected static final String LOG_TYPE_SERVICE_IN = "SERVICE_IN";
     protected static final String LOG_TYPE_SERVICE_OUT = "SERVICE_OUT";
+    protected static final String INPUT_CONTENT = "INPUT_CONTENT";
 
     public AbstractSoapInterceptor(String phase) {
         super(phase);

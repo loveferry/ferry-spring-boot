@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.ws.BindingType;
+import javax.xml.ws.soap.SOAPBinding;
+
 /**
  * <p>基于 soap 协议的人员接口实现类
  *
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
  * created by 2019/09/25 17:08
  */
 @Service
+@BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
 public class ChinesePeopleSoapServiceImpl implements ChinesePeopleSoapService {
     private static final Logger logger = LoggerFactory.getLogger(ChinesePeopleSoapServiceImpl.class);
 
@@ -26,14 +30,14 @@ public class ChinesePeopleSoapServiceImpl implements ChinesePeopleSoapService {
     private ChinesePeopleService chinesePeopleService;
 
     @Override
-    public OutHeaderMessage<ChinesePeople> query(InHeaderMessage inHeaderMessage, ChineseQueryBody chinessQueryBody) {
+    public OutHeaderMessage<ChinesePeople> query(InHeaderMessage inHeaderMessage, ChineseQueryBody chineseQueryBody) {
         logger.info("inHeaderMessage: {}", inHeaderMessage);
-        logger.info("chineseQueryBody: {}", chinessQueryBody);
+        logger.info("chineseQueryBody: {}", chineseQueryBody);
 
         OutHeaderMessage<ChinesePeople> outHeaderMessage =  new OutHeaderMessage<>();
         outHeaderMessage.setServerName("chineseQuery");
         outHeaderMessage.setStatus(SoapWebServiceCommon.Status.SUCCESS.name());
-        outHeaderMessage.setList(chinesePeopleService.queryByName(chinessQueryBody.getName(), 0, 0));
+        outHeaderMessage.setList(chinesePeopleService.queryByName(chineseQueryBody.getName(), 0, 0));
         logger.info("outHeaderMessage : {}", outHeaderMessage);
         return outHeaderMessage;
     }

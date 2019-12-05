@@ -22,17 +22,18 @@ import javax.xml.bind.annotation.XmlElement;
         name = "ChinesePeopleService",  // wsdl:portType
         serviceName = "ChinesePeopleService",   // wsdl:service
         portName = "ChinesePeopleServicePort", // wsdl:port name
-        endpointInterface = "cn.org.ferry.soap.service.ChinesePeopleSoapService"
+        endpointInterface = "cn.org.ferry.soap.service.ChinesePeopleSoapService",
+        targetNamespace = "http://lovesy.org.cn:6688/ws"
 )
 public interface ChinesePeopleSoapService {
     /**
      * 查询人员信息，姓名模糊查询
      * @param inHeaderMessage 接收的消息头
-     * @param chinessQueryBody 接收的消息体
+     * @param chineseQueryBody 接收的消息体
      * @return 返回人员信息列表
      */
-    @WebMethod(operationName = "query")  // wsdl:operation
+    @WebMethod  // wsdl:operation
     @WebResult(name = "result")
-    OutHeaderMessage<ChinesePeople> query(@XmlElement(required = true) @WebParam(name = "headerMessage", header = true) InHeaderMessage inHeaderMessage,
-                                          @XmlElement(required = true) @WebParam(name = "chiness") ChineseQueryBody chinessQueryBody);
+    OutHeaderMessage<ChinesePeople> query(@XmlElement(required = true) @WebParam(name = "baseInfo", header = true) InHeaderMessage inHeaderMessage,
+                                          @XmlElement(required = true) @WebParam(name = "chinese") ChineseQueryBody chineseQueryBody);
 }
