@@ -5,28 +5,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>项目实体类
+ * <p>合同实体类
  *
  * @author ferry ferry_sy@163.com
  * created by 2019/11/29 09:39
  */
 
-@XmlRootElement(name = "project")
-@XmlType(propOrder = {"APPROVAL_STATUS", "PARTNERS", "PARTNERS_CONTRACT_NUMBER", "REJECTED_DESCRIPTION"})
-public class PrjProject {
-    private String APPROVAL_STATUS;
+@XmlRootElement(name = "contract")
+@XmlType(propOrder = {"PARTNERS", "PARTNERS_CONTRACT_NUMBER", "LEASE_START_DATE", "INCEPTION_OF_LEASE"})
+public class ConContract {
     private String PARTNERS;
     private String PARTNERS_CONTRACT_NUMBER;
-    private String REJECTED_DESCRIPTION;
-
-    @XmlElement(required = true)
-    public String getAPPROVAL_STATUS() {
-        return APPROVAL_STATUS;
-    }
-
-    public void setAPPROVAL_STATUS(String APPROVAL_STATUS) {
-        this.APPROVAL_STATUS = APPROVAL_STATUS;
-    }
+    private String LEASE_START_DATE;
+    private String INCEPTION_OF_LEASE;
 
     @XmlElement(required = true)
     public String getPARTNERS() {
@@ -47,11 +38,20 @@ public class PrjProject {
     }
 
     @XmlElement(required = true)
-    public String getREJECTED_DESCRIPTION() {
-        return REJECTED_DESCRIPTION;
+    public String getLEASE_START_DATE() {
+        return LEASE_START_DATE;
     }
 
-    public void setREJECTED_DESCRIPTION(String REJECTED_DESCRIPTION) {
-        this.REJECTED_DESCRIPTION = REJECTED_DESCRIPTION;
+    public void setLEASE_START_DATE(String LEASE_START_DATE) {
+        this.LEASE_START_DATE = LEASE_START_DATE;
+    }
+
+    @XmlElement(required = true)
+    public String getINCEPTION_OF_LEASE() {
+        return INCEPTION_OF_LEASE;
+    }
+
+    public void setINCEPTION_OF_LEASE(String INCEPTION_OF_LEASE) {
+        this.INCEPTION_OF_LEASE = INCEPTION_OF_LEASE;
     }
 }

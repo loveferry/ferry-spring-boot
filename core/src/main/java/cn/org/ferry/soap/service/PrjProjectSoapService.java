@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlElement;
         name = "PrjProject",
         serviceName = "PrjProjectService",   // wsdl:service
         portName = "PrjProjectServicePort", // wsdl:port name
-        endpointInterface = "cn.org.ferry.soap.service.ChinesePeopleSoapService"
+        endpointInterface = "cn.org.ferry.soap.service.PrjProjectSoapService"
 )
 public interface PrjProjectSoapService {
 
