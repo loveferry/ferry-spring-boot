@@ -5,8 +5,6 @@ import cn.org.ferry.soap.dto.OutHeaderMessage;
 import cn.org.ferry.soap.dto.PrjProject;
 import cn.org.ferry.soap.dto.PrjProjectBase;
 import cn.org.ferry.soap.service.PrjProjectSoapService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,11 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PrjProjectSoapServiceImpl implements PrjProjectSoapService {
-    private static final Logger logger = LoggerFactory.getLogger(PrjProjectSoapServiceImpl.class);
     @Override
     public OutHeaderMessage<PrjProject> projectReview(InHeaderMessage inHeaderMessage, PrjProjectBase projectBase) {
-        logger.info(inHeaderMessage.toString());
-        logger.info(projectBase.toString());
         return null;
     }
 }

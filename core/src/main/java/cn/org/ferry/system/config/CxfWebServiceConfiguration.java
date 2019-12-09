@@ -2,6 +2,7 @@ package cn.org.ferry.system.config;
 
 import cn.org.ferry.soap.service.ChinesePeopleSoapService;
 import cn.org.ferry.soap.service.ConContractSoapService;
+import cn.org.ferry.soap.service.EveryDayPlanSoapService;
 import cn.org.ferry.soap.service.PrjProjectSoapService;
 import cn.org.ferry.system.inceptors.SoapInInputStreamInterceptor;
 import cn.org.ferry.system.inceptors.SoapLogInInterceptor;
@@ -94,6 +95,17 @@ public class CxfWebServiceConfiguration {
     public Endpoint contractEndPoint(ConContractSoapService conContractSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, conContractSoapService);
         endpoint.publish("/contract");
+        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
+        endpoint.getInInterceptors().add(soapLogInInterceptor());
+        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+        return endpoint;
+    }
+
+    @Autowired
+    @Bean(name = "everyDayPlan")
+    public Endpoint everyDayPlanEndPoint(EveryDayPlanSoapService everyDayPlanSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, everyDayPlanSoapService);
+        endpoint.publish("/everyDayPlan");
         endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
         endpoint.getInInterceptors().add(soapLogInInterceptor());
         endpoint.getOutInterceptors().add(soapLogOutInterceptor());
