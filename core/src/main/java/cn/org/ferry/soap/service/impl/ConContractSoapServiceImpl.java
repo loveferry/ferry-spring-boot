@@ -1,11 +1,12 @@
 package cn.org.ferry.soap.service.impl;
 
 import cn.org.ferry.soap.dto.ConContract;
-import cn.org.ferry.soap.dto.ConContractBase;
 import cn.org.ferry.soap.dto.InHeaderMessage;
 import cn.org.ferry.soap.dto.OutHeaderMessage;
 import cn.org.ferry.soap.service.ConContractSoapService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>基于 soap 协议的起租信息同步业务实现
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class ConContractSoapServiceImpl implements ConContractSoapService {
 
     @Override
-    public OutHeaderMessage<ConContract> contractIncept(InHeaderMessage inHeaderMessage, ConContractBase conContractBase) {
+    public OutHeaderMessage<ConContract> contractIncept(InHeaderMessage inHeaderMessage, List<ConContract> conContractList) {
         return null;
     }
 }

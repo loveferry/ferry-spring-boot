@@ -1,10 +1,10 @@
 package cn.org.ferry.soap.service;
 
 import cn.org.ferry.soap.dto.ConContract;
-import cn.org.ferry.soap.dto.ConContractBase;
 import cn.org.ferry.soap.dto.InHeaderMessage;
 import cn.org.ferry.soap.dto.OutHeaderMessage;
 
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -22,12 +22,13 @@ import javax.xml.bind.annotation.XmlElement;
         name = "ConContract",
         serviceName = "ConContractService",   // wsdl:service
         portName = "ConContractServicePort", // wsdl:port name
-        endpointInterface = "cn.org.ferry.soap.service.ConContractSoapService"
+        endpointInterface = "cn.org.ferry.soap.service.ConContractSoapService",
+        targetNamespace = "http://lovesy.org.cn:50318"
 )
 public interface ConContractSoapService {
 
-    @WebMethod(operationName = "contractIncept")  // wsdl:operation
+    @WebMethod(operationName = "contractIncept", action = "contractIncept")  // wsdl:operation
     @WebResult(name = "result")
     OutHeaderMessage<ConContract> contractIncept(@XmlElement(required = true) @WebParam(name = "baseInfo", header = true, targetNamespace = "head") InHeaderMessage inHeaderMessage,
-                                                 @XmlElement(required = true) @WebParam(name = "contract") ConContractBase conContractBase);
+                                                 @XmlElement(required = true) @WebParam(name = "PROJECT") List<ConContract> conContractList);
 }
