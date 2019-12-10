@@ -3,8 +3,8 @@ package cn.org.ferry.soap.service;
 import cn.org.ferry.soap.dto.InHeaderMessage;
 import cn.org.ferry.soap.dto.OutHeaderMessage;
 import cn.org.ferry.soap.dto.PrjProject;
-import cn.org.ferry.soap.dto.PrjProjectBase;
 
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -12,7 +12,7 @@ import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
- * <p>基于 soap 协议的项目接口
+ * <p>基于 soap 协议的签约投放接口
  *
  * @author ferry ferry_sy@163.com
  * created by 2019/11/29 09:32
@@ -22,12 +22,13 @@ import javax.xml.bind.annotation.XmlElement;
         name = "PrjProject",
         serviceName = "PrjProjectService",   // wsdl:service
         portName = "PrjProjectServicePort", // wsdl:port name
-        endpointInterface = "cn.org.ferry.soap.service.PrjProjectSoapService"
+        endpointInterface = "cn.org.ferry.soap.service.PrjProjectSoapService",
+        targetNamespace = "http://lovesy.org.cn:50318"
 )
 public interface PrjProjectSoapService {
 
-    @WebMethod(operationName = "projectReview")  // wsdl:operation
+    @WebMethod(operationName = "projectReview", action = "projectReview")  // wsdl:operation
     @WebResult(name = "result")
     OutHeaderMessage<PrjProject> projectReview(@XmlElement(required = true) @WebParam(name = "baseInfo", header = true, targetNamespace = "head") InHeaderMessage inHeaderMessage,
-                                               @XmlElement(required = true) @WebParam(name = "project") PrjProjectBase projectBase);
+                                               @XmlElement(required = true) @WebParam(name = "PROJECT") List<PrjProject> prjProjectList);
 }

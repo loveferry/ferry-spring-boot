@@ -1,7 +1,8 @@
 package cn.org.ferry.soap.dto;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -11,13 +12,13 @@ import javax.xml.bind.annotation.XmlType;
  * created by 2019/11/29 09:39
  */
 
-@XmlRootElement(name = "project")
-@XmlType(propOrder = {"APPROVAL_STATUS", "PARTNERS", "PARTNERS_CONTRACT_NUMBER", "REJECTED_DESCRIPTION"})
+@XmlType(propOrder = {"APPROVAL_STATUS", "PARTNERS", "PARTNERS_CONTRACT_NUMBER", "REJECTED_DESCRIPTION", "CASHFLOW_LIST"})
 public class PrjProject {
     private String APPROVAL_STATUS;
     private String PARTNERS;
     private String PARTNERS_CONTRACT_NUMBER;
     private String REJECTED_DESCRIPTION;
+    private List<Cashflow> CASHFLOW_LIST;
 
     @XmlElement(required = true)
     public String getAPPROVAL_STATUS() {
@@ -53,5 +54,15 @@ public class PrjProject {
 
     public void setREJECTED_DESCRIPTION(String REJECTED_DESCRIPTION) {
         this.REJECTED_DESCRIPTION = REJECTED_DESCRIPTION;
+    }
+
+    @XmlElementWrapper(name = "CASHFLOW_LIST")
+    @XmlElement(name="CASHFLOW")
+    public List<Cashflow> getCASHFLOW_LIST() {
+        return CASHFLOW_LIST;
+    }
+
+    public void setCASHFLOW_LIST(List<Cashflow> CASHFLOW_LIST) {
+        this.CASHFLOW_LIST = CASHFLOW_LIST;
     }
 }

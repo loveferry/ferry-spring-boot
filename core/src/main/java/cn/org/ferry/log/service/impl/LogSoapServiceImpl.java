@@ -28,7 +28,17 @@ public class LogSoapServiceImpl extends BaseServiceImpl<LogSoap> implements LogS
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public void insertLogSoap(LogSoap logSoap) {
+	public void insertLogSoap(String serviceAddress, String operationName, String clientAddress, String protocolHeaders,
+							  String contentType, String inputContent, String outputContent) {
+		LogSoap logSoap = new LogSoap();
+		logSoap.setServiceAddress(serviceAddress);
+		logSoap.setOperationName(operationName);
+		logSoap.setClientAddress(clientAddress);
+		logSoap.setProtocolHeaders(protocolHeaders);
+		logSoap.setContentType(contentType);
+		logSoap.setInputContent(inputContent);
+		logSoap.setOutputContent(outputContent);
 		insert(logSoap);
+		logger.info("web service log record.");
 	}
 }

@@ -4,9 +4,9 @@ import cn.org.ferry.soap.service.ChinesePeopleSoapService;
 import cn.org.ferry.soap.service.ConContractSoapService;
 import cn.org.ferry.soap.service.EveryDayPlanSoapService;
 import cn.org.ferry.soap.service.PrjProjectSoapService;
-import cn.org.ferry.system.inceptors.SoapInInputStreamInterceptor;
-import cn.org.ferry.system.inceptors.SoapLogInInterceptor;
-import cn.org.ferry.system.inceptors.SoapLogOutInterceptor;
+import cn.org.ferry.system.inceptors.cxf.SoapInPreInvokeInterceptor;
+import cn.org.ferry.system.inceptors.cxf.SoapInReceiveInterceptor;
+import cn.org.ferry.system.inceptors.cxf.SoapOutPreStreamInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
@@ -17,6 +17,8 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import javax.xml.ws.Endpoint;
 
@@ -45,27 +47,27 @@ public class CxfWebServiceConfiguration {
     }
 
     /**
-     * soap 接口服务端流入拦截器
+     * soap 接口服务端流入输接收数据处理拦截器
      */
     @Bean
-    public SoapInInputStreamInterceptor soapInInputStreamInterceptor(){
-        return new SoapInInputStreamInterceptor();
+    public SoapInReceiveInterceptor soapInReceiveInterceptor(){
+        return new SoapInReceiveInterceptor();
     }
 
     /**
-     * soap接口服务端流入日志拦截器
+     * soap接口服务端流入业务方法处理前拦截器
      */
     @Bean
-    public SoapLogInInterceptor soapLogInInterceptor(){
-        return new SoapLogInInterceptor();
+    public SoapInPreInvokeInterceptor soapInPreInvokeInterceptor(){
+        return new SoapInPreInvokeInterceptor();
     }
 
     /**
-     * soap接口服务端流出日志拦截器
+     * soap接口服务端流出输出流处理前拦截器
      */
     @Bean
-    public SoapLogOutInterceptor soapLogOutInterceptor(){
-        return new SoapLogOutInterceptor();
+    public SoapOutPreStreamInterceptor soapOutPreStreamInterceptor(){
+        return new SoapOutPreStreamInterceptor();
     }
 
     @Autowired
@@ -73,9 +75,9 @@ public class CxfWebServiceConfiguration {
     public Endpoint chinesePeopleEndPoint(ChinesePeopleSoapService chinesePeopleSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, chinesePeopleSoapService);
         endpoint.publish("/chinese");
-        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
-        endpoint.getInInterceptors().add(soapLogInInterceptor());
-        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
         return endpoint;
     }
 
@@ -84,9 +86,22 @@ public class CxfWebServiceConfiguration {
     public Endpoint projectEndPoint(PrjProjectSoapService prjProjectSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, prjProjectSoapService);
         endpoint.publish("/project");
-        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
-        endpoint.getInInterceptors().add(soapLogInInterceptor());
-        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        /*Map<String, Object> nsMap = new HashMap<>();
+        nsMap.put("ferry", "http://lovesy.org.cn:50318");
+        nsMap.put("env", "http://www.w3.org/2003/05/soap-envelope");
+
+        map.put("soap.env.ns.map", nsMap);
+        map.put("disable.outputstream.optimization", true);*/
+//        map.put("soap.force.doclit.bare", true);
+//        endpoint.setProperties(map);
+
         return endpoint;
     }
 
@@ -95,9 +110,9 @@ public class CxfWebServiceConfiguration {
     public Endpoint contractEndPoint(ConContractSoapService conContractSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, conContractSoapService);
         endpoint.publish("/contract");
-        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
-        endpoint.getInInterceptors().add(soapLogInInterceptor());
-        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
         return endpoint;
     }
 
@@ -106,9 +121,9 @@ public class CxfWebServiceConfiguration {
     public Endpoint everyDayPlanEndPoint(EveryDayPlanSoapService everyDayPlanSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, everyDayPlanSoapService);
         endpoint.publish("/everyDayPlan");
-        endpoint.getInInterceptors().add(soapInInputStreamInterceptor());
-        endpoint.getInInterceptors().add(soapLogInInterceptor());
-        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
         return endpoint;
     }
 }
