@@ -1,7 +1,8 @@
 package cn.org.ferry.soap.dto;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -11,13 +12,13 @@ import javax.xml.bind.annotation.XmlType;
  * created by 2019/11/29 09:39
  */
 
-@XmlRootElement(name = "contract")
-@XmlType(propOrder = {"PARTNERS", "PARTNERS_CONTRACT_NUMBER", "LEASE_START_DATE", "INCEPTION_OF_LEASE"})
+@XmlType(propOrder = {"PARTNERS", "PARTNERS_CONTRACT_NUMBER", "LEASE_START_DATE", "INCEPTION_OF_LEASE", "CASHFLOW_LIST"})
 public class ConContract {
     private String PARTNERS;
     private String PARTNERS_CONTRACT_NUMBER;
     private String LEASE_START_DATE;
     private String INCEPTION_OF_LEASE;
+    private List<Cashflow> CASHFLOW_LIST;
 
     @XmlElement(required = true)
     public String getPARTNERS() {
@@ -53,5 +54,15 @@ public class ConContract {
 
     public void setINCEPTION_OF_LEASE(String INCEPTION_OF_LEASE) {
         this.INCEPTION_OF_LEASE = INCEPTION_OF_LEASE;
+    }
+
+    @XmlElementWrapper(name = "CASHFLOW_LIST")
+    @XmlElement(name="CASHFLOW")
+    public List<Cashflow> getCASHFLOW_LIST() {
+        return CASHFLOW_LIST;
+    }
+
+    public void setCASHFLOW_LIST(List<Cashflow> CASHFLOW_LIST) {
+        this.CASHFLOW_LIST = CASHFLOW_LIST;
     }
 }
