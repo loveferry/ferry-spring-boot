@@ -6,33 +6,32 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>签约投放接口消息体
+ * <p>每日还款计划接口消息体
  *
  * @author ferry ferry_sy@163.com
  * created by 2019/11/29 09:39
  */
 
-@XmlType(propOrder = {"PROJECT", "CASHFLOW_LIST"})
-public class PrjProjectBase {
-    private PrjProject PROJECT;
-    private List<Cashflow> CASHFLOW_LIST;
+@XmlType(propOrder = {"PROJECT","CASHFLOW_LIST"})
+public class EveryPlanBase {
+    private EveryDayPlan PROJECT;
+    private List<EveryPlanLine> CASHFLOW_LIST;
 
     @XmlElement(required = true)
-    public PrjProject getPROJECT() {
+    public EveryDayPlan getPROJECT() {
         return PROJECT;
     }
 
-    public void setPROJECT(PrjProject PROJECT) {
+    public void setPROJECT(EveryDayPlan PROJECT) {
         this.PROJECT = PROJECT;
     }
 
-    @XmlElementWrapper(name = "list")
-//    @XmlAnyElement
-    public List<Cashflow> getCASHFLOW_LIST() {
+    @XmlElementWrapper(name = "LIST")
+    public List<EveryPlanLine> getCASHFLOW_LIST() {
         return CASHFLOW_LIST;
     }
 
-    public void setCASHFLOW_LIST(List<Cashflow> CASHFLOW_LIST) {
+    public void setCASHFLOW_LIST(List<EveryPlanLine> CASHFLOW_LIST) {
         this.CASHFLOW_LIST = CASHFLOW_LIST;
     }
 }

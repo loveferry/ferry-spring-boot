@@ -3,15 +3,13 @@
 <mapper namespace="cn.org.ferry.log.mapper.LogSoapMapper">
 	<resultMap id="BaseResultMap" type="cn.org.ferry.log.dto.LogSoap">
 		<id column="log_id" property="logId" javaType="java.lang.Long" jdbcType="BIGINT"/>
-		<result column="log_type" property="logType" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="service_name" property="serviceName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="service_address" property="serviceAddress" javaType="java.lang.String" jdbcType="VARCHAR"/>
 		<result column="operation_name" property="operationName" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="url" property="url" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="client_address" property="clientAddress" javaType="java.lang.String" jdbcType="VARCHAR"/>
 		<result column="protocol_headers" property="protocolHeaders" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="http_method" property="httpMethod" javaType="java.lang.String" jdbcType="VARCHAR"/>
 		<result column="content_type" property="contentType" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="encoding" property="encoding" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="content" property="content" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="input_content" property="inputContent" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="output_content" property="outputContent" javaType="java.lang.String" jdbcType="VARCHAR"/>
 	</resultMap>
 
 </mapper>

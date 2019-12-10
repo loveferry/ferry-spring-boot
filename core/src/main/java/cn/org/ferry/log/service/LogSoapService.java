@@ -12,5 +12,6 @@ public interface LogSoapService extends BaseService<LogSoap> {
     /**
      * 插入日志
      */
-    void insertLogSoap(LogSoap logSoap);
+    void insertLogSoap(String serviceAddress, String operationName, String clientAddress, String protocolHeaders,
+                       String contentType, String inputContent, String outputContent);
 }

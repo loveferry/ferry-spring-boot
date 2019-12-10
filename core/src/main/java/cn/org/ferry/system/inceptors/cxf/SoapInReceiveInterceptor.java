@@ -1,4 +1,4 @@
-package cn.org.ferry.system.inceptors;
+package cn.org.ferry.system.inceptors.cxf;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.helpers.IOUtils;
@@ -11,16 +11,16 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * <p>description
+ * <p>基于 soap 协议的 web service 接口服务端接收数据拦截器
  *
  * @author ferry ferry_sy@163.com
  * created by 2019/11/29 17:40
  */
 
-public class SoapInInputStreamInterceptor extends AbstractSoapInterceptor<SoapMessage> {
-    private static final Logger logger = LoggerFactory.getLogger(SoapLogInInterceptor.class);
+public class SoapInReceiveInterceptor extends AbstractInSoapInterceptor<SoapMessage> {
+    private static final Logger logger = LoggerFactory.getLogger(SoapInReceiveInterceptor.class);
 
-    public SoapInInputStreamInterceptor(){
+    public SoapInReceiveInterceptor(){
         // 指定拦截器触发阶段
         super(Phase.RECEIVE);
     }
@@ -37,8 +37,12 @@ public class SoapInInputStreamInterceptor extends AbstractSoapInterceptor<SoapMe
                 }
             });
             soapMessage.getExchange().put(INPUT_CONTENT, xml);
+            soapMessage.getExchange().put(PROTOCOL_HEADERS, soapMessage.get(PROTOCOL_HEADERS));
+
+            logger.info("web service interceptor touch off receive: set some variable to soapMessage.getExchange() object");
+
         } catch (IOException e) {
-            logger.error("soap web service log in interceptor error:{}", e);
+            logger.error("soap web service in receive interceptor error:{}", e);
         }
     }
 }
