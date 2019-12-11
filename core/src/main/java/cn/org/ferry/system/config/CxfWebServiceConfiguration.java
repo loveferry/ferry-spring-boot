@@ -2,6 +2,7 @@ package cn.org.ferry.system.config;
 
 import cn.org.ferry.soap.service.ChinesePeopleSoapService;
 import cn.org.ferry.soap.service.ConContractSoapService;
+import cn.org.ferry.soap.service.ContractChangeSoapService;
 import cn.org.ferry.soap.service.EveryDayPlanSoapService;
 import cn.org.ferry.soap.service.PrjProjectSoapService;
 import cn.org.ferry.system.inceptors.cxf.SoapInPreInvokeInterceptor;
@@ -17,8 +18,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import javax.xml.ws.Endpoint;
 
@@ -85,22 +84,26 @@ public class CxfWebServiceConfiguration {
     @Bean(name = "project")
     public Endpoint projectEndPoint(PrjProjectSoapService prjProjectSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, prjProjectSoapService);
+
+        /*Map<String, Object> propertyMap = new HashMap<>();
+
+        Map<String, Object> nsMap = new HashMap<>();
+        nsMap.put("ferry", "http://lovesy.org.cn:50318");
+        nsMap.put("env", "http://www.w3.org/2003/05/soap-envelope");
+
+        propertyMap.put("soap.env.ns.map", nsMap);
+        propertyMap.put("disable.outputstream.optimization", true);
+        endpoint.setProperties(propertyMap);*/
+
+
         endpoint.publish("/project");
         endpoint.getInInterceptors().add(soapInReceiveInterceptor());
         endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
         endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
 
 
-        Map<String, Object> map = new HashMap<>();
 
-        /*Map<String, Object> nsMap = new HashMap<>();
-        nsMap.put("ferry", "http://lovesy.org.cn:50318");
-        nsMap.put("env", "http://www.w3.org/2003/05/soap-envelope");
-
-        map.put("soap.env.ns.map", nsMap);
-        map.put("disable.outputstream.optimization", true);*/
 //        map.put("soap.force.doclit.bare", true);
-//        endpoint.setProperties(map);
 
         return endpoint;
     }
@@ -126,4 +129,17 @@ public class CxfWebServiceConfiguration {
         endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
         return endpoint;
     }
+
+    @Autowired
+    @Bean(name = "contractChange")
+    public Endpoint contractChangePoint(ContractChangeSoapService contractChangeSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, contractChangeSoapService);
+        endpoint.publish("/contractChange");
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        return endpoint;
+    }
+
+
 }

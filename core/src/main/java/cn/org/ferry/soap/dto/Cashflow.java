@@ -1,6 +1,7 @@
 package cn.org.ferry.soap.dto;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>项目实体类
@@ -9,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
  * created by 2019/11/29 09:39
  */
 
+@XmlType(propOrder = {"TIMES","CF_DIRECTION","CF_ITEM","DUE_DATE","DUE_AMOUNT","PRINCIPAL","INTEREST","SURPLUS_RECEIVED_PRINCIPAL"})
 public class Cashflow {
     private String TIMES;
     private String CF_DIRECTION;
