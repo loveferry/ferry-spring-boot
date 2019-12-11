@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -61,6 +62,18 @@ public class ListTest {
         list.remove(2);
         list.add(2,"2");
         System.out.println(list);
+
+    }
+
+    @Test
+    public void cdisncd(){
+        Map<Long, List<String>> map = new HashMap<>();
+
+        map.put(101L, null);
+        map.put(102L, null);
+        map.put(103L, null);
+        map.put(104L, null);
+        System.out.println(map);
 
     }
 }

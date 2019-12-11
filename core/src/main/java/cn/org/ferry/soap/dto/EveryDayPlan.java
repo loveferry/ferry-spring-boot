@@ -1,7 +1,8 @@
 package cn.org.ferry.soap.dto;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -11,8 +12,7 @@ import javax.xml.bind.annotation.XmlType;
  * created by 2019/11/29 09:39
  */
 
-@XmlRootElement(name = "PROJECT")
-@XmlType(propOrder = {"PARTNERS", "PARTNERS_CONTRACT_NUMBER", "DEPOSIT_TOTAL", "DEPOSIT_BALANCE"})
+@XmlType(propOrder = {"PARTNERS", "PARTNERS_CONTRACT_NUMBER", "DEPOSIT_TOTAL", "DEPOSIT_BALANCE", "CASHFLOW_LIST"})
 public class EveryDayPlan {
 
     private String PARTNERS;
@@ -22,6 +22,8 @@ public class EveryDayPlan {
     private String DEPOSIT_TOTAL;
 
     private String DEPOSIT_BALANCE;
+
+    private List<EveryPlanLine> CASHFLOW_LIST;
 
     @XmlElement(required = true)
     public String getPARTNERS() {
@@ -57,5 +59,15 @@ public class EveryDayPlan {
 
     public void setDEPOSIT_BALANCE(String DEPOSIT_BALANCE) {
         this.DEPOSIT_BALANCE = DEPOSIT_BALANCE;
+    }
+
+    @XmlElementWrapper(name = "CASHFLOW_LIST")
+    @XmlElement(name = "CASHFLOW", required = true)
+    public List<EveryPlanLine> getCASHFLOW_LIST() {
+        return CASHFLOW_LIST;
+    }
+
+    public void setCASHFLOW_LIST(List<EveryPlanLine> CASHFLOW_LIST) {
+        this.CASHFLOW_LIST = CASHFLOW_LIST;
     }
 }

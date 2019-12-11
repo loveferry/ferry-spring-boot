@@ -33,5 +33,5 @@ public interface PrjProjectSoapService {
     @RequestWrapper(localName = "PROJECT_LIST", targetNamespace = "prj")
 //    @ResponseWrapper(localName = "RESULT", targetNamespace = "prj")
     OutHeaderMessage<PrjProject> projectReview(@XmlElement(required = true) @WebParam(name = "baseInfo", header = true, targetNamespace = "head") InHeaderMessage inHeaderMessage,
-                                               @XmlElement(required = true) @WebParam(name = "PROJECT") List<PrjProject> prjProjectList);
+                                               @XmlElement(required = true, name = "PROJECT") @WebParam List<PrjProject> prjProjectList);
 }
