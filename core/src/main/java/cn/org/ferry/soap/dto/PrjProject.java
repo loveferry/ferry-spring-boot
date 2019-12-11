@@ -57,7 +57,7 @@ public class PrjProject {
     }
 
     @XmlElementWrapper(name = "CASHFLOW_LIST")
-    @XmlElement(name="CASHFLOW")
+    @XmlElement(name="CASHFLOW", required = true)
     public List<Cashflow> getCASHFLOW_LIST() {
         return CASHFLOW_LIST;
     }
