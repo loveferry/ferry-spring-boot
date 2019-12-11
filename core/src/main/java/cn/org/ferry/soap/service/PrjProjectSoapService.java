@@ -10,6 +10,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.ws.RequestWrapper;
 
 /**
  * <p>基于 soap 协议的签约投放接口
@@ -28,7 +29,9 @@ import javax.xml.bind.annotation.XmlElement;
 public interface PrjProjectSoapService {
 
     @WebMethod(operationName = "projectReview", action = "projectReview")  // wsdl:operation
-    @WebResult(name = "result")
+    @WebResult(name = "result", targetNamespace = "prj")
+    @RequestWrapper(localName = "PROJECT_LIST", targetNamespace = "prj")
+//    @ResponseWrapper(localName = "RESULT", targetNamespace = "prj")
     OutHeaderMessage<PrjProject> projectReview(@XmlElement(required = true) @WebParam(name = "baseInfo", header = true, targetNamespace = "head") InHeaderMessage inHeaderMessage,
                                                @XmlElement(required = true) @WebParam(name = "PROJECT") List<PrjProject> prjProjectList);
 }
