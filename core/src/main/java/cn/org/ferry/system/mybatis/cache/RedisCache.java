@@ -1,16 +1,16 @@
 package cn.org.ferry.system.mybatis.cache;
 
+import cn.org.ferry.system.utils.ConfigUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.ZSetOperations;
 
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <p>使用redis作为缓存
@@ -20,37 +20,12 @@ import java.util.concurrent.locks.ReadWriteLock;
  */
 
 public class RedisCache implements Cache {
+    private static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
+
     /**
      * 缓存id
      */
     private String id;
-
-    /**
-     * 字符串键值对对象
-     */
-    private ValueOperations<Object, Object> valueOperations;
-
-    /**
-     * 列表键值对对象
-     */
-    private ListOperations<Object, Object> listOperations;
-
-    /**
-     * 哈希键值对对象
-     */
-    private HashOperations<Object, Object, Object> hashOperations;
-
-    /**
-     * 集合键值对对象
-     */
-    private SetOperations<Object, Object> setOperations;
-
-    /**
-     * 有序集合键值对对象
-     */
-    private ZSetOperations<Object, Object> zSetOperations;
-
-    private static RedisTemplate<String, String> redisTemplate;
 
     public RedisCache(String cacheId){
         if(StringUtils.isEmpty(cacheId)){
@@ -66,31 +41,47 @@ public class RedisCache implements Cache {
 
     @Override
     public void putObject(Object key, Object value) {
-
+        HashOperations<String, Object, Object> hashOperations = getRedisTemplate().opsForHash();
+        hashOperations.put(id, key, value);
+        logger.info("Mybatis set second level cache for id : {}", id);
     }
 
     @Override
     public Object getObject(Object key) {
-        return null;
+        logger.info("Mybatis get second level cache for id : {}", id);
+        HashOperations<String, Object, Object> hashOperations = getRedisTemplate().opsForHash();
+        return hashOperations.get(id, key);
     }
 
     @Override
     public Object removeObject(Object key) {
-        return null;
+        HashOperations<String, Object, Object> hashOperations = getRedisTemplate().opsForHash();
+        Object value = hashOperations.get(id, key);
+        Long count = hashOperations.delete(id, key);
+        logger.info("Mybatis remove second level cache for id : {}, delete count : {}", id, count);
+        return value;
     }
 
     @Override
     public void clear() {
-
+        getRedisTemplate().delete(id);
+        logger.info("Mybatis clear second level cache for id : {}", id);
     }
 
     @Override
     public int getSize() {
-        return 0;
+        logger.info("Get Mybatis second level cache size for id : {}", id);
+        HashOperations<String, Object, Object> hashOperations = getRedisTemplate().opsForHash();
+        return Integer.valueOf(hashOperations.size(id).toString());
     }
 
     @Override
     public ReadWriteLock getReadWriteLock() {
-        return null;
+        return new ReentrantReadWriteLock(true);
     }
+
+    private RedisTemplate<String, Object> getRedisTemplate(){
+        return (RedisTemplate<String, Object>) ConfigUtil.getBean("redisTemplate");
+    }
+
 }

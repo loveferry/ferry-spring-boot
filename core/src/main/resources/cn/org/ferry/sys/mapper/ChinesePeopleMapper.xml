@@ -8,7 +8,7 @@
         <result column="birth_date" property="birthDate" jdbcType="DATE" javaType="java.util.Date"/>
     </resultMap>
     
-    <cache/>
+    <cache type="cn.org.ferry.system.mybatis.cache.RedisCache"/>
     
     <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         select

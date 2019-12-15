@@ -4,7 +4,7 @@ import cn.org.ferry.system.dto.FerryRequest;
 import cn.org.ferry.system.dto.FerrySession;
 import cn.org.ferry.system.inceptors.AuthenticationInterceptor;
 import cn.org.ferry.system.inceptors.RegisterRequestInterceptor;
-import cn.org.ferry.system.utils.PropertiesUtils;
+import cn.org.ferry.system.utils.ConfigUtil;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
@@ -97,7 +97,7 @@ public class FerryWebConfiguration implements WebMvcConfigurer {
                 SerializerFeature.WriteNullListAsEmpty      // List null-> []
         );
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-        fastJsonHttpMessageConverter.setDefaultCharset(Charset.forName(PropertiesUtils.DEFAULT_CHARSET));
+        fastJsonHttpMessageConverter.setDefaultCharset(Charset.forName(ConfigUtil.DEFAULT_CHARSET));
         converters.add(0, fastJsonHttpMessageConverter);
 //        converters.add(fastJsonHttpMessageConverter);
     }

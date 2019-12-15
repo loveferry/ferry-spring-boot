@@ -1,6 +1,6 @@
 package cn.org.ferry;
 
-import cn.org.ferry.system.utils.PropertiesUtils;
+import cn.org.ferry.system.utils.ConfigUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,7 @@ public class CoreApplication {
 		// 关闭 logo 显示效果
 //        springApplication.setBannerMode(Banner.Mode.OFF);
 		ConfigurableApplicationContext applicationContext = springApplication.run(args);
-		PropertiesUtils.init(applicationContext);
+		ConfigUtil.init(applicationContext);
 	}
 }
 

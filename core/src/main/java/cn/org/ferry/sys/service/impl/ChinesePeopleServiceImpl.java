@@ -119,12 +119,7 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
 
 //        PageHelper.startPage(page, pageSize);
 
-        List<ChinesePeople> list = chinesePeopleMapper.queryByName(name);
-        ChinesePeople chinesePeople = new ChinesePeople();
-        chinesePeople.setId(1011L);
-        list.add(chinesePeople);
-
-        return list;
+        return chinesePeopleMapper.queryByName(name);
     }
 
     @Override

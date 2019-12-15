@@ -8,17 +8,15 @@ import cn.org.ferry.doc.mapper.DocTemplateMapper;
 import cn.org.ferry.doc.service.DocTemplateParamService;
 import cn.org.ferry.doc.service.DocTemplateService;
 import cn.org.ferry.doc.utils.Docx4jGenerateUtil;
-import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.exceptions.AttachmentException;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
-import cn.org.ferry.sys.service.SysAttachmentService;
 import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.sys.service.SysSqlService;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.utils.PropertiesUtils;
+import cn.org.ferry.system.utils.ConfigUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ferry ferry_sy@163.com
@@ -77,7 +74,7 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         List<DocTemplateParam> docTemplateParamList = docTemplateParamService.queryByTemplateCode(templateCode);
         // 目标附件
         SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sourceType);
-        String targetPath = PropertiesUtils.getProperty("ferry.upload")+File.separator+sysAttachmentCategory.getAttachmentPath()+File.separator+ UUID.randomUUID().toString();
+        String targetPath = ConfigUtil.getProperty("ferry.upload")+File.separator+sysAttachmentCategory.getAttachmentPath()+File.separator+ UUID.randomUUID().toString();
         // 书签替换
         Map<String, Object> bookMarkParams = new HashMap<>(docTemplateParamList.size());
         Map<String, BookMarkType> bookMarkTypes = new HashMap<>(docTemplateParamList.size());
