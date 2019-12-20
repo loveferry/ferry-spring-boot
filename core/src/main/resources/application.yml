@@ -5,13 +5,12 @@ spring:
 
 # mybatis
 mybatis:
-  #  type-handlers-package: cn.org.ferry.system.mybatis.handler
-  mapperLocations: classpath:cn/org/ferry/**/mapper/*Mapper.xml
+  mapper-locations: classpath:cn/org/ferry/**/mapper/*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true   # 开启驼峰映射
     cache-enabled: true
-mapper:
-  mappers: cn.org.ferry.system.mybatis.BaseMapper
+#mapper:
+#  mappers: cn.org.ferry.system.mybatis.BaseMapper
 
 
 pagehelper:
