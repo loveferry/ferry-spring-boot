@@ -39,6 +39,12 @@
 			<version>RELEASE</version>
 		</dependency>
 		
+		<!--actuator依赖-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
 		<!--redis依赖包 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

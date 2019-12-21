@@ -33,7 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class MapperHelper {
-
+    /**
+     * 日志对象
+     */
     private static final Logger logger = LoggerFactory.getLogger(MapperHelper.class);
 
     /**
@@ -68,9 +70,6 @@ public class MapperHelper {
     /**
      * 通过通用Mapper接口获取对应的MapperTemplate
      *
-     * @param mapperClass
-     * @return
-     * @throws Exception
      */
     private MapperTemplate fromMapperClass(Class<?> mapperClass) {
         Method[] methods = mapperClass.getDeclaredMethods();
@@ -246,9 +245,6 @@ public class MapperHelper {
 
     /**
      * 配置指定的接口
-     *
-     * @param configuration
-     * @param mapperInterface
      */
     public void processConfiguration(Configuration configuration, Class<?> mapperInterface) {
         String prefix;

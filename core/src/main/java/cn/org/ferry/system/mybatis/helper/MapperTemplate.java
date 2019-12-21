@@ -77,9 +77,6 @@ public abstract class MapperTemplate {
 
     /**
      * 是否支持该通用方法
-     *
-     * @param msId
-     * @return
      */
     public boolean supportMethod(String msId) {
         Class<?> mapperClass = MsUtil.getMapperClass(msId);

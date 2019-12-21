@@ -5,7 +5,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * 注册跨域访问类
  */
 @Configuration
-public class CORSFilterConfiguration {
+public class CorsConfiguration {
     @Value("#{'${ferry.cors.allowedOrigins}'.split(',')}")
     private List<String> allowedOrigins;
     @Value("#{'${ferry.cors.allowedHeaders}'.split(',')}")
@@ -29,7 +28,7 @@ public class CORSFilterConfiguration {
 
     @Bean
     public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
+        org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置允许的网站域名，如果全允许则设为 *
         if(CollectionUtils.isEmpty(allowedOrigins)){
