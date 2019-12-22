@@ -19,10 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 实体类工具类 - 处理实体和数据库表以及字段关键的一个类
- * <p/>
- * <p>项目地址 : <a href="https://github.com/abel533/Mapper" target="_blank">https://github.com/abel533/Mapper</a></p>
- *
- * @author liuzh
  */
 public class EntityHelper {
 
@@ -31,6 +27,9 @@ public class EntityHelper {
      */
     private static final Map<Class<?>, EntityTable> entityTableMap = new ConcurrentHashMap<Class<?>, EntityTable>();
 
+    /**
+     * 默认的实体类解析器
+     */
     private static final EntityResolve DEFAULT = new DefaultEntityResolve();
 
     /**
@@ -40,9 +39,6 @@ public class EntityHelper {
 
     /**
      * 获取表对象
-     *
-     * @param entityClass
-     * @return
      */
     public static EntityTable getEntityTable(Class<?> entityClass) {
         EntityTable entityTable = entityTableMap.get(entityClass);
@@ -141,10 +137,7 @@ public class EntityHelper {
     }
 
     /**
-     * 初始化实体属性
-     *
-     * @param entityClass
-     * @param config
+     * 初始化实体类属性
      */
     public static synchronized void initEntityNameMap(Class<?> entityClass, Config config) {
         if (entityTableMap.get(entityClass) != null) {

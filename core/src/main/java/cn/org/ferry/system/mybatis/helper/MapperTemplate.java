@@ -5,8 +5,8 @@ import cn.org.ferry.system.exception.MybatisException;
 import cn.org.ferry.system.mybatis.entity.Config;
 import cn.org.ferry.system.mybatis.entity.EntityColumn;
 import cn.org.ferry.system.mybatis.entity.EntityTable;
+import cn.org.ferry.system.mybatis.utils.MetaObjectUtil;
 import cn.org.ferry.system.mybatis.utils.MsUtil;
-import com.github.pagehelper.util.MetaObjectUtil;
 import com.github.pagehelper.util.StringUtil;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
@@ -35,9 +35,23 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class MapperTemplate {
     private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
-    protected            Map<String, Method>   methodMap      = new ConcurrentHashMap<String, Method>();
-    protected Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<String, Class<?>>();
-    protected            Class<?>              mapperClass;
+
+    /**
+     * 方法 hash 表
+     */
+    protected Map<String, Method> methodMap = new ConcurrentHashMap<>();
+
+
+    protected Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<>();
+
+    /**
+     * mapper 接口的 Class 对象
+     */
+    protected Class<?> mapperClass;
+
+    /**
+     * 通用 mapper 逻辑处理类
+     */
     protected MapperHelper mapperHelper;
 
     public MapperTemplate(Class<?> mapperClass, MapperHelper mapperHelper) {
@@ -47,9 +61,6 @@ public abstract class MapperTemplate {
 
     /**
      * 该方法仅仅用来初始化ProviderSqlSource
-     *
-     * @param record
-     * @return
      */
     public String dynamicSQL(Object record) {
         return "dynamicSQL";
@@ -77,6 +88,8 @@ public abstract class MapperTemplate {
 
     /**
      * 是否支持该通用方法
+     *
+     * @param msId MappedStatement 的 id
      */
     public boolean supportMethod(String msId) {
         Class<?> mapperClass = MsUtil.getMapperClass(msId);
@@ -103,9 +116,6 @@ public abstract class MapperTemplate {
 
     /**
      * 重新设置SqlSource
-     *
-     * @param ms
-     * @param sqlSource
      */
     protected void setSqlSource(MappedStatement ms, SqlSource sqlSource) {
         MetaObject msObject = MetaObjectUtil.forObject(ms);
@@ -125,9 +135,6 @@ public abstract class MapperTemplate {
 
     /**
      * 获取返回值类型 - 实体类型
-     *
-     * @param ms
-     * @return
      */
     public Class<?> getEntityClass(MappedStatement ms) {
         String msId = ms.getId();
@@ -154,9 +161,6 @@ public abstract class MapperTemplate {
 
     /**
      * 获取实体类的表名
-     *
-     * @param entityClass
-     * @return
      */
     protected String tableName(Class<?> entityClass) {
         EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
@@ -193,10 +197,6 @@ public abstract class MapperTemplate {
 
     /**
      * 重新设置SqlSource
-     *
-     * @param ms
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
      */
     public void setSqlSource(MappedStatement ms) throws Exception {
         if (this.mapperClass == MsUtil.getMapperClass(ms.getId())) {
@@ -204,18 +204,13 @@ public abstract class MapperTemplate {
         }
         Method method = methodMap.get(MsUtil.getMethodName(ms));
         try {
-            //第一种，直接操作ms，不需要返回值
-            if (method.getReturnType() == Void.TYPE) {
+            if (method.getReturnType() == Void.TYPE) {                              // 第一种，直接操作ms，不需要返回值
                 method.invoke(this, ms);
-            }
-            //第二种，返回SqlNode
-            else if (SqlNode.class.isAssignableFrom(method.getReturnType())) {
+            } else if (SqlNode.class.isAssignableFrom(method.getReturnType())) {    // 第二种，返回SqlNode
                 SqlNode sqlNode = (SqlNode) method.invoke(this, ms);
                 DynamicSqlSource dynamicSqlSource = new DynamicSqlSource(ms.getConfiguration(), sqlNode);
                 setSqlSource(ms, dynamicSqlSource);
-            }
-            //第三种，返回xml形式的sql字符串
-            else if (String.class.equals(method.getReturnType())) {
+            } else if (String.class.equals(method.getReturnType())) {               // 第三种，返回xml形式的sql字符串
                 String xmlSql = (String) method.invoke(this, ms);
                 SqlSource sqlSource = createSqlSource(ms, xmlSql);
                 //替换原有的SqlSource

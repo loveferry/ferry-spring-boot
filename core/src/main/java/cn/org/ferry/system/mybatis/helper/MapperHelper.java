@@ -68,8 +68,9 @@ public class MapperHelper {
     }
 
     /**
-     * 通过通用Mapper接口获取对应的MapperTemplate
-     *
+     * 通过通用 mapper 获取对应的 MapperTemplate
+     * 注意：一个通用 mapper 只能对应一个 MapperTemplate
+     * 通用 mapper 的方法名必须和实际逻辑处理类对应的方法名保持一致
      */
     private MapperTemplate fromMapperClass(Class<?> mapperClass) {
         Method[] methods = mapperClass.getDeclaredMethods();
@@ -136,7 +137,7 @@ public class MapperHelper {
                 registerMapper(anInterface);
             }
         }*/
-        // 优化逻辑，按上述代码执行，则通用 mapper继承的所有接口都会被注册成通用 mapper，
+        // 优化逻辑，按上述代码执行，通用 mapper继承的所有接口都会被注册成通用 mapper，
         // 调用下述方法，会判断继承的接口是否有 RegisterMapper 注解标记，若有，则注册成 通用 mapper，否则不注册
         hasRegisterMapper(mapperClass);
     }
@@ -156,9 +157,6 @@ public class MapperHelper {
 
     /**
      * 判断当前的接口方法是否需要进行拦截
-     *
-     * @param msId
-     * @return
      */
     public MapperTemplate isMapperMethod(String msId) {
         MapperTemplate mapperTemplate = getMapperTemplateByMsId(msId);
@@ -177,10 +175,9 @@ public class MapperHelper {
     }
 
     /**
-     * 根据 msId 获取 MapperTemplate
+     * 获取指定的 MapperTemplate
      *
-     * @param msId
-     * @return
+     * @param msId MappedStatement id
      */
     public MapperTemplate getMapperTemplateByMsId(String msId){
         for (Map.Entry<Class<?>, MapperTemplate> entry : registerMapper.entrySet()) {
@@ -265,8 +262,7 @@ public class MapperHelper {
 
     /**
      * 处理 MappedStatement
-     *
-     * @param ms
+     * 重设 SqlSource
      */
     public void processMappedStatement(MappedStatement ms){
         MapperTemplate mapperTemplate = isMapperMethod(ms.getId());
@@ -286,8 +282,6 @@ public class MapperHelper {
 
     /**
      * 设置通用Mapper配置
-     *
-     * @param config
      */
     public void setConfig(Config config) {
         this.config = config;
@@ -337,12 +331,8 @@ public class MapperHelper {
     }
 
     /**
-     * 重新设置SqlSource
-     * <p/>
+     * 重新设置 SqlSource
      * 执行该方法前必须使用 isMapperMethod 判断，否则 msIdCache 会空
-     *
-     * @param ms
-     * @param mapperTemplate
      */
     public void setSqlSource(MappedStatement ms, MapperTemplate mapperTemplate) {
         try {

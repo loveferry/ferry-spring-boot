@@ -21,28 +21,50 @@ import javax.persistence.Table;
 
 /**
  * 数据库表
- *
- * @author liuzh
  */
+
 public class EntityTable {
     public static final Pattern DELIMITER = Pattern.compile("^[`\\[\"]?(.*?)[`\\]\"]?$");
-    //属性和列对应
+
+    /**
+     * 属性-字段映射集合
+     */
     protected Map<String, EntityColumn> propertyMap;
+
     private String name;
+
     private String catalog;
+
     private String schema;
+
     private String orderByClause;
+
     private String baseSelect;
-    //实体类 => 全部列属性
+    /**
+     * 实体类 => 全部列属性
+     */
     private LinkedHashSet<EntityColumn> entityClassColumns;
-    //实体类 => 主键信息
+
+    /**
+     * 实体类 => 主键信息
+     */
     private LinkedHashSet<EntityColumn> entityClassPKColumns;
-    //useGenerator包含多列的时候需要用到
+
+    /**
+     * useGenerator包含多列的时候需要用到
+     */
     private List<String> keyProperties;
+
     private List<String> keyColumns;
-    //resultMap对象
+
+    /**
+     * resultMap对象
+     */
     private ResultMap resultMap;
-    //类
+
+    /**
+     * 类
+     */
     private Class<?> entityClass;
 
     public EntityTable(Class<?> entityClass) {

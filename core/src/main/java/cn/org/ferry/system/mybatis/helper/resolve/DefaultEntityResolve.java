@@ -3,11 +3,9 @@ package cn.org.ferry.system.mybatis.helper.resolve;
 import cn.org.ferry.system.exception.MybatisException;
 import cn.org.ferry.system.mybatis.annotation.ColumnType;
 import cn.org.ferry.system.mybatis.annotation.KeySql;
-import cn.org.ferry.system.mybatis.annotation.NameStyle;
 import cn.org.ferry.system.mybatis.annotation.Order;
 import cn.org.ferry.system.mybatis.code.IdentityDialect;
 import cn.org.ferry.system.mybatis.code.ORDER;
-import cn.org.ferry.system.mybatis.code.Style;
 import cn.org.ferry.system.mybatis.entity.Config;
 import cn.org.ferry.system.mybatis.entity.EntityColumn;
 import cn.org.ferry.system.mybatis.entity.EntityField;
@@ -18,10 +16,12 @@ import cn.org.ferry.system.mybatis.helper.FieldHelper;
 import cn.org.ferry.system.mybatis.utils.SimpleTypeUtil;
 import cn.org.ferry.system.mybatis.utils.SqlReservedWords;
 import com.github.pagehelper.util.StringUtil;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
+import com.google.common.base.CaseFormat;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.UnknownTypeHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.LinkedHashSet;
@@ -35,41 +35,46 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
- * @author liuzh
+ * 默认的实体类解析器
  */
-public class DefaultEntityResolve implements EntityResolve {
-    private final Log log = LogFactory.getLog(DefaultEntityResolve.class);
 
+public class DefaultEntityResolve implements EntityResolve {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultEntityResolve.class);
+
+    /**
+     * 解析实体类
+     */
     @Override
     public EntityTable resolveEntity(Class<?> entityClass, Config config) {
-        Style style = config.getStyle();
-        //style，该注解优先于全局配置
-        if (entityClass.isAnnotationPresent(NameStyle.class)) {
-            NameStyle nameStyle = entityClass.getAnnotation(NameStyle.class);
-            style = nameStyle.value();
+        CaseFormat caseFormat = config.getCaseFormat();
+        // caseFormat，该注解优先于全局配置
+        if (entityClass.isAnnotationPresent(cn.org.ferry.system.mybatis.annotation.CaseFormat.class)) {
+            cn.org.ferry.system.mybatis.annotation.CaseFormat caseFormatAnnotation =
+                    entityClass.getAnnotation(cn.org.ferry.system.mybatis.annotation.CaseFormat.class);
+            caseFormat = caseFormatAnnotation.value();
         }
 
-        //创建并缓存EntityTable
+        // 创建并缓存EntityTable
         EntityTable entityTable = null;
         if (entityClass.isAnnotationPresent(Table.class)) {
             Table table = entityClass.getAnnotation(Table.class);
-            if (!"".equals(table.name())) {
+            if (StringUtils.isNotEmpty(table.name())) {
                 entityTable = new EntityTable(entityClass);
                 entityTable.setTable(table);
             }
         }
         if (entityTable == null) {
             entityTable = new EntityTable(entityClass);
-            //可以通过stye控制
-            String tableName = convertByStyle(entityClass.getSimpleName(), style);
+            // 通过自定义的映射关系将实体类名转化成表名
+            String tableName = convertByCaseFormat(entityClass.getSimpleName(), caseFormat);
             //自动处理关键字
             if (StringUtil.isNotEmpty(config.getWrapKeyword()) && SqlReservedWords.containsWord(tableName)) {
                 tableName = MessageFormat.format(config.getWrapKeyword(), tableName);
             }
             entityTable.setName(tableName);
         }
-        entityTable.setEntityClassColumns(new LinkedHashSet<EntityColumn>());
-        entityTable.setEntityClassPKColumns(new LinkedHashSet<EntityColumn>());
+        entityTable.setEntityClassColumns(new LinkedHashSet<>());
+        entityTable.setEntityClassPKColumns(new LinkedHashSet<>());
         //处理所有列
         List<EntityField> fields = null;
         if (config.isEnableMethodAnnotation()) {
@@ -89,7 +94,7 @@ public class DefaultEntityResolve implements EntityResolve {
                     (config.isEnumAsSimpleType() && Enum.class.isAssignableFrom(field.getJavaType())))) {
                 continue;
             }
-            processField(entityTable, field, config, style);
+            processField(entityTable, field, config, caseFormat);
         }
         //当pk.size=0的时候使用所有列作为主键
         if (entityTable.getEntityClassPKColumns().size() == 0) {
@@ -101,13 +106,8 @@ public class DefaultEntityResolve implements EntityResolve {
 
     /**
      * 处理字段
-     *
-     * @param entityTable
-     * @param field
-     * @param config
-     * @param style
      */
-    protected void processField(EntityTable entityTable, EntityField field, Config config, Style style) {
+    protected void processField(EntityTable entityTable, EntityField field, Config config, CaseFormat caseFormat) {
         //排除字段
         if (field.isAnnotationPresent(Transient.class)) {
             return;
@@ -147,7 +147,7 @@ public class DefaultEntityResolve implements EntityResolve {
         }
         //列名
         if (StringUtil.isEmpty(columnName)) {
-            columnName = convertByStyle(field.getName(), style);
+            columnName = convertByCaseFormat(field.getName(), caseFormat);
         }
         //自动处理关键字
         if (StringUtil.isNotEmpty(config.getWrapKeyword()) && SqlReservedWords.containsWord(columnName)) {
@@ -157,7 +157,7 @@ public class DefaultEntityResolve implements EntityResolve {
         entityColumn.setColumn(columnName);
         entityColumn.setJavaType(field.getJavaType());
         if (field.getJavaType().isPrimitive()) {
-            log.warn("通用 Mapper 警告信息: <[" + entityColumn + "]> 使用了基本类型，基本类型在动态 SQL 中由于存在默认值，因此任何时候都不等于 null，建议修改基本类型为对应的包装类型!");
+            logger.warn("通用 Mapper 警告信息: <[" + entityColumn + "]> 使用了基本类型，基本类型在动态 SQL 中由于存在默认值，因此任何时候都不等于 null，建议修改基本类型为对应的包装类型!");
         }
         //OrderBy
         processOrderBy(entityTable, field, entityColumn);
@@ -183,7 +183,7 @@ public class DefaultEntityResolve implements EntityResolve {
             if ("".equals(orderBy)) {
                 orderBy = "ASC";
             }
-            log.warn(OrderBy.class + " is outdated, use " + Order.class + " instead!");
+            logger.warn(OrderBy.class + " is outdated, use " + Order.class + " instead!");
         }
         if (field.isAnnotationPresent(Order.class)) {
             Order order = field.getAnnotation(Order.class);
@@ -287,7 +287,7 @@ public class DefaultEntityResolve implements EntityResolve {
                 GenSql genSql = keySql.genSql().newInstance();
                 entityColumn.setGenerator(genSql.genSql(entityTable, entityColumn));
             } catch (Exception e) {
-                log.error("实例化 GenSql 失败: " + e, e);
+                logger.error("实例化 GenSql 失败: " + e, e);
                 throw new MybatisException("实例化 GenSql 失败: " + e, e);
             }
         } else if(keySql.genId() != GenId.NULL.class){
@@ -301,47 +301,9 @@ public class DefaultEntityResolve implements EntityResolve {
 
     /**
      * 根据指定的样式进行转换
-     *
-     * @param str
-     * @param style
-     * @return
      */
-    public static String convertByStyle(String str, Style style) {
-        switch (style) {
-            case camelhump:
-                return camelhumpToUnderline(str);
-            case uppercase:
-                return str.toUpperCase();
-            case lowercase:
-                return str.toLowerCase();
-            case camelhumpAndLowercase:
-                return camelhumpToUnderline(str).toLowerCase();
-            case camelhumpAndUppercase:
-                return camelhumpToUnderline(str).toUpperCase();
-            case normal:
-            default:
-                return str;
-        }
-    }
-
-    /**
-     * 将驼峰风格替换为下划线风格
-     */
-    public static String camelhumpToUnderline(String str) {
-        final int size;
-        final char[] chars;
-        final StringBuilder sb = new StringBuilder(
-                (size = (chars = str.toCharArray()).length) * 3 / 2 + 1);
-        char c;
-        for (int i = 0; i < size; i++) {
-            c = chars[i];
-            if (isUppercaseAlpha(c)) {
-                sb.append('_').append(toLowerAscii(c));
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.charAt(0) == '_' ? sb.substring(1) : sb.toString();
+    public static String convertByCaseFormat(String str, CaseFormat caseFormat) {
+        return CaseFormat.LOWER_CAMEL.to(caseFormat, str);
     }
 
     public static boolean isUppercaseAlpha(char c) {

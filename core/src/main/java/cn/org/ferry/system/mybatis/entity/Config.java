@@ -2,10 +2,10 @@ package cn.org.ferry.system.mybatis.entity;
 
 import cn.org.ferry.system.exception.MybatisException;
 import cn.org.ferry.system.mybatis.code.IdentityDialect;
-import cn.org.ferry.system.mybatis.code.Style;
 import cn.org.ferry.system.mybatis.helper.resolve.EntityResolve;
 import cn.org.ferry.system.mybatis.utils.SimpleTypeUtil;
 import com.github.pagehelper.util.StringUtil;
+import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.Properties;
 public class Config {
     public static final String PREFIX = "mapper";
 
-    private List<Class> mappers = new ArrayList<Class>();
+    private List<Class> mappers = new ArrayList<>();
     private String  IDENTITY;
     private boolean BEFORE;
     private String  seqFormat;
@@ -46,7 +46,7 @@ public class Config {
     /**
      * 字段转换风格，默认驼峰转下划线
      */
-    private Style style;
+    private CaseFormat caseFormat;
     /**
      * 处理关键字，默认空，mysql可以设置为 `{0}`, sqlserver 为 [{0}]，{0} 代表的列名
      */
@@ -159,12 +159,12 @@ public class Config {
         this.seqFormat = seqFormat;
     }
 
-    public Style getStyle() {
-        return this.style == null ? Style.camelhump : this.style;
+    public CaseFormat getCaseFormat() {
+        return this.caseFormat == null ? caseFormat.UPPER_UNDERSCORE : this.caseFormat;
     }
 
-    public void setStyle(Style style) {
-        this.style = style;
+    public void setCaseFormat(CaseFormat caseFormat) {
+        this.caseFormat = caseFormat;
     }
 
     public String getWrapKeyword() {
@@ -295,13 +295,11 @@ public class Config {
 
     /**
      * 配置属性
-     *
-     * @param properties
      */
     public void setProperties(Properties properties) {
         if (properties == null) {
             //默认驼峰
-            this.style = Style.camelhump;
+            this.caseFormat = CaseFormat.UPPER_UNDERSCORE;
             return;
         }
         String IDENTITY = properties.getProperty("IDENTITY");
@@ -354,16 +352,16 @@ public class Config {
         if (Boolean.valueOf(properties.getProperty("usePrimitiveType"))) {
             SimpleTypeUtil.registerPrimitiveTypes();
         }
-        String styleStr = properties.getProperty("style");
-        if (StringUtils.isNotEmpty(styleStr)) {
+        String caseFormatStr = properties.getProperty("caseFormat");
+        if (StringUtils.isNotEmpty(caseFormatStr)) {
             try {
-                this.style = Style.valueOf(styleStr);
+                this.caseFormat = CaseFormat.valueOf(caseFormatStr);
             } catch (IllegalArgumentException e) {
-                throw new MybatisException(styleStr + "不是合法的Style值!");
+                throw new MybatisException(caseFormatStr + "不是合法的CaseFormat值!");
             }
         } else {
             //默认驼峰
-            this.style = Style.camelhump;
+            this.caseFormat = CaseFormat.UPPER_UNDERSCORE;
         }
         //处理关键字
         String wrapKeyword = properties.getProperty("wrapKeyword");

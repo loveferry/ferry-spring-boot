@@ -12,17 +12,14 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 public class MsUtil {
 
-    public static final Cache CLASS_CACHE = new SoftCache(new PerpetualCache("MAPPER_CLASS_CACHE"));
+    private static final Cache CLASS_CACHE = new SoftCache(new PerpetualCache("MAPPER_CLASS_CACHE"));
 
     /**
      * 根据msId获取接口类
-     *
-     * @param msId
-     * @return
      */
     public static Class<?> getMapperClass(String msId) {
-        if (msId.indexOf(".") == -1) {
-            throw new MybatisException("当前MappedStatement的id=" + msId + ",不符合MappedStatement的规则!");
+        if (!msId.contains(".")) {
+            throw new MybatisException("当前 MappedStatement 的id=" + msId + ",不符合MappedStatement的规则!");
         }
         String mapperClassStr = msId.substring(0, msId.lastIndexOf("."));
         //由于一个接口中的每个方法都会进行下面的操作，因此缓存
@@ -30,7 +27,7 @@ public class MsUtil {
         if(mapperClass != null){
             return mapperClass;
         }
-        ClassLoader[] classLoader = getClassLoaders();
+        ClassLoader[] classLoader = new ClassLoader[]{Thread.currentThread().getContextClassLoader(), MsUtil.class.getClassLoader()};
 
         for (ClassLoader cl : classLoader) {
             if (null != cl) {
@@ -51,10 +48,6 @@ public class MsUtil {
         return mapperClass;
     }
 
-    private static ClassLoader[] getClassLoaders() {
-        return new ClassLoader[]{Thread.currentThread().getContextClassLoader(), MsUtil.class.getClassLoader()};
-    }
-
     /**
      * 获取执行的方法名
      *
@@ -67,9 +60,6 @@ public class MsUtil {
 
     /**
      * 获取执行的方法名
-     *
-     * @param msId
-     * @return
      */
     public static String getMethodName(String msId) {
         return msId.substring(msId.lastIndexOf(".") + 1);

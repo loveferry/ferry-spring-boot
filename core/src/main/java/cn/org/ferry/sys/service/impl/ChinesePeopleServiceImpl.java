@@ -121,9 +121,9 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
 
 //        return chinesePeopleMapper.queryByName(name);
         ChinesePeople chinesePeople = new ChinesePeople();
-        chinesePeople.setName("王");
-//        chinesePeopleMapper.selectOne(chinesePeople);
-        chinesePeopleMapper.selectAll();
+        chinesePeople.setName(name);
+        chinesePeopleMapper.selectOne2(name);
+//        chinesePeopleMapper.selectAll();
         return null;
     }
 

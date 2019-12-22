@@ -935,7 +935,7 @@ public class SqlReservedWords {
                 "ZONE" //$NON-NLS-1$
         };
 
-        RESERVED_WORDS = new HashSet<String>(words.length);
+        RESERVED_WORDS = new HashSet<>(words.length);
 
         for (String word : words) {
             RESERVED_WORDS.add(word);
@@ -949,14 +949,6 @@ public class SqlReservedWords {
     }
 
     public static boolean containsWord(String word) {
-        boolean rc;
-
-        if (word == null) {
-            rc = false;
-        } else {
-            rc = RESERVED_WORDS.contains(word.toUpperCase());
-        }
-
-        return rc;
+        return word == null ? false : RESERVED_WORDS.contains(word.toUpperCase());
     }
 }
