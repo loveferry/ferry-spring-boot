@@ -62,7 +62,7 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
             throw new DocException("模版代码为空");
         }
         if(StringUtils.isEmpty(sourceType)){
-            throw new AttachmentException("目标附件代码为空");
+            throw new AttachmentException("目标附件类型为空");
         }
         // 获取模版文件
         List<SysFile> sysFileList = sysFileService.queryBySourceTypeAndSourceKey(DOC_TEMPLATE_ATTACHMENT_CATEGORY, templateCode);

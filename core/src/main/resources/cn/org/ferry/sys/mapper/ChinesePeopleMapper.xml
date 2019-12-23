@@ -22,6 +22,5 @@
         </if>
         </where>
         order by id
-        limit 0,100
     </select>
 </mapper>

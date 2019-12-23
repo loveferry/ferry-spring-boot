@@ -1,22 +1,14 @@
 package cn.org.ferry.system.inceptors;
 
-import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
 import cn.org.ferry.system.dto.FerryRequest;
 import cn.org.ferry.system.dto.FerrySession;
-import cn.org.ferry.system.exception.TokenException;
-import cn.org.ferry.system.utils.ConstantUtils;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * <p>description
@@ -40,7 +32,7 @@ public class RegisterRequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String _token = request.getHeader(ConstantUtils._TOKEN);
+        /*String _token = request.getHeader(ConstantUtils._TOKEN);
         if(StringUtils.isNotEmpty(_token) && StringUtils.isEmpty(ferrySession.getSessionId())){
             SysUser user;
             try{
@@ -68,6 +60,7 @@ public class RegisterRequestInterceptor implements HandlerInterceptor {
             String key = enumeration.nextElement();
             ferryRequest.put(key, request.getAttribute(key));
         }
+        return true;*/
         return true;
     }
 

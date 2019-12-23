@@ -13,6 +13,7 @@ logging:
   level:
     root: INFO
     cn.org.ferry : DEBUG
+    io.swagger.models.parameters.AbstractSerializableParameter: ERROR
 
 
 # dataSource
@@ -63,6 +64,8 @@ info:
 # 自定义的配置属性
 ferry:
   upload: /u01/ferry/upload
+  swagger:
+    enabled: true
   cxf:
     path: /ws
   cors:
@@ -71,3 +74,5 @@ ferry:
     allowedMethod: GET,POST,OPTIONS,DELETE,PUT
     maxAge: 1800
     url: "/api/**"
+  filter:
+    paths: /swagger

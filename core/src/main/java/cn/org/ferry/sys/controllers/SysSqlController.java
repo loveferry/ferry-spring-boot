@@ -4,6 +4,7 @@ import cn.org.ferry.sys.service.SysSqlService;
 import cn.org.ferry.system.dto.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class SysSqlController {
     @Autowired
     private SysSqlService sysSqlService;
 
-    @RequestMapping("/api/sys/sql/execute")
+    @RequestMapping(value = "/api/sys/sql/execute", method = RequestMethod.POST)
     public ResponseData execute(String sql) throws SQLException {
         ResponseData responseData = new ResponseData();
         Map<String, Object> params = new HashMap<>();

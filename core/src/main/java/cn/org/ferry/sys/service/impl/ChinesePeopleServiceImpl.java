@@ -117,14 +117,14 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
         }
         return listOperations.range(name, (page-1)*pageSize, page*pageSize-1);*/
 
-//        PageHelper.startPage(page, pageSize);
+        PageHelper.startPage(page, pageSize);
 
-//        return chinesePeopleMapper.queryByName(name);
-        ChinesePeople chinesePeople = new ChinesePeople();
-        chinesePeople.setName(name);
-        chinesePeopleMapper.selectOne2(name);
+        return chinesePeopleMapper.queryByName(name);
+//        ChinesePeople chinesePeople = new ChinesePeople();
+//        chinesePeople.setName(name);
+//        chinesePeopleMapper.selectOne2(name);
 //        chinesePeopleMapper.selectAll();
-        return null;
+//        return null;
     }
 
     @Override
