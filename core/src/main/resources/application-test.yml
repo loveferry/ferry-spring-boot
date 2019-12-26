@@ -74,3 +74,5 @@ ferry:
     allowedMethod: GET,POST,OPTIONS,DELETE,PUT
     maxAge: 1800
     url: "/api/**"
+  filter:
+    paths: "/swagger,/actuator/**"

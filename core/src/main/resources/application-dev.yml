@@ -75,4 +75,4 @@ ferry:
     maxAge: 1800
     url: "/api/**"
   filter:
-    paths: /swagger
+    paths: "/swagger,/actuator/**"

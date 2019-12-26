@@ -34,8 +34,7 @@ public class ChinesePeopleController {
      */
     @ApiOperation(value = "生成人员信息", notes = "批量生成人员信息,可指定生成数量")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "size", value = "生成数据量", defaultValue = "10000", paramType = "form", dataType = "Integer"),
-            @ApiImplicitParam(name = "_token", value = "token", required = true, paramType = "header", dataType = "String")
+            @ApiImplicitParam(name = "size", value = "生成数据量", defaultValue = "10000", paramType = "form", dataType = "Integer")
     })
     @RequestMapping(value = "/batch/generate", method = RequestMethod.POST)
     public void batchGenerate(@RequestParam(defaultValue = "10000")int size, HttpServletRequest httpServletRequest) throws SQLException{
@@ -53,8 +52,7 @@ public class ChinesePeopleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "config", value = "导出的配置信息,格式要求为json字符串格式,里面包含字段的映射关系,字段宽度,对齐方式等", paramType = "form", dataType = "String"),
             @ApiImplicitParam(name = "page", value = "当前页", defaultValue = "1", paramType = "form", dataType = "Integer"),
-            @ApiImplicitParam(name = "pageSize", value = "页面大小", defaultValue = "10", paramType = "form", dataType = "Integer"),
-            @ApiImplicitParam(name = "_token", value = "token", required = true, paramType = "header", dataType = "String")
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", defaultValue = "10", paramType = "form", dataType = "Integer")
     })
     @RequestMapping(value = "/info/export", method = RequestMethod.POST)
     public void export(String config, HttpServletResponse response, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){
@@ -71,8 +69,7 @@ public class ChinesePeopleController {
     @ApiOperation(value = "查询人员信息", notes = "根据人员信息对象查询人员信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "当前页", defaultValue = "1", paramType = "query", dataType = "Integer"),
-            @ApiImplicitParam(name = "pageSize", value = "页面大小", defaultValue = "10", paramType = "query", dataType = "Integer"),
-            @ApiImplicitParam(name = "_token", value = "token", required = true, paramType = "header", dataType = "String")
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", defaultValue = "10", paramType = "query", dataType = "Integer")
     })
     public List<ChinesePeople> query(ChinesePeople chinesePeople, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){
         return chinesePeopleService.query(chinesePeople, page, pageSize);
@@ -89,8 +86,7 @@ public class ChinesePeopleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "名称关键字", paramType = "query", dataType = "String"),
             @ApiImplicitParam(name = "page", value = "当前页", defaultValue = "1", paramType = "query", dataType = "Integer"),
-            @ApiImplicitParam(name = "pageSize", value = "页面大小", defaultValue = "10", paramType = "query", dataType = "Integer"),
-            @ApiImplicitParam(name = "_token", value = "token", required = true, paramType = "header", dataType = "String")
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", defaultValue = "10", paramType = "query", dataType = "Integer")
     })
     @RequestMapping(value = "/query/name", method = RequestMethod.GET)
     public List<ChinesePeople> queryByName(String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize){

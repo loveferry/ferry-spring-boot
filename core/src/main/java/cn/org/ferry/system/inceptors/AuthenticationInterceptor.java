@@ -41,8 +41,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     // 在业务处理器处理请求之前被调用
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String uri = request.getRequestURI();
-        if(allowPaths.contains(uri)){
+        if(matchUri(request.getRequestURI())){
             return true;
         }
         // 如果不是映射到方法直接通过
@@ -97,5 +96,26 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     // 在整个请求结束之后被调用，也就是在 DispatcherServlet 渲染了对应的视图之后执行（主要是用于进行资源清理工作）
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+    }
+
+    private boolean matchUri(String uri){
+        if(allowPaths.contains(uri)){
+            return true;
+        }
+        for (String allowPath : allowPaths) {
+            if(allowPath.equals("/")){
+                return true;
+            }
+            if(allowPath.endsWith("**") && uri.startsWith(allowPath.substring(0,allowPath.length()-2))){
+                return true;
+            }
+            String path = allowPath.substring(0,allowPath.length()-1);
+            if(allowPath.endsWith("*") && uri.startsWith(path)){
+                if(StringUtils.split(uri.substring(path.length()-1),'/').length == 1){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
