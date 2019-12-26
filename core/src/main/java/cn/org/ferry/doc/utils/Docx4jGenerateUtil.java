@@ -5,7 +5,6 @@ import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.annotations.NotNull;
 import cn.org.ferry.system.exception.FileException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
 import org.docx4j.finders.RangeFinder;
@@ -242,38 +241,38 @@ public final class Docx4jGenerateUtil {
         logger.info("the bookmark count: {}", rangeFinder.getStarts().size()-1);
         for (int i = 0; i < rangeFinder.getStarts().size(); i++) {
             CTBookmark bookmark = rangeFinder.getStarts().get(i);
-            for(Map.Entry<String, Object> entry : bookMarkMap.entrySet()){
-                if(StringUtils.equals(entry.getKey(), bookmark.getName())){
-                    logger.info("bookmark name is {}, replace value is {}, replace type is {}", bookmark.getName(),
-                            entry.getValue(), bookMarkTypeMap.get(entry.getKey()).getDescription());
-                    // 书签替换
-                    BookMarkReplaceUtil.replace(mlPackage, bookmark, entry.getValue(), bookMarkTypeMap.get(entry.getKey()));
-                    logger.info("remove the bookmark that has been replaced");
-                    // 移除书签
-                    for (CTMarkupRange end : rangeFinder.getEnds()) {
-                        if(end.getId().equals(bookmark.getId())){
-                            // 获取书签的父级标签
-                            List<Object> markupRangeList = TraversalUtil.getChildrenImpl(end.getParent());
-                            int index = -1;
-                            for (Object o : markupRangeList) {
-                                index++;
-                                if(XmlUtils.unwrap(o).equals(end)) break;
-                            }
-                            markupRangeList.remove(index);
-                            break;
-                        }
-                    }
+            if(!bookMarkMap.containsKey(bookmark.getName())){
+                continue;
+            }
+            Object value = bookMarkMap.get(bookmark.getName());
+
+            logger.info("bookmark name is {}, replace value is {}, replace type is {}", bookmark.getName(),
+                    value, bookMarkTypeMap.get(bookmark.getName()).getDescription());
+            // 书签替换
+            BookMarkReplaceUtil.replace(mlPackage, bookmark, value, bookMarkTypeMap.get(bookmark.getName()));
+            logger.info("remove the bookmark that has been replaced");
+            // 移除书签
+            for (CTMarkupRange end : rangeFinder.getEnds()) {
+                if(end.getId().equals(bookmark.getId())){
                     // 获取书签的父级标签
-                    List<Object> bookMarkList = TraversalUtil.getChildrenImpl(bookmark.getParent());
+                    List<Object> markupRangeList = TraversalUtil.getChildrenImpl(end.getParent());
                     int index = -1;
-                    for (Object o : bookMarkList) {
+                    for (Object o : markupRangeList) {
                         index++;
-                        if(XmlUtils.unwrap(o).equals(bookmark)) break;
+                        if(XmlUtils.unwrap(o).equals(end)) break;
                     }
-                    bookMarkList.remove(index);
+                    markupRangeList.remove(index);
                     break;
                 }
             }
+            // 获取书签的父级标签
+            List<Object> bookMarkList = TraversalUtil.getChildrenImpl(bookmark.getParent());
+            int index = -1;
+            for (Object o : bookMarkList) {
+                index++;
+                if(XmlUtils.unwrap(o).equals(bookmark)) break;
+            }
+            bookMarkList.remove(index);
         }
 
         try {

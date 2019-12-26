@@ -47,7 +47,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         }
         String token = tokenTactics.generateToken(sysUser.getUserCode(), sysUser.getPassword());
         String ip = NetWorkUtils.getIpAddress(request);
-        loginLogService.insertLoginLog(sysUser.getUserCode(), ip, NetWorkUtils.getUserAgent(request));
+//        loginLogService.insertLoginLog(sysUser.getUserCode(), ip, NetWorkUtils.getUserAgent(request));
         tokenTactics.setTokenToRedisWithPeriodOfValidity(ip+"_"+sysUser.getUserCode(), token);
         responseData.setToken(token);
         responseData.setMessage("登陆成功!");
