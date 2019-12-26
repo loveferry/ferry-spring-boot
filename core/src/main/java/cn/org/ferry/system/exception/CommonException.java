@@ -5,23 +5,30 @@ import org.springframework.http.HttpStatus;
 public class CommonException extends RuntimeException {
     private String message;
 
-    private int code;
+    private int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
     public CommonException(){
         super();
-        this.code = HttpStatus.INTERNAL_SERVER_ERROR.value();
     }
 
     public CommonException(String message){
         super(message);
         this.message = message;
-        this.code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+    }
+
+    public CommonException(Throwable cause){
+        super(cause);
     }
 
     public CommonException(String message, int code){
         super(message);
         this.message = message;
         this.code = code;
+    }
+
+    public CommonException(String message, Throwable cause){
+        super(message, cause);
+        this.message = message;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package cn.org.ferry.system.config;
 
-import cn.org.ferry.system.components.FerrySession;
+import cn.org.ferry.system.dto.FerryRequest;
+import cn.org.ferry.system.dto.FerrySession;
 import cn.org.ferry.system.inceptors.AuthenticationInterceptor;
-import cn.org.ferry.system.utils.PropertiesUtils;
+import cn.org.ferry.system.inceptors.RegisterRequestInterceptor;
+import cn.org.ferry.system.utils.ConfigUtil;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
@@ -16,8 +18,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 拦截器配置类
@@ -31,8 +33,27 @@ public class FerryWebConfiguration implements WebMvcConfigurer {
     @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public FerrySession ferrySession(){
         FerrySession ferrySession = new FerrySession();
-        ferrySession.setId(UUID.randomUUID().toString());
         return ferrySession;
+    }
+
+    /**
+     * 会话 bean
+     */
+    @Bean
+    @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public FerryRequest ferryRequest(FerrySession ferrySession){
+        FerryRequest ferryRequest = new FerryRequest(ferrySession);
+        ferryRequest.setNow(new Date());
+        return ferryRequest;
+    }
+
+    /**
+     * token认证拦截器
+     */
+    @Bean
+    public RegisterRequestInterceptor registerRequestInterceptor() {
+        FerrySession ferrySession = ferrySession();
+        return new RegisterRequestInterceptor(ferrySession, ferryRequest(ferrySession));
     }
 
     /**
@@ -49,6 +70,7 @@ public class FerryWebConfiguration implements WebMvcConfigurer {
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
         registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(registerRequestInterceptor()).addPathPatterns("/**");
     }
 
     /*@Override
@@ -75,7 +97,7 @@ public class FerryWebConfiguration implements WebMvcConfigurer {
                 SerializerFeature.WriteNullListAsEmpty      // List null-> []
         );
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-        fastJsonHttpMessageConverter.setDefaultCharset(Charset.forName(PropertiesUtils.DEFAULT_CHARSET));
+        fastJsonHttpMessageConverter.setDefaultCharset(Charset.forName(ConfigUtil.DEFAULT_CHARSET));
         converters.add(0, fastJsonHttpMessageConverter);
 //        converters.add(fastJsonHttpMessageConverter);
     }

@@ -14,6 +14,8 @@
 		<result column="user_family_address" property="userFamilyAddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
+	<cache type="cn.org.ferry.system.mybatis.cache.RedisCache"/>
+	
 	<select id="queryByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select *
         from sys_user

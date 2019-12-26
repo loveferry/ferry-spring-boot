@@ -26,7 +26,7 @@
 			<column name="template_code" type="VARCHAR(200)" remarks="模版代码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="param_type" type="enum('TEXT','LIST','IMAGE')" defaultValue="TEXT" remarks="参数类型"/>
+			<column name="param_type" type="VARCHAR(10)" defaultValue="TEXT" remarks="参数类型('TEXT','LIST','IMAGE')"/>
 			<column name="param_name" type="VARCHAR(200)" remarks="参数名称"/>
 			<column name="book_mark" type="VARCHAR(200)" remarks="书签名称"/>
 			<column name="sql_code" type="VARCHAR(200)" remarks="数据源代码"/>

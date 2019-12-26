@@ -1,12 +1,11 @@
 package cn.org.ferry.sys.mapper;
 
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
-import cn.org.ferry.system.mybatis.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SysAttachmentCategoryMapper extends BaseMapper<SysAttachmentCategory> {
+public interface SysAttachmentCategoryMapper{
     /**
      * 查询附件类型信息
      * @param sourceType 必传参数，此字段有唯一约束，只能查出一条数据，不存在返回空

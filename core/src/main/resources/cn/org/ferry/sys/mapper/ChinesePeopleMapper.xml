@@ -8,12 +8,14 @@
         <result column="birth_date" property="birthDate" jdbcType="DATE" javaType="java.util.Date"/>
     </resultMap>
     
+    <cache type="cn.org.ferry.system.mybatis.cache.RedisCache"/>
+    
     <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
             id,name,birth_date,sex
         from
             chinese_people
-        <where> 1=1
+        <where>
         <if test="name != null">
             <bind name="name" value="'%'+name+'%'"/>
             and name like #{name}

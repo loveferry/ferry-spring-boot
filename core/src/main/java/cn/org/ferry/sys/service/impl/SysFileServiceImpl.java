@@ -14,14 +14,13 @@ import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
 import cn.org.ferry.system.sysenum.IfOrNotFlag;
-import cn.org.ferry.system.utils.PropertiesUtils;
+import cn.org.ferry.system.utils.ConfigUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -32,11 +31,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -78,7 +73,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             }
             deleteByAttachmentId(sysAttachment.getAttachmentId());
         }
-        String uploadPath = PropertiesUtils.getProperty("ferry.upload")+sysAttachmentCategory.getAttachmentPath();
+        String uploadPath = ConfigUtil.getProperty("ferry.upload")+sysAttachmentCategory.getAttachmentPath();
         for(MultipartFile multipartFile : files){
             String name = UUID.randomUUID().toString();
             SysFile sysFile = new SysFile();
@@ -184,19 +179,23 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             if(file.exists()){
                 file.delete();
             }
-            sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
+            // todo 待完善删除
+//            sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteFileByPrimaryKey(Long fileId) {
-        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
+        // todo 待完善查询
+//        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
+        SysFile sysFile = selectByPrimaryKey(fileId);
         File file = new File(sysFile.getFilePath());
         if(file.exists()){
             file.delete();
         }
-        sysFileMapper.deleteByPrimaryKey(fileId);
+        // todo 待完善删除
+//        sysFileMapper.deleteByPrimaryKey(fileId);
     }
 
     @Override

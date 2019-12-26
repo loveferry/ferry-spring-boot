@@ -1,15 +1,13 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.mybatis.handler.SexHandler;
 import cn.org.ferry.system.sysenum.Sex;
 import lombok.Data;
-import tk.mybatis.mapper.annotation.ColumnType;
 
+import java.util.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * 系统用户 创建于 2018-09-11
@@ -50,7 +48,6 @@ public class SysUser extends BaseDTO {
     /**
      * 系统用户性别
      */
-    @ColumnType(typeHandler = SexHandler.class)
     private Sex userSex;
 
     /**

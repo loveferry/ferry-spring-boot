@@ -5,6 +5,7 @@ import cn.org.ferry.sys.service.SysUserService;
 import cn.org.ferry.system.annotations.LoginPass;
 import cn.org.ferry.system.components.TokenTactics;
 import cn.org.ferry.system.exception.TokenException;
+import cn.org.ferry.system.utils.ConstantUtils;
 import cn.org.ferry.system.utils.NetWorkUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -13,6 +14,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,11 +35,15 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private TokenTactics tokenTactics;
-    private static final String _TOKEN = "_token";
+    @Value("#{'${ferry.filter.paths}'.split(',')}")
+    private List<String> allowPaths;
 
     // 在业务处理器处理请求之前被调用
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if(matchUri(request.getRequestURI())){
+            return true;
+        }
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -49,7 +56,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(!method.getDeclaringClass().getPackage().getName().contains("cn.org.ferry")){
             return true;
         }
-        String _token = request.getHeader(_TOKEN);
+        String _token = request.getHeader(ConstantUtils._TOKEN);
         if(StringUtils.isEmpty(_token)){
             throw new TokenException("unauthorized access!");
         }
@@ -71,7 +78,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 token = tokenTactics.generateToken(user.getUserCode(), user.getPassword());
                 tokenTactics.setTokenToRedisWithPeriodOfValidity(key, token);
                 response.setStatus(TokenException.class.getAnnotation(ResponseStatus.class).code().value());
-                response.addHeader(_TOKEN, token);
+                response.addHeader(ConstantUtils._TOKEN, token);
                 response.getWriter().append("refresh token");
                 return false;
             }else{
@@ -89,5 +96,26 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     // 在整个请求结束之后被调用，也就是在 DispatcherServlet 渲染了对应的视图之后执行（主要是用于进行资源清理工作）
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+    }
+
+    private boolean matchUri(String uri){
+        if(allowPaths.contains(uri)){
+            return true;
+        }
+        for (String allowPath : allowPaths) {
+            if(allowPath.equals("/")){
+                return true;
+            }
+            if(allowPath.endsWith("**") && uri.startsWith(allowPath.substring(0,allowPath.length()-2))){
+                return true;
+            }
+            String path = allowPath.substring(0,allowPath.length()-1);
+            if(allowPath.endsWith("*") && uri.startsWith(path)){
+                if(StringUtils.split(uri.substring(path.length()-1),'/').length == 1){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -1,9 +1,7 @@
 package cn.org.ferry.doc.dto;
 
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.mybatis.handler.BookMarkTypeHandler;
 import lombok.Data;
-import tk.mybatis.mapper.annotation.ColumnType;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -32,7 +30,6 @@ public class DocTemplateParam extends BaseDTO {
     /**
      * 参数类型
      */
-    @ColumnType(typeHandler = BookMarkTypeHandler.class)
     private BookMarkType paramType;
 
     /**

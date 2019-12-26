@@ -1,12 +1,11 @@
 package cn.org.ferry.sys.mapper;
 
 import cn.org.ferry.sys.dto.SysAttachment;
-import cn.org.ferry.system.mybatis.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SysAttachmentMapper extends BaseMapper<SysAttachment> {
+public interface SysAttachmentMapper{
     /**
      * 查询附件信息
      * @param sourceKey 附件编码为必传参数

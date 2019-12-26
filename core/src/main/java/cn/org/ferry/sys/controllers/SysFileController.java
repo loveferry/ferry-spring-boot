@@ -7,6 +7,7 @@ import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.exception.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class SysFileController {
     /**
      * 文件上传,可以上传多个文件
      */
-    @RequestMapping("/api/sys/file/upload")
+    @RequestMapping(value = "/api/sys/file/upload", method = RequestMethod.POST)
     public void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment) {
         iSysFileService.upload(httpServletRequest, sysAttachment);
     }
@@ -33,7 +34,7 @@ public class SysFileController {
      * @param fileId 文件表主键,必须传递该参数
      */
     @LoginPass
-    @RequestMapping("/api/sys/file/download")
+    @RequestMapping(value = "/api/sys/file/download", method = RequestMethod.GET)
     public void download(HttpServletResponse response, Long fileId) throws FileException {
         iSysFileService.download(response, fileId);
     }
@@ -41,7 +42,7 @@ public class SysFileController {
     /**
      * 附件查询
      */
-    @RequestMapping("/api/sys/attachment/query")
+    @RequestMapping(value = "/api/sys/attachment/query", method = RequestMethod.GET)
     @ResponseBody
     public ResponseData queryBySourceTypeAndSourceKey(@RequestParam("sourceKey") String sourceKey, @RequestParam("sourceType") String sourceType){
         return new ResponseData(iSysFileService.queryBySourceTypeAndSourceKey(sourceType, sourceKey));
