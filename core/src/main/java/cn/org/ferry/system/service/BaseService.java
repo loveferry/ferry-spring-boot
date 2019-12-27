@@ -1,8 +1,15 @@
 package cn.org.ferry.system.service;
 
+import cn.org.ferry.system.dto.BaseDTO;
+
 import java.util.List;
 
-public interface BaseService<T>{
+/**
+ * 通用业务层
+ * @param <T> 实体泛型类
+ */
+
+public interface BaseService<T extends BaseDTO>{
     /**
      * 更新
      */
@@ -13,27 +20,25 @@ public interface BaseService<T>{
      */
     String INSERT = "INSERT";
 
-    int insertSelective(T t);
+    T insertSelective(T record);
 
-    int insert(T t);
+    T insert(T record);
 
-    int delete(T t);
+    int delete(T record);
 
-    int updateByPrimaryKeySelective(T t);
+    int updateByPrimaryKeySelective(T record);
 
-    int updateByPrimaryKey(T t);
+    int updateByPrimaryKey(T record);
 
-    T selectByPrimaryKey(Object o);
+    T selectByPrimaryKey(Object key);
 
     List<T> select();
 
     List<T> select(int page, int pageSize);
 
-    List<T> select(T t);
+    List<T> select(T record);
 
-    List<T> select(T t, int page, int pageSize);
+    List<T> select(T record, int page, int pageSize);
 
-    int selectCount(T t);
-
-    int selectCount(T t, int page, int pageSize);
+    int selectCount(T record);
 }

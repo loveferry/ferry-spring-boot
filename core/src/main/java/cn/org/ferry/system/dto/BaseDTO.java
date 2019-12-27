@@ -17,10 +17,10 @@ import java.util.Date;
 public class BaseDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public static final String CREATEDBY = "createdBy";
-    public static final String CREATIONDATE = "creationDate";
-    public static final String LASTUPDATEDBY = "lastUpdatedBy";
-    public static final String LASTUPDATEDATE = "lastUpdateDate";
+    public static final String CREATED_BY = "createdBy";
+    public static final String CREATION_DATE = "creationDate";
+    public static final String LAST_UPDATED_BY = "lastUpdatedBy";
+    public static final String LAST_UPDATE_DATE = "lastUpdateDate";
 
     @ApiModelProperty(value = "创建人主键", position = 65530, readOnly = true, allowEmptyValue = true)
     private Long createdBy;

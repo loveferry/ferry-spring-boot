@@ -1,4 +1,7 @@
 package cn.org.ferry.sys.mapper;
 
-public interface SysDataFormatMapper{
+import cn.org.ferry.sys.dto.SysDataFormat;
+import cn.org.ferry.system.mapper.Mapper;
+
+public interface SysDataFormatMapper extends Mapper<SysDataFormat> {
 }

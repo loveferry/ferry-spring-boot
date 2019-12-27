@@ -1,9 +1,10 @@
 package cn.org.ferry.sys.mapper;
 
 import cn.org.ferry.sys.dto.SysUser;
+import cn.org.ferry.system.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-public interface SysUserMapper{
+public interface SysUserMapper extends Mapper<SysUser> {
     /**
      * 查询员工信息
      * @param userCode 员工代码

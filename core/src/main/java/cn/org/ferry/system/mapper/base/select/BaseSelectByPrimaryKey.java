@@ -4,19 +4,17 @@ import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
 import cn.org.ferry.system.mybatis.providers.BaseSelectProvider;
 import org.apache.ibatis.annotations.SelectProvider;
 
-import java.util.List;
-
 /**
- * <p>查询通用 mapper
+ * <p>通用mapper 根据主键查找记录
  *
  * @author ferry ferry_sy@163.com
  */
 
 @RegisterMapper
-public interface BaseSelectMapper<T> extends BaseSelectOneMapper<T>, BaseSelectAllMapper<T>, BaseSelectByPrimaryKey<T>,BaseSelectCountMapper<T> {
+public interface BaseSelectByPrimaryKey<T> {
     @SelectProvider(
             type = BaseSelectProvider.class,
             method = "dynamicSQL"
     )
-    List<T> select(T record);
+    T selectByPrimaryKey(Object key);
 }

@@ -1,8 +1,7 @@
 package cn.org.ferry.system.mapper;
 
-import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
 import cn.org.ferry.system.mapper.base.BaseMapper;
+import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
 
 /**
  * <p>通用 mapper 接口层
@@ -11,5 +10,5 @@ import cn.org.ferry.system.mapper.base.BaseMapper;
  */
 
 @RegisterMapper
-public interface Mapper<T extends BaseDTO> extends BaseMapper<T> {
+public interface Mapper<T> extends BaseMapper<T> {
 }

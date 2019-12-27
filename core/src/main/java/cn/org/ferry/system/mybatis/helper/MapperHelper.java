@@ -233,8 +233,6 @@ public class MapperHelper {
     /**
      * 配置完成后，执行下面的操作
      * <br>处理configuration中全部的MappedStatement
-     *
-     * @param configuration
      */
     public void processConfiguration(Configuration configuration) {
         processConfiguration(configuration, null);
