@@ -50,13 +50,13 @@
 					<execution>
 						<id>build-datasource</id>
 						<!--绑定生命周期-->
-						<!--<phase>test</phase>-->
+						<phase>package</phase>
 						<goals>
 							<!--目标-->
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>${start-class}</mainClass>
+							<mainClass>cn.org.ferry.CoreDbApplication</mainClass>
 							<!--不加这句，启动插件后，该java程序会异常关闭-->
 							<cleanupDaemonThreads>false</cleanupDaemonThreads>
 						</configuration>
@@ -70,7 +70,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>application.yml</include>
+					<include>application*.yml</include>
 					<include>sys/**</include>
 					<include>doc/**</include>
 					<include>log/**</include>
@@ -78,4 +78,31 @@
 			</resource>
 		</resources>
 	</build>
+	
+	<profiles>
+		<!--开发环境-->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activeProfile>dev</activeProfile>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!--测试环境-->
+		<profile>
+			<id>test</id>
+			<properties>
+				<activeProfile>test</activeProfile>
+			</properties>
+		</profile>
+		<!--正式环境-->
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activeProfile>prod</activeProfile>
+			</properties>
+		</profile>
+	</profiles>
 </project>
