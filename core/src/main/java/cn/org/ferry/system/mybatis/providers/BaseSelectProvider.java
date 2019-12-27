@@ -18,7 +18,14 @@ public class BaseSelectProvider extends MapperTemplate {
     }
 
     public String selectOne(MappedStatement ms) {
-        return "select * from chinese_people";
+        Class<?> entityClass = getEntityClass(ms);
+        //修改返回值类型为实体类型
+        setResultType(ms, entityClass);
+        return new StringBuilder()
+                .append(SqlHelper.selectAllColumns(entityClass))
+                .append(SqlHelper.fromTable(entityClass, tableName(entityClass)))
+                .append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()))
+                .toString();
     }
 
     public String selectAll(MappedStatement ms) {
@@ -28,7 +35,6 @@ public class BaseSelectProvider extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-
         // 逻辑删除的未删除查询条件
         sql.append("<where>");
         sql.append(SqlHelper.whereLogicDelete(entityClass, false));
@@ -38,8 +44,35 @@ public class BaseSelectProvider extends MapperTemplate {
         return sql.toString();
     }
 
+    public String selectByPrimaryKey(MappedStatement ms) {
+        final Class<?> entityClass = getEntityClass(ms);
+        //将返回值修改为实体类型
+        setResultType(ms, entityClass);
+        return new StringBuilder()
+                .append(SqlHelper.selectAllColumns(entityClass))
+                .append(SqlHelper.fromTable(entityClass, tableName(entityClass)))
+                .append(SqlHelper.wherePKColumns(entityClass))
+                .toString();
+    }
 
-    public String selectOne2(){
-        return "select * from chinese_people where id = 1";
+    public String selectCount(MappedStatement ms) {
+        Class<?> entityClass = getEntityClass(ms);
+        StringBuilder sql = new StringBuilder();
+        sql.append(SqlHelper.selectCount(entityClass));
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()));
+        return sql.toString();
+    }
+
+    public String select(MappedStatement ms) {
+        Class<?> entityClass = getEntityClass(ms);
+        //修改返回值类型为实体类型
+        setResultType(ms, entityClass);
+        StringBuilder sql = new StringBuilder();
+        sql.append(SqlHelper.selectAllColumns(entityClass));
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()));
+        sql.append(SqlHelper.orderByDefault(entityClass));
+        return sql.toString();
     }
 }

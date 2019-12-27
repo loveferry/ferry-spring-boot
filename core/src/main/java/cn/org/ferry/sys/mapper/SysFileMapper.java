@@ -1,11 +1,12 @@
 package cn.org.ferry.sys.mapper;
 
 import cn.org.ferry.sys.dto.SysFile;
+import cn.org.ferry.system.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SysFileMapper{
+public interface SysFileMapper extends Mapper<SysFile> {
     /**
      * 查询附件
      */

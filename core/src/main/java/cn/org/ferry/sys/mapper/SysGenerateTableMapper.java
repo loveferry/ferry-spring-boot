@@ -1,11 +1,12 @@
 package cn.org.ferry.sys.mapper;
 
 import cn.org.ferry.sys.dto.SysGenerateTable;
+import cn.org.ferry.system.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SysGenerateTableMapper{
+public interface SysGenerateTableMapper extends Mapper<SysGenerateTable> {
     /**
      * 查询当前数据库表名及其注释
      * @param tableName 表名/表注释

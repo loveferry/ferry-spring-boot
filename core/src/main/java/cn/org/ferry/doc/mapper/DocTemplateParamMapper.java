@@ -1,6 +1,7 @@
 package cn.org.ferry.doc.mapper;
 
 import cn.org.ferry.doc.dto.DocTemplateParam;
+import cn.org.ferry.system.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * @date 2019/07/13
  * @description
  */
-public interface DocTemplateParamMapper{
+public interface DocTemplateParamMapper extends Mapper<DocTemplateParam> {
     /**
      * 获取指定模版的参数集
      */
