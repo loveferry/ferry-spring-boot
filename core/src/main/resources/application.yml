@@ -6,6 +6,7 @@ spring:
 # mybatis
 mybatis:
   mapper-locations: classpath:cn/org/ferry/**/mapper/*Mapper.xml
+#  type-aliases-package: "cn.org.ferry.sys.dto"
   configuration:
     map-underscore-to-camel-case: true   # 开启驼峰映射
     cache-enabled: true

@@ -2,10 +2,9 @@ package cn.org.ferry.system.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.data.annotation.Transient;
-
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Transient;
 
 /**
  * 基础字段 创建于 2018-09-11

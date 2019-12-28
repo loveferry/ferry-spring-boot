@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -100,31 +101,15 @@ public class ChinesePeopleServiceImpl extends BaseServiceImpl<ChinesePeople> imp
         System.out.println("\n\n\n-----------------用时-----------------");
     }
 
+    @Transactional
     @Override
     public List<ChinesePeople> queryByName(String name, int page, int pageSize) {
-        /*ListOperations<String, ChinesePeople> listOperations = redisTemplate.opsForList();
-        if(redisTemplate.hasKey(name)){
-            log.info("从缓存中查询数据...");
-            return listOperations.range(name, (page-1)*pageSize, page*pageSize-1);
-        }
+//        PageHelper.startPage(page, pageSize);
+        ChinesePeople chinesePeople = new ChinesePeople();
+        chinesePeople.setName("于对");
         List<ChinesePeople> list = chinesePeopleMapper.queryByName(name);
-        if(CollectionUtils.isEmpty(list)){
-            return list;
-        }
-        log.info("将集合插入redis缓存...");
-        for (ChinesePeople chinesePeople : list) {
-            listOperations.rightPush(name, chinesePeople);
-        }
-        return listOperations.range(name, (page-1)*pageSize, page*pageSize-1);*/
-
-        PageHelper.startPage(page, pageSize);
-
-        return chinesePeopleMapper.queryByName(name);
-//        ChinesePeople chinesePeople = new ChinesePeople();
-//        chinesePeople.setName(name);
-//        chinesePeopleMapper.selectOne2(name);
-//        chinesePeopleMapper.selectAll();
-//        return null;
+        list.add(chinesePeople);
+        return list;
     }
 
     @Override
