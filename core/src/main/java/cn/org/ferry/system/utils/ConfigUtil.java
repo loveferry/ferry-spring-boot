@@ -32,6 +32,9 @@ public final class ConfigUtil {
     }
 
     public static Object getBean(String name){
+        if(applicationContext == null){
+            return null;
+        }
         return applicationContext.getBean(name);
     }
 
