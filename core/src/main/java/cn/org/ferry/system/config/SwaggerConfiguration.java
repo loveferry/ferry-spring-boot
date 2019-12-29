@@ -82,4 +82,23 @@ public class SwaggerConfiguration {
                 .globalOperationParameters(parameterList)
                 .apiInfo(apiInfo("系统模块", "2.0.0", "你努力后的成功，不能弥补你成功前的痛苦"));
     }
+
+    /**
+     * 文档操作接口api
+     */
+    @Bean
+    public Docket docDocket() {
+        List<Parameter> parameterList = new ArrayList<>(1);
+        parameterList.add(initParameter("_token", "token认证", String.class.getSimpleName(), "header", true));
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .pathMapping("/") // 默认请求都是以 / 根路径开始，如果我们的应用不是部署在根路径，比如以/validator部署，则可以通过一下方式设置请求的统一前缀
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("cn.org.ferry.doc.controllers"))
+                .paths(PathSelectors.any())
+                .build()
+                .groupName("文档模块")
+                .globalOperationParameters(parameterList)
+                .apiInfo(apiInfo("文档模块", "2.0.0", "任在旧的光阴里，偏爱简静的东西"));
+    }
 }
