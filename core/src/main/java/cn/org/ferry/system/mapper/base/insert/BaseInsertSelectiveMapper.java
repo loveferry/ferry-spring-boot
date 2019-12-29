@@ -16,5 +16,5 @@ public interface BaseInsertSelectiveMapper<T> {
             type = BaseInsertProvider.class,
             method = "dynamicSQL"
     )
-    T insertSelective(T record);
+    void insertSelective(T record);
 }

@@ -45,4 +45,9 @@
             </if>
         </where>
     </select>
+    
+    <insert id="insertOne" parameterType="cn.org.ferry.sys.dto.SysAttachmentCategory">
+        insert into sys_attachment_category(CATEGORY_NAME,SOURCE_TYPE,ATTACHMENT_PATH, ENABLE_FLAG, UNIQUE_FLAG)
+        values(#{categoryName}, #{sourceType}, #{attachmentPath}, #{enableFlag}, #{uniqueFlag})
+    </insert>
 </mapper>

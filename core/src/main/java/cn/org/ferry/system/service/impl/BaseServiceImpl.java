@@ -27,13 +27,15 @@ public abstract class BaseServiceImpl<T extends BaseDTO> implements BaseService<
     @Override
     public T insertSelective(T record) {
         updateBaseField(record, INSERT);
-        return mapper.insertSelective(record);
+        mapper.insertSelective(record);
+        return record;
     }
 
     @Override
     public T insert(T record) {
         updateBaseField(record, INSERT);
-        return mapper.insert(record);
+        mapper.insert(record);
+        return record;
     }
 
     @Override

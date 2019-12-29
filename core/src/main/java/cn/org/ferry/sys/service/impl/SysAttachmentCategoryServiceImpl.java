@@ -69,7 +69,7 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
             return responseData;
         }
         if(null == sysAttachmentCategory.getCategoryId()){
-            insertSelective(sysAttachmentCategory);
+            sysAttachmentCategoryMapper.insertOne(sysAttachmentCategory);
         }else{
             updateByPrimaryKeySelective(sysAttachmentCategory);
         }

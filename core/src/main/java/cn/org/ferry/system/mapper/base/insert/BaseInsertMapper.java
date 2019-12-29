@@ -16,5 +16,5 @@ public interface BaseInsertMapper<T> extends BaseInsertSelectiveMapper<T> {
             type = BaseInsertProvider.class,
             method = "dynamicSQL"
     )
-    T insert(T record);
+    void insert(T record);
 }
