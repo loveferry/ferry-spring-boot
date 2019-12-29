@@ -17,4 +17,9 @@ public interface SysAttachmentCategoryMapper extends Mapper<SysAttachmentCategor
      * 查询附件类型
      */
     List<SysAttachmentCategory> query(SysAttachmentCategory sysAttachmentCategory);
+
+    /**
+     * 插入附件
+     */
+    void insertOne(SysAttachmentCategory sysAttachmentCategory);
 }
