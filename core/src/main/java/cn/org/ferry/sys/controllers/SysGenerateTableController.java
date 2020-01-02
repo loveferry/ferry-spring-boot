@@ -1,10 +1,10 @@
 package cn.org.ferry.sys.controllers;
 
+import cn.org.ferry.mybatis.enums.IfOrNotFlag;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.service.SysGenerateTableService;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.exception.FileException;
-import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,7 +1,7 @@
 package cn.org.ferry.system.mapper.base.insert;
 
-import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
-import cn.org.ferry.system.mybatis.providers.BaseInsertProvider;
+import cn.org.ferry.mybatis.annotations.RegisterMapper;
+import cn.org.ferry.mybatis.providers.BaseInsertProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 
 /**
@@ -16,5 +16,5 @@ public interface BaseInsertSelectiveMapper<T> {
             type = BaseInsertProvider.class,
             method = "dynamicSQL"
     )
-    void insertSelective(T record);
+    int insertSelective(T record);
 }

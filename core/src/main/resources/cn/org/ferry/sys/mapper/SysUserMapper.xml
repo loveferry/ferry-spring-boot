@@ -7,14 +7,15 @@
 		<result column="password" property="password" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_name_en" property="userNameEn" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_name_zh" property="userNameZh" jdbcType="VARCHAR" javaType="java.lang.String"/>
-		<result column="user_sex" property="userSex" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.Sex" typeHandler="cn.org.ferry.system.mybatis.handler.SexHandler"/>
+		<result column="user_sex" property="userSex" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.Sex"
+				typeHandler="cn.org.ferry.mybatis.handlers.SexHandler"/>
 		<result column="user_birthday" property="userBirthday" jdbcType="DATE" javaType="java.util.Date"/>
 		<result column="user_email" property="userEmail" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_family_address" property="userFamilyAddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
-	<cache type="cn.org.ferry.system.mybatis.cache.RedisCache"/>
+	<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>
 	
 	<select id="queryByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select *

@@ -1,5 +1,6 @@
 package cn.org.ferry.sys.service.impl;
 
+import cn.org.ferry.mybatis.enums.IfOrNotFlag;
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
@@ -13,8 +14,7 @@ import cn.org.ferry.sys.utils.FileUtils;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.sysenum.IfOrNotFlag;
-import cn.org.ferry.system.utils.ConfigUtil;
+import cn.org.ferry.mybatis.utils.ConfigUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;

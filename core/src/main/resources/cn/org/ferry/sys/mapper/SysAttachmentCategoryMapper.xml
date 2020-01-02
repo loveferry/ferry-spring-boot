@@ -5,8 +5,10 @@
         <id column="category_id" property="categoryId" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result column="category_name" property="categoryName" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="source_type" property="sourceType" jdbcType="VARCHAR" javaType="java.lang.String"/>
-        <result column="enable_flag" property="enableFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.EnableFlag" typeHandler="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
-        <result column="unique_flag" property="uniqueFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.system.sysenum.IfOrNotFlag" typeHandler="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+        <result column="enable_flag" property="enableFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.EnableFlag"
+                typeHandler="cn.org.ferry.mybatis.handlers.EnableFlagHandler"/>
+        <result column="unique_flag" property="uniqueFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+                typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
         <result column="attachment_path" property="attachmentPath" jdbcType="VARCHAR" />
     </resultMap>
 

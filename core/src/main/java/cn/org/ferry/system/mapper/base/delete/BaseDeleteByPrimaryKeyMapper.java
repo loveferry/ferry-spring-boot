@@ -1,7 +1,8 @@
 package cn.org.ferry.system.mapper.base.delete;
 
-import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
-import cn.org.ferry.system.mybatis.providers.BaseDeleteProvider;
+
+import cn.org.ferry.mybatis.annotations.RegisterMapper;
+import cn.org.ferry.mybatis.providers.BaseDeleteProvider;
 import org.apache.ibatis.annotations.DeleteProvider;
 
 /**

@@ -1,7 +1,7 @@
 package cn.org.ferry.sys.dto;
 
+import cn.org.ferry.mybatis.enums.Sex;
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.sysenum.Sex;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

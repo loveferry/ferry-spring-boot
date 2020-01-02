@@ -1,8 +1,8 @@
 package cn.org.ferry.sys.dto;
 
+import cn.org.ferry.mybatis.enums.EnableFlag;
+import cn.org.ferry.mybatis.enums.IfOrNotFlag;
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.sysenum.EnableFlag;
-import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

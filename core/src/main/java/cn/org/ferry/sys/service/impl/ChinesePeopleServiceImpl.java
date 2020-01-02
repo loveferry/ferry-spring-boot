@@ -1,28 +1,33 @@
 package cn.org.ferry.sys.service.impl;
 
+import cn.org.ferry.mybatis.enums.Sex;
 import cn.org.ferry.sys.dto.ChinesePeople;
 import cn.org.ferry.sys.mapper.ChinesePeopleMapper;
 import cn.org.ferry.sys.service.ChinesePeopleService;
 import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.system.dto.BaseDTO;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.sysenum.Sex;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletResponse;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Service

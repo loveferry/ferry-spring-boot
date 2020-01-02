@@ -4,8 +4,8 @@
 	<resultMap id="BaseResultMap" type="cn.org.ferry.doc.dto.DocTemplateParam">
 		<id column="param_id" property="paramId" jdbcType="BIGINT" javaType="java.lang.Long"/>
 		<result column="template_code" property="templateCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
-		<result column="param_type" property="paramType" jdbcType="VARCHAR" javaType="cn.org.ferry.doc.dto.BookMarkType"
-				typeHandler="cn.org.ferry.system.mybatis.handler.BookMarkTypeHandler"/>
+		<result column="param_type" property="paramType" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.BookMarkType"
+				typeHandler="cn.org.ferry.mybatis.handlers.BookMarkTypeHandler"/>
 		<result column="param_name" property="paramName" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="book_mark" property="bookMark" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="sql_code" property="sqlCode" jdbcType="VARCHAR" javaType="java.lang.String"/>

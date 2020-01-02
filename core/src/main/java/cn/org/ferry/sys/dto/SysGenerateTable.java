@@ -1,7 +1,7 @@
 package cn.org.ferry.sys.dto;
 
+import cn.org.ferry.mybatis.enums.IfOrNotFlag;
 import cn.org.ferry.system.dto.BaseDTO;
-import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;

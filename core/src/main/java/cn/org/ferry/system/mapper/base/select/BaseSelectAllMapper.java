@@ -1,7 +1,7 @@
 package cn.org.ferry.system.mapper.base.select;
 
-import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
-import cn.org.ferry.system.mybatis.providers.BaseSelectProvider;
+import cn.org.ferry.mybatis.annotations.RegisterMapper;
+import cn.org.ferry.mybatis.providers.BaseSelectProvider;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;

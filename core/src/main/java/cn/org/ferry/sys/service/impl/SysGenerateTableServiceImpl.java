@@ -1,5 +1,6 @@
 package cn.org.ferry.sys.service.impl;
 
+import cn.org.ferry.mybatis.enums.IfOrNotFlag;
 import cn.org.ferry.sys.dto.SysEnumType;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.mapper.SysGenerateTableMapper;
@@ -11,7 +12,6 @@ import cn.org.ferry.system.exception.CommonException;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.BaseService;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.sysenum.IfOrNotFlag;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

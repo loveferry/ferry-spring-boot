@@ -39,27 +39,27 @@
 	<changeSet id="init_sys_enum_type_data" author="ferry">
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="SEX"/>
-			<column name="java_type" value="cn.org.ferry.system.sysenum.Sex"/>
+			<column name="java_type" value="cn.org.ferry.mybatis.enums.Sex"/>
 			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.SexHandler"/>
+			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.SexHandler"/>
 		</insert>
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="if_or_not_flag"/>
-			<column name="java_type" value="cn.org.ferry.system.sysenum.IfOrNotFlag"/>
+			<column name="java_type" value="cn.org.ferry.mybatis.enums.IfOrNotFlag"/>
 			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.IfOrNotFlagHandler"/>
+			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
 		</insert>
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="enable_flag"/>
-			<column name="java_type" value="cn.org.ferry.system.sysenum.EnableFlag"/>
+			<column name="java_type" value="cn.org.ferry.mybatis.enums.EnableFlag"/>
 			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.EnableFlagHandler"/>
+			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.EnableFlagHandler"/>
 		</insert>
 		<insert tableName="sys_enum_type">
 			<column name="type_code" value="book_mark_type"/>
-			<column name="java_type" value="cn.org.ferry.doc.dto.BookMarkType"/>
+			<column name="java_type" value="cn.org.ferry.mybatis.enums.BookMarkType"/>
 			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.system.mybatis.handler.BookMarkTypeHandler"/>
+			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.BookMarkTypeHandler"/>
 		</insert>
 	</changeSet>
 </databaseChangeLog>

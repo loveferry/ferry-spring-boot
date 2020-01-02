@@ -1,6 +1,6 @@
 package cn.org.ferry.system.mapper.base.update;
 
-import cn.org.ferry.system.mybatis.annotation.RegisterMapper;
+import cn.org.ferry.mybatis.annotations.RegisterMapper;
 
 /**
  * <p>description

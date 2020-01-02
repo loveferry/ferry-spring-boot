@@ -19,6 +19,11 @@
 	</properties>
 	
 	<dependencies>
+		<dependency>
+			<groupId>cn.org.ferry</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		<!-- persistence-api -->
 		<dependency>
 			<groupId>javax.persistence</groupId>

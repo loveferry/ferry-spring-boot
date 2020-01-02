@@ -1,12 +1,12 @@
 package cn.org.ferry.sys.service.impl;
 
+import cn.org.ferry.mybatis.enums.EnableFlag;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.exceptions.AttachmentException;
 import cn.org.ferry.sys.mapper.SysAttachmentCategoryMapper;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import cn.org.ferry.system.dto.ResponseData;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.sysenum.EnableFlag;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

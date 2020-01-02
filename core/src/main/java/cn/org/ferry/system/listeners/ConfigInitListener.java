@@ -1,6 +1,6 @@
 package cn.org.ferry.system.listeners;
 
-import cn.org.ferry.system.utils.ConfigUtil;
+import cn.org.ferry.mybatis.utils.ConfigUtil;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 

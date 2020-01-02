@@ -87,6 +87,7 @@
 	
 	<modules>
 		<module>core</module>
+		<module>mybatis</module>
 		<module>core-db</module>
 	</modules>
 </project>

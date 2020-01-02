@@ -16,7 +16,7 @@ import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.sys.service.SysSqlService;
 import cn.org.ferry.system.exception.FileException;
 import cn.org.ferry.system.service.impl.BaseServiceImpl;
-import cn.org.ferry.system.utils.ConfigUtil;
+import cn.org.ferry.mybatis.utils.ConfigUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
