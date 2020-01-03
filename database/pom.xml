@@ -5,10 +5,13 @@
 	<parent>
 		<groupId>cn.org.ferry</groupId>
 		<artifactId>ferry</artifactId>
-		<version>1.0.0</version>
+		<version>${ferry.version}</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>database</artifactId>
+	<packaging>jar</packaging>
+	<name>database</name>
+	<description>ferry's core project</description>
 	
 	<properties>
 		<start-class>cn.org.ferry.DataBaseApplication</start-class>
@@ -22,8 +25,7 @@
 	</dependencies>
 	
 	<build>
-		<finalName>database</finalName>
-		<directory>target</directory>
+		<directory>../target/database</directory>
 		
 		<plugins>
 			<plugin>

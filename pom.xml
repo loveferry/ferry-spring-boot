@@ -11,13 +11,13 @@
 	</parent>
 	<groupId>cn.org.ferry</groupId>
 	<artifactId>ferry</artifactId>
-	<version>1.0.0</version>
+	<version>${ferry.version}</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<swagger.version>2.9.2</swagger.version>
-		<ferry.version>1.0.0</ferry.version>
+		<ferry.version>2.0.0</ferry.version>
 		<maven.test.skip>true</maven.test.skip>
 	</properties>
 	

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn.org.ferry</groupId>
 		<artifactId>ferry</artifactId>
-		<version>1.0.0</version>
+		<version>${ferry.version}</version>
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
@@ -25,11 +25,8 @@
 	</dependencies>
 	
 	<build>
-		<!--产生的构建的文件名-->
-		<finalName>soap</finalName>
-		
 		<!--构建产生的所有文件存放的目录-->
-		<directory>target</directory>
+		<directory>../target/soap</directory>
 	
 	</build>
 	
