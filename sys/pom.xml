@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>cn.org.ferry</groupId>
+		<artifactId>ferry</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sys</artifactId>
+	<packaging>jar</packaging>
+	<name>sys</name>
+	<description>ferry's sys module</description>
+	
+	
+	
+	<dependencies>
+		<dependency>
+			<groupId>cn.org.ferry</groupId>
+			<artifactId>core</artifactId>
+			<version>${ferry.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<!--产生的构建的文件名-->
+		<finalName>sys</finalName>
+		
+		<!--构建产生的所有文件存放的目录-->
+		<directory>target</directory>
+	
+	</build>
+	
+
+</project>

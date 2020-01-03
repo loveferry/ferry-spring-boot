@@ -1,4 +1,4 @@
-import cn.org.ferry.system.exception.CommonException;
+import cn.org.ferry.core.exceptions.CommonException;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;

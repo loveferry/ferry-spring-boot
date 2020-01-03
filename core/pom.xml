@@ -4,12 +4,11 @@
 	<parent>
 		<groupId>cn.org.ferry</groupId>
 		<artifactId>ferry</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>core</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>core</name>
 	<description>ferry's core project</description>
@@ -19,18 +18,6 @@
 	</properties>
 	
 	<dependencies>
-		<dependency>
-			<groupId>cn.org.ferry</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<!-- persistence-api -->
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		
 		<!--mybatis -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -110,74 +97,23 @@
 			<groupId>org.docx4j</groupId>
 			<artifactId>docx4j</artifactId>
 			<version>6.1.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	
 	</dependencies>
 	
 	<build>
 		<!--产生的构建的文件名-->
-		<finalName>ferry</finalName>
+		<finalName>core</finalName>
 		
 		<!--构建产生的所有文件存放的目录-->
 		<directory>target</directory>
 		
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<!--在plugins里添加如下配置，允许在springboot使用${}获取maven变量值-->
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<encoding>utf-8</encoding>
-					<useDefaultDelimiters>true</useDefaultDelimiters>
-				</configuration>
-			</plugin>
-		</plugins>
-		
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>application.yml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*</include>
-				</includes>
-			</resource>
-		</resources>
 	</build>
-	
-	<profiles>
-		<!--开发环境-->
-		<profile>
-			<id>dev</id>
-			<properties>
-				<activeProfile>dev</activeProfile>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<!--测试环境-->
-		<profile>
-			<id>test</id>
-			<properties>
-				<activeProfile>test</activeProfile>
-			</properties>
-		</profile>
-		<!--正式环境-->
-		<profile>
-			<id>prod</id>
-			<properties>
-				<activeProfile>prod</activeProfile>
-			</properties>
-		</profile>
-	</profiles>
 
 </project>
