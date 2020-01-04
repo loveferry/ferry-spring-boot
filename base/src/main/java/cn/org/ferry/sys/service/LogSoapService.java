@@ -1,8 +1,8 @@
-package cn.org.ferry.soap.service;
+package cn.org.ferry.sys.service;
 
 
 import cn.org.ferry.core.service.BaseService;
-import cn.org.ferry.soap.dto.LogSoap;
+import cn.org.ferry.sys.dto.LogSoap;
 
 /**
  * Generate by code generator

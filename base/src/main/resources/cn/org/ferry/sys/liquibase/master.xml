@@ -11,8 +11,7 @@
     <includeAll>指定的是changelog的目录，而不是为文件，如：<includeAll path="com/example/changelogs/"/> -->
 
     <!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
-
-    <include file="log_login.xml" relativeToChangelogFile="true" />
+    
     <include file="sys_user.xml" relativeToChangelogFile="true" />
     <include file="sys_attachment_category.xml" relativeToChangelogFile="true" />
     <include file="sys_attachment.xml" relativeToChangelogFile="true" />
@@ -21,4 +20,7 @@
     <include file="sys_sql.xml" relativeToChangelogFile="true" />
     <include file="sys_enum_type.xml" relativeToChangelogFile="true" />
     <include file="sys_generate_table.xml" relativeToChangelogFile="true" />
+    
+    <include file="log_login.xml" relativeToChangelogFile="true" />
+    <include file="log_soap.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

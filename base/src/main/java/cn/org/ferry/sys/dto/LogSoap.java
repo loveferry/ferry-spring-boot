@@ -1,8 +1,9 @@
-package cn.org.ferry.soap.dto;
+package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;

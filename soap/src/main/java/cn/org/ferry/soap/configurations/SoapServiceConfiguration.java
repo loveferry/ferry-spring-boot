@@ -1,23 +1,20 @@
 package cn.org.ferry.soap.configurations;
 
-import cn.org.ferry.soap.interceptors.SoapInPreInvokeInterceptor;
-import cn.org.ferry.soap.interceptors.SoapInReceiveInterceptor;
-import cn.org.ferry.soap.interceptors.SoapOutPreStreamInterceptor;
 import cn.org.ferry.soap.service.ConContractSoapService;
 import cn.org.ferry.soap.service.ContractChangeSoapService;
 import cn.org.ferry.soap.service.EveryDayPlanSoapService;
 import cn.org.ferry.soap.service.PrjProjectSoapService;
+import cn.org.ferry.sys.interceptors.SoapInPreInvokeInterceptor;
+import cn.org.ferry.sys.interceptors.SoapInReceiveInterceptor;
+import cn.org.ferry.sys.interceptors.SoapOutPreStreamInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Objects;
 import javax.xml.ws.Endpoint;
 
 /**
@@ -26,46 +23,23 @@ import javax.xml.ws.Endpoint;
  * @author ferry ferry_sy@163.com
  * created by 2019/09/25 18:46
  */
+
 @Configuration
 @ConditionalOnClass({SpringBus.class, CXFServlet.class})
-public class CxfWebServiceConfiguration {
-    @Value("${ferry.cxf.path}")
-    private String path;
+public class SoapServiceConfiguration {
     @Autowired
     private SpringBus springBus;
+    @Autowired
+    private SoapInReceiveInterceptor soapInReceiveInterceptor;
+    @Autowired
+    private SoapInPreInvokeInterceptor soapInPreInvokeInterceptor;
+    @Autowired
+    private SoapOutPreStreamInterceptor soapOutPreStreamInterceptor;
 
-    /**
-     * cxf servlet 名称指定为 cxfServletRegistration，否则 spring 会生成两个 servlet
-     * @see  org.apache.cxf.spring.boot.autoconfigure.CxfAutoConfiguration
-     */
-    @Bean(name = "cxfServletRegistration")
-    public ServletRegistrationBean<CXFServlet> cxfServletRegistration() {
-        Objects.requireNonNull(path, "cxf path can not empty");
-        return new ServletRegistrationBean(new CXFServlet(), new String[]{path.endsWith("/") ? path + "*" : path + "/*"});
-    }
-
-    /**
-     * soap 接口服务端流入输接收数据处理拦截器
-     */
-    @Bean
-    public SoapInReceiveInterceptor soapInReceiveInterceptor(){
-        return new SoapInReceiveInterceptor();
-    }
-
-    /**
-     * soap接口服务端流入业务方法处理前拦截器
-     */
-    @Bean
-    public SoapInPreInvokeInterceptor soapInPreInvokeInterceptor(){
-        return new SoapInPreInvokeInterceptor();
-    }
-
-    /**
-     * soap接口服务端流出输出流处理前拦截器
-     */
-    @Bean
-    public SoapOutPreStreamInterceptor soapOutPreStreamInterceptor(){
-        return new SoapOutPreStreamInterceptor();
+    private void addInterceptors(EndpointImpl endpoint){
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor);
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor);
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor);
     }
 
     @Autowired
@@ -85,12 +59,8 @@ public class CxfWebServiceConfiguration {
 
 
         endpoint.publish("/project");
-        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
-        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
-        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
 
-
-
+        addInterceptors(endpoint);
 //        map.put("soap.force.doclit.bare", true);
 
         return endpoint;
@@ -101,9 +71,7 @@ public class CxfWebServiceConfiguration {
     public Endpoint contractEndPoint(ConContractSoapService conContractSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, conContractSoapService);
         endpoint.publish("/contract");
-        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
-        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
-        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        addInterceptors(endpoint);
         return endpoint;
     }
 
@@ -112,9 +80,7 @@ public class CxfWebServiceConfiguration {
     public Endpoint everyDayPlanEndPoint(EveryDayPlanSoapService everyDayPlanSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, everyDayPlanSoapService);
         endpoint.publish("/everyDayPlan");
-        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
-        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
-        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        addInterceptors(endpoint);
         return endpoint;
     }
 
@@ -123,9 +89,7 @@ public class CxfWebServiceConfiguration {
     public Endpoint contractChangePoint(ContractChangeSoapService contractChangeSoapService){
         EndpointImpl endpoint = new EndpointImpl(springBus, contractChangeSoapService);
         endpoint.publish("/contractChange");
-        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
-        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
-        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        addInterceptors(endpoint);
         return endpoint;
     }
 

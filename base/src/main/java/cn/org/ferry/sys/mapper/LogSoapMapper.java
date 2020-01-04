@@ -1,8 +1,8 @@
-package cn.org.ferry.soap.mapper;
+package cn.org.ferry.sys.mapper;
 
 
 import cn.org.ferry.core.mapper.Mapper;
-import cn.org.ferry.soap.dto.LogSoap;
+import cn.org.ferry.sys.dto.LogSoap;
 
 /**
  * Generate by code generator

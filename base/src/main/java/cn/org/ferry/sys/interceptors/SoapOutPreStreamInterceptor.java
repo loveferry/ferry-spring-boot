@@ -1,6 +1,6 @@
-package cn.org.ferry.soap.interceptors;
+package cn.org.ferry.sys.interceptors;
 
-import cn.org.ferry.soap.service.LogSoapService;
+import cn.org.ferry.sys.service.LogSoapService;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.interceptor.Fault;

@@ -1,4 +1,4 @@
-package cn.org.ferry.soap.interceptors;
+package cn.org.ferry.sys.interceptors;
 
 import cn.org.ferry.core.utils.NetWorkUtils;
 import org.apache.cxf.binding.soap.SoapMessage;

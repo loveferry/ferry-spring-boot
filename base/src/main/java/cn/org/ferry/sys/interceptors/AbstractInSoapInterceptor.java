@@ -1,4 +1,4 @@
-package cn.org.ferry.soap.interceptors;
+package cn.org.ferry.sys.interceptors;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.io.CachedOutputStream;

@@ -1,9 +1,10 @@
-package cn.org.ferry.soap.service.impl;
+package cn.org.ferry.sys.service.impl;
+
 
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.soap.dto.LogSoap;
-import cn.org.ferry.soap.mapper.LogSoapMapper;
-import cn.org.ferry.soap.service.LogSoapService;
+import cn.org.ferry.sys.dto.LogSoap;
+import cn.org.ferry.sys.mapper.LogSoapMapper;
+import cn.org.ferry.sys.service.LogSoapService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
