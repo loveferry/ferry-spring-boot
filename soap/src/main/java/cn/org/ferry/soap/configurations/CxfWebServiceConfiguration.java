@@ -1,8 +1,12 @@
 package cn.org.ferry.soap.configurations;
 
-import cn.org.ferry.soap.interceptors.SoapLogInInterceptor;
-import cn.org.ferry.soap.interceptors.SoapLogOutInterceptor;
-import cn.org.ferry.soap.service.ChinesePeopleSoapService;
+import cn.org.ferry.soap.interceptors.SoapInPreInvokeInterceptor;
+import cn.org.ferry.soap.interceptors.SoapInReceiveInterceptor;
+import cn.org.ferry.soap.interceptors.SoapOutPreStreamInterceptor;
+import cn.org.ferry.soap.service.ConContractSoapService;
+import cn.org.ferry.soap.service.ContractChangeSoapService;
+import cn.org.ferry.soap.service.EveryDayPlanSoapService;
+import cn.org.ferry.soap.service.PrjProjectSoapService;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
@@ -41,28 +45,89 @@ public class CxfWebServiceConfiguration {
     }
 
     /**
-     * soap接口服务端流入日志拦截器
+     * soap 接口服务端流入输接收数据处理拦截器
      */
     @Bean
-    public SoapLogInInterceptor soapLogInInterceptor(){
-        return new SoapLogInInterceptor();
+    public SoapInReceiveInterceptor soapInReceiveInterceptor(){
+        return new SoapInReceiveInterceptor();
     }
 
     /**
-     * soap接口服务端流出日志拦截器
+     * soap接口服务端流入业务方法处理前拦截器
      */
     @Bean
-    public SoapLogOutInterceptor soapLogOutInterceptor(){
-        return new SoapLogOutInterceptor();
+    public SoapInPreInvokeInterceptor soapInPreInvokeInterceptor(){
+        return new SoapInPreInvokeInterceptor();
+    }
+
+    /**
+     * soap接口服务端流出输出流处理前拦截器
+     */
+    @Bean
+    public SoapOutPreStreamInterceptor soapOutPreStreamInterceptor(){
+        return new SoapOutPreStreamInterceptor();
     }
 
     @Autowired
-    @Bean(name = "chinese")
-    public Endpoint chinesePeopleEndPoint(ChinesePeopleSoapService chinesePeopleSoapService){
-        EndpointImpl endpoint = new EndpointImpl(springBus, chinesePeopleSoapService);
-        endpoint.publish("/chinese");
-        endpoint.getInInterceptors().add(soapLogInInterceptor());
-        endpoint.getOutInterceptors().add(soapLogOutInterceptor());
+    @Bean(name = "project")
+    public Endpoint projectEndPoint(PrjProjectSoapService prjProjectSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, prjProjectSoapService);
+
+        /*Map<String, Object> propertyMap = new HashMap<>();
+
+        Map<String, Object> nsMap = new HashMap<>();
+        nsMap.put("ferry", "http://lovesy.org.cn:50318");
+        nsMap.put("env", "http://www.w3.org/2003/05/soap-envelope");
+
+        propertyMap.put("soap.env.ns.map", nsMap);
+        propertyMap.put("disable.outputstream.optimization", true);
+        endpoint.setProperties(propertyMap);*/
+
+
+        endpoint.publish("/project");
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+
+
+
+//        map.put("soap.force.doclit.bare", true);
+
         return endpoint;
     }
+
+    @Autowired
+    @Bean(name = "contract")
+    public Endpoint contractEndPoint(ConContractSoapService conContractSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, conContractSoapService);
+        endpoint.publish("/contract");
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        return endpoint;
+    }
+
+    @Autowired
+    @Bean(name = "everyDayPlan")
+    public Endpoint everyDayPlanEndPoint(EveryDayPlanSoapService everyDayPlanSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, everyDayPlanSoapService);
+        endpoint.publish("/everyDayPlan");
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        return endpoint;
+    }
+
+    @Autowired
+    @Bean(name = "contractChange")
+    public Endpoint contractChangePoint(ContractChangeSoapService contractChangeSoapService){
+        EndpointImpl endpoint = new EndpointImpl(springBus, contractChangeSoapService);
+        endpoint.publish("/contractChange");
+        endpoint.getInInterceptors().add(soapInReceiveInterceptor());
+        endpoint.getInInterceptors().add(soapInPreInvokeInterceptor());
+        endpoint.getOutInterceptors().add(soapOutPreStreamInterceptor());
+        return endpoint;
+    }
+
+
 }

@@ -46,25 +46,6 @@ public class SwaggerConfiguration {
     }
 
     /**
-     * 人员信息api
-     */
-    @Bean
-    public Docket chinesePeopleDocket() {
-        List<Parameter> parameterList = new ArrayList<>(1);
-        parameterList.add(initParameter("_token", "token认证", String.class.getSimpleName(), "header", true));
-
-        return new Docket(DocumentationType.SWAGGER_2)
-                .pathMapping("/") // 默认请求都是以 / 根路径开始，如果我们的应用不是部署在根路径，比如以/validator部署，则可以通过一下方式设置请求的统一前缀
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("cn.org.ferry"))
-                .paths(PathSelectors.ant("/api/chinese/**"))
-                .build()
-                .groupName("人员信息")
-                .globalOperationParameters(parameterList)
-                .apiInfo(apiInfo("人员信息", "1.0.0", "当爱已成往事，沉默是最好的道别"));
-    }
-
-    /**
      * 系统接口api
      */
     @Bean
@@ -81,5 +62,24 @@ public class SwaggerConfiguration {
                 .groupName("系统模块")
                 .globalOperationParameters(parameterList)
                 .apiInfo(apiInfo("系统模块", "2.0.0", "你努力后的成功，不能弥补你成功前的痛苦"));
+    }
+
+    /**
+     * 文档操作接口api
+     */
+    @Bean
+    public Docket docDocket() {
+        List<Parameter> parameterList = new ArrayList<>(1);
+        parameterList.add(initParameter("_token", "token认证", String.class.getSimpleName(), "header", true));
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .pathMapping("/") // 默认请求都是以 / 根路径开始，如果我们的应用不是部署在根路径，比如以/validator部署，则可以通过一下方式设置请求的统一前缀
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("cn.org.ferry.doc.controllers"))
+                .paths(PathSelectors.any())
+                .build()
+                .groupName("文档模块")
+                .globalOperationParameters(parameterList)
+                .apiInfo(apiInfo("文档模块", "2.0.0", "当爱已成往事，沉默是最好的道别"));
     }
 }

@@ -23,21 +23,17 @@
 			<column name="log_id" type="BIGINT" autoIncrement="true" remarks="pk">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="log_soap_pk_li"/>
 			</column>
-			<column name="log_type" type="VARCHAR(200)" remarks="日志类型">
-				<constraints nullable="false"/>
-			</column>
-			<column name="service_name" type="VARCHAR(200)" remarks="服务名称">
+			<column name="service_address" type="VARCHAR(200)" remarks="服务地址">
 				<constraints nullable="false"/>
 			</column>
 			<column name="operation_name" type="VARCHAR(200)" remarks="操作名称">
 				<constraints nullable="false"/>
 			</column>
-			<column name="url" type="VARCHAR(200)" remarks="访问路径"/>
+			<column name="client_address" type="VARCHAR(200)" remarks="客户端地址"/>
 			<column name="protocol_headers" type="VARCHAR(1000)" remarks="协议头"/>
-			<column name="http_method" type="VARCHAR(10)" remarks="请求方式"/>
 			<column name="content_type" type="VARCHAR(100)" remarks="媒体类型"/>
-			<column name="encoding" type="VARCHAR(20)" remarks="编码格式"/>
-			<column name="content" type="LONGTEXT" remarks="内容"/>
+			<column name="input_content" type="LONGTEXT" remarks="流入内容"/>
+			<column name="output_content" type="LONGTEXT" remarks="流出内容"/>
 			<column name="created_by" type="BIGINT" defaultValue="-1" />
 			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
 			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
@@ -46,11 +42,7 @@
 	</changeSet>
 	
 	<changeSet id="create_log_soap_index" author="ferry">
-		<createIndex tableName="log_soap" indexName="log_soap_ik_lt">
-			<column name="log_type"/>
-		</createIndex>
-		<createIndex tableName="log_soap" indexName="log_soap_ik_lt_sn_on">
-			<column name="service_name"/>
+		<createIndex tableName="log_soap" indexName="log_soap_ik_on">
 			<column name="operation_name"/>
 		</createIndex>
 	</changeSet>

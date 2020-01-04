@@ -59,10 +59,9 @@ public final class BookMarkReplaceUtil {
      * @param bookMarkType 书签类型
      * @throws FileException 若出现错误，统一抛出该异常
      */
-    public static void replace(WordprocessingMLPackage mlPackage, @NotNull CTBookmark bookmark, @NotNull Object value,
+    public static void replace(WordprocessingMLPackage mlPackage, @NotNull CTBookmark bookmark, Object value,
                                @NotNull BookMarkType bookMarkType) throws FileException {
         Objects.requireNonNull(bookmark,"书签不能为空");
-        Objects.requireNonNull(value,"图片资源不能为空");
         Objects.requireNonNull(bookMarkType,"书签类型不能为空");
         switch (bookMarkType){
             case TEXT:
@@ -81,7 +80,7 @@ public final class BookMarkReplaceUtil {
                 }else if(value instanceof byte[]){
                     bs = (byte[]) value;
                 }else{
-                    throw new FileException("图片类型非法，当前类型为："+value.getClass().getName());
+                    throw new FileException("图片类型非法，当前类型为："+value.getClass().getCanonicalName());
                 }
                 replaceImage(mlPackage, bookmark, bs);
                 break;
@@ -103,6 +102,7 @@ public final class BookMarkReplaceUtil {
         String content = BeanUtils.ifnull(value, BeanUtils.EMPTY).toString();
         List<Object> bookMarkParentList = TraversalUtil.getChildrenImpl(bookmark.getParent());
         List<CTMarkupRange> markupRangeList = Docx4jCommonUtil.getAllElementByChildren(bookmark.getParent(), CTMarkupRange.class);
+        // 获取书签范围
         int rangeStart = -1;
         int rangeEnd = -1;
         for (int i = 0; i < bookMarkParentList.size(); i++) {
@@ -116,6 +116,7 @@ public final class BookMarkReplaceUtil {
                 }
             }
         }
+        // 当书签范围内有文本标签时将实际值放入第一个文本标签内
         Text text = null;
         for (int i = rangeStart+1; i < rangeEnd; i++) {
             List<Text> textList = Docx4jCommonUtil.getAllElementByChildren(bookMarkParentList.get(i), Text.class);
@@ -125,6 +126,7 @@ public final class BookMarkReplaceUtil {
                 break;
             }
         }
+        // 若范围内没有文本标签，则生成一个带文本的样式块
         if(text == null){
             R r = Docx4jCommonUtil.initR();
             RPr rPr = null;
@@ -162,7 +164,7 @@ public final class BookMarkReplaceUtil {
         if(CollectionUtils.isEmpty(drawList)){
             throw new FileException("图片书签未包含图片!");
         }
-        List<Object> list = new ArrayList<>();
+        List<Object> list = new ArrayList<>(drawList.size());
         for (Drawing drawing : drawList) {
             list.addAll(drawing.getAnchorOrInline());
         }
