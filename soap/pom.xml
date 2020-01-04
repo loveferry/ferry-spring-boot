@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>cn.org.ferry</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>base</artifactId>
 			<version>${ferry.version}</version>
 		</dependency>
 	

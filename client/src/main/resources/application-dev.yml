@@ -64,6 +64,8 @@ info:
 # 自定义的配置属性
 ferry:
   upload: /u01/ferry/upload
+  liquibase:
+    enabled: true
   swagger:
     enabled: true
   cxf:

@@ -17,13 +17,6 @@
 		<start-class>cn.org.ferry.DataBaseApplication</start-class>
 	</properties>
 	
-	<dependencies>
-		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-		</dependency>
-	</dependencies>
-	
 	<build>
 		<directory>../target/database</directory>
 		
@@ -44,27 +37,27 @@
 			<!--maven 命令行方式启动-->
 			<!--mvn clean compile -pl core-db exec:java -Dexec.mainClass="cn.org.ferry.CoreDbApplication" -Dexec.cleanupDaemonThreads=false -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/ferry -Dspring.datasource.username=ferry -Dspring.datasource.password=ferry-->
 			<!--mvn clean compile -pl core-db org.codehaus.mojo:exec-maven-plugin:java -Dexec.mainClass="cn.org.ferry.CoreDbApplication" -Dexec.cleanupDaemonThreads=false -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/ferry -Dspring.datasource.username=ferry -Dspring.datasource.password=ferry-->
-			<plugin>
+			<!--<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.6.0</version>
 				<executions>
 					<execution>
 						<id>build-datasource</id>
-						<!--绑定生命周期-->
+						&lt;!&ndash;绑定生命周期&ndash;&gt;
 						<phase>package</phase>
 						<goals>
-							<!--目标-->
+							&lt;!&ndash;目标&ndash;&gt;
 							<goal>java</goal>
 						</goals>
 						<configuration>
 							<mainClass>cn.org.ferry.DataBaseApplication</mainClass>
-							<!--不加这句，启动插件后，该java程序会异常关闭-->
+							&lt;!&ndash;不加这句，启动插件后，该java程序会异常关闭&ndash;&gt;
 							<cleanupDaemonThreads>false</cleanupDaemonThreads>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 		
 		<resources>
