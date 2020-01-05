@@ -106,7 +106,6 @@
 		<module>soap</module>
 		<module>doc</module>
 		<module>client</module>
-		<module>database</module>
 	</modules>
 	
 </project>
