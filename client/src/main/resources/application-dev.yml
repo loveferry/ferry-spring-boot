@@ -9,7 +9,7 @@ server:
 
 # 日志
 logging:
-  path: log/
+  path: /u01/ferry/logs/
   level:
     root: INFO
     cn.org.ferry : DEBUG
