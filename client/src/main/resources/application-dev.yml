@@ -19,10 +19,13 @@ logging:
 # dataSource
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/ferry
+    url: jdbc:oracle:thin:@localhost:49161:xe
+#    url: jdbc:mysql://127.0.0.1:3306/ferry
+    driver-class-name: oracle.jdbc.OracleDriver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
     username: ferry
     password: ferry
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    type: oracle.jdbc.pool.OracleDataSource
   redis:
     host: 127.0.0.1
     port: 6379

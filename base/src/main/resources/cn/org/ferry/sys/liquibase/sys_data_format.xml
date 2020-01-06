@@ -18,94 +18,62 @@
     
     <!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
     
-    <changeSet id="create_sys_data_format" author="ferry">
-        <createTable tableName="sys_data_format" remarks="数据格式化表">
-            <column name="data_format_id" type="BIGINT" autoIncrement="true" remarks="pk">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="sys_data_format_pk_dfi"/>
+    <changeSet id="CREATE_TABLE_MYSQL_SYS_DATA_FORMAT" dbms="mysql" author="ferry">
+        <preConditions>
+            <not>
+                <tableExists tableName="SYS_DATA_FORMAT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SYS_DATA_FORMAT" remarks="数据格式化表">
+            <column name="DATA_FORMAT_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_DATA_FORMAT_PK_DFI"/>
             </column>
-            <column name="data_type" type="VARCHAR(100)" remarks="数据类型"/>
-            <column name="data_format" type="VARCHAR(100)" remarks="格式化表达式"/>
-            <column name="description" type="VARCHAR(1000)" remarks="格式化说明"/>
-            <column name="created_by" type="BIGINT" defaultValue="-1" />
-            <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-            <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-            <column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+            <column name="DATA_TYPE" type="VARCHAR(100)" remarks="数据类型"/>
+            <column name="DATA_FORMAT" type="VARCHAR(100)" remarks="格式化表达式"/>
+            <column name="DESCRIPTION" type="VARCHAR(1000)" remarks="格式化说明"/>
+            <column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+            <column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+            <column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+                    remarks="最后更新人"/>
+            <column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
         </createTable>
     </changeSet>
     
-    <changeSet id="create_sys_data_format_index" author="ferry">
-        <createIndex tableName="sys_data_format" indexName="sys_data_format_ik_sdf">
-            <column name="data_type"/>
-            <column name="data_format"/>
+    <changeSet id="CREATE_TABLE_ORACLE_SYS_DATA_FORMAT" dbms="oracle" author="ferry">
+        <preConditions>
+            <not>
+                <tableExists tableName="SYS_DATA_FORMAT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SYS_DATA_FORMAT" remarks="数据格式化表">
+            <column name="DATA_FORMAT_ID" type="BIGINT" remarks="PK">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_DATA_FORMAT_PK_DFI"/>
+            </column>
+            <column name="DATA_TYPE" type="VARCHAR2(100)" remarks="数据类型"/>
+            <column name="DATA_FORMAT" type="VARCHAR2(100)" remarks="格式化表达式"/>
+            <column name="DESCRIPTION" type="VARCHAR2(1000)" remarks="格式化说明"/>
+            <column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+            <column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+            <column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+                    remarks="最后更新人"/>
+            <column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="CREATE_SEQUENCE_ORACLE_SYS_DATA_FORMAT" dbms="oracle" author="FERRY">
+        <preConditions>
+            <not>
+                <sequenceExists sequenceName="SYS_DATA_FORMAT_S"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="SYS_DATA_FORMAT_S"/>
+    </changeSet>
+    
+    <changeSet id="CREATE_SYS_DATA_FORMAT_INDEX" author="FERRY">
+        <createIndex tableName="SYS_DATA_FORMAT" indexName="SYS_DATA_FORMAT_IK_SDF">
+            <column name="DATA_TYPE"/>
+            <column name="DATA_FORMAT"/>
         </createIndex>
     </changeSet>
     
-    <changeSet id="init_sys_data_format" author="ferry">
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="1"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy年MM月dd日 HH时mm分ss秒"/>
-            <column name="description" value="2011年11月11日 11时11分11秒(二十四时制)"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="2"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy/MM/dd"/>
-            <column name="description" value="2011/11/11"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="3"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy年MM月dd日"/>
-            <column name="description" value="2011年11月11日"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="4"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy-MM-dd"/>
-            <column name="description" value="2011-11-11"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="5"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy-MM-dd HH:mm:ss"/>
-            <column name="description" value="2011-11-11 11:11:11(二十四时制)"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="6"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy年MM月dd日 HH时mm分ss秒 E"/>
-            <column name="description" value="2011年11月11日 11时11分11秒 星期五(二十四时制)"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="7"/>
-            <column name="data_type" value="DATE"/>
-            <column name="data_format" value="yyyy年MM月dd日 HH时mm分ss秒 E"/>
-            <column name="description" value="2011年11月11日 11时11分11秒 星期五(二十四时制)"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="8"/>
-            <column name="data_type" value="NUMBER"/>
-            <column name="data_format" value="000.00"/>
-            <column name="description" value="整数位不足补0，小数位不足补0，小数位四舍五入保留两位有效数字"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="9"/>
-            <column name="data_type" value="NUMBER"/>
-            <column name="data_format" value="###.##"/>
-            <column name="description" value="整数位按实际位数填充，小数位四舍五入保留两位有效数字"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="10"/>
-            <column name="data_type" value="NUMBER"/>
-            <column name="data_format" value="###,###.00"/>
-            <column name="description" value="整数位按实际位数填充，千分位以逗号分隔，小数位四舍五入保留两位有效数字，不足补0"/>
-        </insert>
-        <insert tableName="sys_data_format">
-            <column name="data_format_id" value="11"/>
-            <column name="data_type" value="NUMBER"/>
-            <column name="data_format" value="#0.00%"/>
-            <column name="description" value="百分数显示"/>
-        </insert>
-    </changeSet>
 </databaseChangeLog>

@@ -30,8 +30,8 @@ public class DocLiquibaseConfiguration {
         liquibase.setShouldRun(true);
         liquibase.setResourceLoader(new DefaultResourceLoader());
         // 覆盖Liquibase changelog表名
-        liquibase.setDatabaseChangeLogTable("changelog_table");
-        liquibase.setDatabaseChangeLogLockTable("changelog_lock_table");
+        liquibase.setDatabaseChangeLogTable("CHANGELOG_TABLE");
+        liquibase.setDatabaseChangeLogLockTable("CHANGELOG_LOCK_TABLE");
         return liquibase;
     }
 }

@@ -18,55 +18,79 @@
 	
 	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
 	
-	<changeSet id="create_sys_user" author="ferry">
-		<createTable tableName="sys_user" remarks="系统用户表">
-			<column name="user_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="sys_user_pk_ui"/>
+	<changeSet id="CREATE_TABLE_MYSQL_SYS_USER" dbms="mysql" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_USER"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_USER" remarks="系统用户表">
+			<column name="USER_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_USER_PK_UI"/>
 			</column>
-			<column name="user_code" type="VARCHAR(100)" remarks="用户编码">
-				<constraints nullable="false" unique="true" uniqueConstraintName="sys_user_uk_uc"/>
+			<column name="USER_CODE" type="VARCHAR(100)" remarks="用户编码">
+				<constraints nullable="false" unique="true" uniqueConstraintName="SYS_USER_UK_UC"/>
 			</column>
-			<column name="password" type="VARCHAR(100)" remarks="用户密码">
+			<column name="PASSWORD" type="VARCHAR(100)" remarks="用户密码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="user_name_en" type="VARCHAR(100)" remarks="用户名称(英文)"/>
-			<column name="user_name_zh" type="VARCHAR(100)" remarks="用户名称(简体中文)"/>
-			<column name="user_sex" type="VARCHAR(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
+			<column name="USER_NAME_EN" type="VARCHAR(100)" remarks="用户名称(英文)"/>
+			<column name="USER_NAME_ZH" type="VARCHAR(100)" remarks="用户名称(简体中文)"/>
+			<column name="USER_SEX" type="VARCHAR(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
 				<constraints nullable="false"/>
 			</column>
-			<column name="user_birthday" type="DATE" remarks="用户出生日期"/>
-			<column name="user_email" type="VARCHAR(100)" remarks="邮箱"/>
-			<column name="user_phone" type="VARCHAR(100)" remarks="联系电话"/>
-			<column name="user_family_address" type="VARCHAR(1000)" remarks="家庭住址"/>
-			<column name="created_by" type="BIGINT" defaultValue="-1" />
-			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+			<column name="USER_BIRTHDAY" type="DATE" remarks="用户出生日期"/>
+			<column name="USER_EMAIL" type="VARCHAR(100)" remarks="邮箱"/>
+			<column name="USER_PHONE" type="VARCHAR(100)" remarks="联系电话"/>
+			<column name="USER_FAMILY_ADDRESS" type="VARCHAR(1000)" remarks="家庭住址"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="init_sys_user" author="ferry">
-		<insert tableName="sys_user">
-			<column name="user_code" value="FERRY"/>
-			<column name="password" value="FERRY"/>
-			<column name="user_name_en" value="ferry"/>
-			<column name="user_name_zh" value="盛玉"/>
-			<column name="user_sex" value="MALE"/>
-			<column name="user_birthday" valueDate="1995-04-09"/>
-			<column name="user_email" value="ferry_sy@163.com"/>
-			<column name="user_phone" value="17512591407"/>
-			<column name="user_family_address" value="安徽省马鞍山市和县姥桥镇"/>
-		</insert>
-		<insert tableName="sys_user">
-			<column name="user_code" value="EVER"/>
-			<column name="password" value="EVER"/>
-			<column name="user_name_en" value="EVER"/>
-			<column name="user_name_zh" value="陈寅莹"/>
-			<column name="user_sex" value="FEMALE"/>
-			<column name="user_birthday" valueDate="1994-12-15"/>
-			<column name="user_email" value="892938772@qq.com"/>
-			<column name="user_phone" value="18861822241"/>
-			<column name="user_family_address" value="浙江省宁波市"/>
-		</insert>
+	<changeSet id="CREATE_TABLE_ORACLE_SYS_USER" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_USER"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_USER" remarks="系统用户表">
+			<column name="USER_ID" type="BIGINT" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_USER_PK_UI"/>
+			</column>
+			<column name="USER_CODE" type="VARCHAR2(100)" remarks="用户编码">
+				<constraints nullable="false" unique="true" uniqueConstraintName="SYS_USER_UK_UC"/>
+			</column>
+			<column name="PASSWORD" type="VARCHAR2(100)" remarks="用户密码">
+				<constraints nullable="false"/>
+			</column>
+			<column name="USER_NAME_EN" type="VARCHAR2(100)" remarks="用户名称(英文)"/>
+			<column name="USER_NAME_ZH" type="VARCHAR2(100)" remarks="用户名称(简体中文)"/>
+			<column name="USER_SEX" type="VARCHAR2(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="USER_BIRTHDAY" type="TIMESTAMP" remarks="用户出生日期"/>
+			<column name="USER_EMAIL" type="VARCHAR2(100)" remarks="邮箱"/>
+			<column name="USER_PHONE" type="VARCHAR2(100)" remarks="联系电话"/>
+			<column name="USER_FAMILY_ADDRESS" type="VARCHAR2(1000)" remarks="家庭住址"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
 	</changeSet>
+	
+	<changeSet id="CREATE_SEQUENCE_ORACLE_SYS_USER" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<sequenceExists sequenceName="SYS_USER_S"/>
+			</not>
+		</preConditions>
+		<createSequence sequenceName="SYS_USER_S" startValue="1" minValue="1" incrementBy="1"/>
+	</changeSet>
+
 </databaseChangeLog>

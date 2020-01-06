@@ -18,32 +18,76 @@
 	
 	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
 	
-	<changeSet id="create_log_soap" author="ferry">
-		<createTable tableName="log_soap" remarks="soap接口日志记录表">
-			<column name="log_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="log_soap_pk_li"/>
+	<changeSet id="CREATE_TABLE_MYSQL_LOG_SOAP" dbms="mysql" author="FERRY">
+		<preConditions onFail="CONTINUE" onError="CONTINUE">
+			<not>
+				<tableExists tableName="LOG_SOAP"/>
+			</not>
+		</preConditions>
+		<createTable tableName="LOG_SOAP" remarks="soap接口日志记录表">
+			<column name="LOG_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="LOG_SOAP_PK_LI"/>
 			</column>
-			<column name="service_address" type="VARCHAR(200)" remarks="服务地址">
+			<column name="SERVICE_ADDRESS" type="VARCHAR(200)" remarks="服务地址">
 				<constraints nullable="false"/>
 			</column>
-			<column name="operation_name" type="VARCHAR(200)" remarks="操作名称">
+			<column name="OPERATION_NAME" type="VARCHAR(200)" remarks="操作名称">
 				<constraints nullable="false"/>
 			</column>
-			<column name="client_address" type="VARCHAR(200)" remarks="客户端地址"/>
-			<column name="protocol_headers" type="VARCHAR(1000)" remarks="协议头"/>
-			<column name="content_type" type="VARCHAR(100)" remarks="媒体类型"/>
-			<column name="input_content" type="LONGTEXT" remarks="流入内容"/>
-			<column name="output_content" type="LONGTEXT" remarks="流出内容"/>
-			<column name="created_by" type="BIGINT" defaultValue="-1" />
-			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+			<column name="CLIENT_ADDRESS" type="VARCHAR(200)" remarks="客户端地址"/>
+			<column name="PROTOCOL_HEADERS" type="VARCHAR(1000)" remarks="协议头"/>
+			<column name="CONTENT_TYPE" type="VARCHAR(100)" remarks="媒体类型"/>
+			<column name="INPUT_CONTENT" type="LONGTEXT" remarks="流入内容"/>
+			<column name="OUTPUT_CONTENT" type="LONGTEXT" remarks="流出内容"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="create_log_soap_index" author="ferry">
-		<createIndex tableName="log_soap" indexName="log_soap_ik_on">
-			<column name="operation_name"/>
+	<changeSet id="CREATE_TABLE_ORACLE_LOG_SOAP" dbms="oracle" author="FERRY">
+		<preConditions onFail="CONTINUE" onError="CONTINUE">
+			<not>
+				<tableExists tableName="LOG_SOAP"/>
+			</not>
+		</preConditions>
+		<createTable tableName="LOG_SOAP" remarks="soap接口日志记录表">
+			<column name="LOG_ID" type="BIGINT" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="LOG_SOAP_PK_LI"/>
+			</column>
+			<column name="SERVICE_ADDRESS" type="VARCHAR2(200)" remarks="服务地址">
+				<constraints nullable="false"/>
+			</column>
+			<column name="OPERATION_NAME" type="VARCHAR2(200)" remarks="操作名称">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CLIENT_ADDRESS" type="VARCHAR2(200)" remarks="客户端地址"/>
+			<column name="PROTOCOL_HEADERS" type="VARCHAR2(1000)" remarks="协议头"/>
+			<column name="CONTENT_TYPE" type="VARCHAR2(100)" remarks="媒体类型"/>
+			<column name="INPUT_CONTENT" type="CLOB" remarks="流入内容"/>
+			<column name="OUTPUT_CONTENT" type="CLOB" remarks="流出内容"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="CREATE_SEQUENCE_ORACLE_LOG_SOAP" dbms="oracle" author="FERRY">
+		<preConditions onFail="CONTINUE" onError="CONTINUE">
+			<not>
+				<sequenceExists sequenceName="LOG_SOAP_S"/>
+			</not>
+		</preConditions>
+		<createSequence sequenceName="LOG_SOAP_S"/>
+	</changeSet>
+	
+	<changeSet id="CREATE_LOG_SOAP_INDEX" author="FERRY">
+		<createIndex tableName="LOG_SOAP" indexName="LOG_SOAP_IK_ON">
+			<column name="OPERATION_NAME"/>
 		</createIndex>
 	</changeSet>
 </databaseChangeLog>

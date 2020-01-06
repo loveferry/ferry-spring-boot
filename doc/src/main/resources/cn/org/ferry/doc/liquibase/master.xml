@@ -11,7 +11,22 @@
     <includeAll>指定的是changelog的目录，而不是为文件，如：<includeAll path="com/example/changelogs/"/> -->
 
     <!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
-
+    
+    <!--初始化一些属性-->
+    <!--当前日期-->
+    <property name="now" value="NOW()" dbms="mysql"/>
+    <property name="now" value="SYSTIMESTAMP" dbms="oracle"/>
+    
+    <!--createby默认值-->
+    <property name="create_by_default_value" value="-1"/>
+    <!--last_updated_by默认值-->
+    <property name="last_updated_by_default_value" value="-1"/>
+    
+    
+    
     <include file="doc_template.xml" relativeToChangelogFile="true" />
     <include file="doc_template_param.xml" relativeToChangelogFile="true" />
+    
+    <include file="mysql_init_data.xml" relativeToChangelogFile="true"/>
+    <include file="oracle_init_data.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

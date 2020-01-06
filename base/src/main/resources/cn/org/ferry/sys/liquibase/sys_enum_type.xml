@@ -18,48 +18,61 @@
 	
 	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
 	
-	<changeSet id="create_sys_enum_type" author="ferry">
-		<createTable tableName="sys_enum_type" remarks="枚举类型定义表">
-			<column name="type_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="sys_enum_type_pk_eti"/>
+	<changeSet id="CREATE_TABLE_MYSQL_SYS_ENUM_TYPE" dbms="mysql" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_ENUM_TYPE"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_ENUM_TYPE" remarks="枚举类型定义表">
+			<column name="TYPE_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ENUM_TYPE_PK_ETI"/>
 			</column>
-			<column name="type_code" type="VARCHAR(1000)" remarks="类型代码">
+			<column name="TYPE_CODE" type="VARCHAR(1000)" remarks="类型代码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="java_type" type="VARCHAR(200)" remarks="Java类型(类全限定名)"/>
-			<column name="column_type" type="VARCHAR(200)" remarks="mysql类型"/>
-			<column name="type_handler" type="VARCHAR(200)" remarks="类型转化器(类全限定名)"/>
-			<column name="created_by" type="BIGINT" defaultValue="-1" />
-			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+			<column name="JAVA_TYPE" type="VARCHAR(200)" remarks="Java类型(类全限定名)"/>
+			<column name="COLUMN_TYPE" type="VARCHAR(200)" remarks="mysql类型"/>
+			<column name="TYPE_HANDLER" type="VARCHAR(200)" remarks="类型转化器(类全限定名)"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="init_sys_enum_type_data" author="ferry">
-		<insert tableName="sys_enum_type">
-			<column name="type_code" value="SEX"/>
-			<column name="java_type" value="cn.org.ferry.mybatis.enums.Sex"/>
-			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.SexHandler"/>
-		</insert>
-		<insert tableName="sys_enum_type">
-			<column name="type_code" value="if_or_not_flag"/>
-			<column name="java_type" value="cn.org.ferry.mybatis.enums.IfOrNotFlag"/>
-			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-		</insert>
-		<insert tableName="sys_enum_type">
-			<column name="type_code" value="enable_flag"/>
-			<column name="java_type" value="cn.org.ferry.mybatis.enums.EnableFlag"/>
-			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.mybatis.handlers.EnableFlagHandler"/>
-		</insert>
-		<insert tableName="sys_enum_type">
-			<column name="type_code" value="book_mark_type"/>
-			<column name="java_type" value="cn.org.ferry.doc.enums.BookMarkType"/>
-			<column name="column_type" value="VARCHAR"/>
-			<column name="type_handler" value="cn.org.ferry.doc.handlers.BookMarkTypeHandler"/>
-		</insert>
+	<changeSet id="CREATE_TABLE_ORACLE_SYS_ENUM_TYPE" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_ENUM_TYPE"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_ENUM_TYPE" remarks="枚举类型定义表">
+			<column name="TYPE_ID" type="BIGINT" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ENUM_TYPE_PK_ETI"/>
+			</column>
+			<column name="TYPE_CODE" type="VARCHAR2(1000)" remarks="类型代码">
+				<constraints nullable="false"/>
+			</column>
+			<column name="JAVA_TYPE" type="VARCHAR2(200)" remarks="Java类型(类全限定名)"/>
+			<column name="COLUMN_TYPE" type="VARCHAR2(200)" remarks="mysql类型"/>
+			<column name="TYPE_HANDLER" type="VARCHAR2(200)" remarks="类型转化器(类全限定名)"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
 	</changeSet>
+	
+	<changeSet id="CREATE_SEQUENCE_ORACLE_SYS_ENUM_TYPE" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<sequenceExists sequenceName="SYS_ENUM_TYPE_S"/>
+			</not>
+		</preConditions>
+		<createSequence sequenceName="SYS_ENUM_TYPE_S"/>
+	</changeSet>
+	
 </databaseChangeLog>

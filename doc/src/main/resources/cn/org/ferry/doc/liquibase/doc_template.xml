@@ -18,34 +18,67 @@
 	
 	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
 	
-	<changeSet id="create_doc_template" author="ferry">
-		<createTable tableName="doc_template" remarks="word文档模版表">
-			<column name="template_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="doc_template_pk_ti"/>
+	<changeSet id="CREATE_TABLE_MYSQL_DOC_TEMPLATE" dbms="mysql" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="DOC_TEMPLATE"/>
+			</not>
+		</preConditions>
+		<createTable tableName="DOC_TEMPLATE" remarks="word文档模版表">
+			<column name="TEMPLATE_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DOC_TEMPLATE_PK_TI"/>
 			</column>
-			<column name="template_code" type="VARCHAR(200)" remarks="模版代码">
-				<constraints nullable="false" unique="true" uniqueConstraintName="doc_template_uk_tc"/>
+			<column name="TEMPLATE_CODE" type="VARCHAR(200)" remarks="模版代码">
+				<constraints nullable="false" unique="true" uniqueConstraintName="DOC_TEMPLATE_UK_TC"/>
 			</column>
-			<column name="template_name" type="VARCHAR(200)" remarks="模版名称">
+			<column name="TEMPLATE_NAME" type="VARCHAR(200)" remarks="模版名称">
 				<constraints nullable="false"/>
 			</column>
-			<column name="created_by" type="BIGINT" defaultValue="-1" />
-			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="create_doc_template_index" author="ferry">
-		<createIndex tableName="doc_template" indexName="doc_template_ik_tn">
-			<column name="template_name"/>
+	<changeSet id="CREATE_TABLE_ORACLE_DOC_TEMPLATE" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="DOC_TEMPLATE"/>
+			</not>
+		</preConditions>
+		<createTable tableName="DOC_TEMPLATE" remarks="word文档模版表">
+			<column name="TEMPLATE_ID" type="BIGINT" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DOC_TEMPLATE_PK_TI"/>
+			</column>
+			<column name="TEMPLATE_CODE" type="VARCHAR2(200)" remarks="模版代码">
+				<constraints nullable="false" unique="true" uniqueConstraintName="DOC_TEMPLATE_UK_TC"/>
+			</column>
+			<column name="TEMPLATE_NAME" type="VARCHAR2(200)" remarks="模版名称">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="CREATE_SEQUENCE_ORACLE_DOC_TEMPLATE" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<sequenceExists sequenceName="DOC_TEMPLATE_S"/>
+			</not>
+		</preConditions>
+		<createSequence sequenceName="DOC_TEMPLATE_S"/>
+	</changeSet>
+	
+	<changeSet id="CREATE_DOC_TEMPLATE_INDEX" author="FERRY">
+		<createIndex tableName="DOC_TEMPLATE" indexName="DOC_TEMPLATE_IK_TN">
+			<column name="TEMPLATE_NAME"/>
 		</createIndex>
 	</changeSet>
 	
-	<changeSet id="init_doc_template_data" author="ferry">
-		<insert tableName="doc_template">
-			<column name="template_code" value="FERRY"/>
-			<column name="template_name" value="ferry文档模版"/>
-		</insert>
-	</changeSet>
 </databaseChangeLog>

@@ -18,28 +18,68 @@
 	
 	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
 	
-	<changeSet id="create_sys_file" author="ferry">
-		<createTable tableName="sys_file" remarks="文件表">
-			<column name="file_id" type="BIGINT" autoIncrement="true" remarks="pk">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="sys_file_pk_fi"/>
+	<changeSet id="CREATE_TABLE_MYSQL_SYS_FILE" dbms="mysql" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_FILE"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_FILE" remarks="文件表">
+			<column name="FILE_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_FILE_PK_FI"/>
 			</column>
-			<column name="attachment_id" type="BIGINT" remarks="附件id">
+			<column name="ATTACHMENT_ID" type="BIGINT" remarks="附件id">
 				<constraints nullable="false"/>
 			</column>
-			<column name="file_name" type="VARCHAR(100)" remarks="文件名称"/>
-			<column name="file_path" type="VARCHAR(100)" remarks="文件绝对路径"/>
-			<column name="file_size" type="BIGINT" remarks="文件大小(字节)" defaultValue="-1"/>
-			<column name="file_type" type="VARCHAR(200)" remarks="文件类型"/>
-			<column name="created_by" type="BIGINT" defaultValue="-1" />
-			<column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-			<column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-			<column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+			<column name="FILE_NAME" type="VARCHAR(100)" remarks="文件名称"/>
+			<column name="FILE_PATH" type="VARCHAR(100)" remarks="文件绝对路径"/>
+			<column name="FILE_SIZE" type="BIGINT" remarks="文件大小(字节)" defaultValue="-1"/>
+			<column name="FILE_TYPE" type="VARCHAR(200)" remarks="文件类型"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="create_sys_file_index" author="ferry">
-		<createIndex tableName="sys_file" indexName="sys_file_ik_ai">
-			<column name="attachment_id"/>
+	<changeSet id="CREATE_TABLE_ORACLE_SYS_FILE" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_FILE"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_FILE" remarks="文件表">
+			<column name="FILE_ID" type="BIGINT" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_FILE_PK_FI"/>
+			</column>
+			<column name="ATTACHMENT_ID" type="BIGINT" remarks="附件id">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FILE_NAME" type="VARCHAR2(100)" remarks="文件名称"/>
+			<column name="FILE_PATH" type="VARCHAR2(100)" remarks="文件绝对路径"/>
+			<column name="FILE_SIZE" type="BIGINT" remarks="文件大小(字节)" defaultValue="-1"/>
+			<column name="FILE_TYPE" type="VARCHAR2(200)" remarks="文件类型"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="CREATE_SEQUENCE_ORACLE_SYS_FILE" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<sequenceExists sequenceName="SYS_FILE_S"/>
+			</not>
+		</preConditions>
+		<createSequence sequenceName="SYS_FILE_S"/>
+	</changeSet>
+	
+	<changeSet id="CREATE_SYS_FILE_INDEX" author="FERRY">
+		<createIndex tableName="SYS_FILE" indexName="SYS_FILE_IK_AI">
+			<column name="ATTACHMENT_ID"/>
 		</createIndex>
 	</changeSet>
 </databaseChangeLog>

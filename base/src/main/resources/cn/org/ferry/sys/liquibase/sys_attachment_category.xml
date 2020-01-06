@@ -18,35 +18,67 @@
     
     <!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
     
-    <changeSet id="create_sys_attachment_category" author="ferry">
-        <createTable tableName="sys_attachment_category" remarks="附件类型表">
-            <column name="category_id" type="BIGINT" autoIncrement="true" remarks="pk">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="sys_attachment_pk_ai"/>
+    <changeSet id="CREATE_TABLE_MYSQL_SYS_ATTACHMENT_CATEGORY" dbms="mysql" author="FERRY">
+        <preConditions>
+            <not>
+                <tableExists tableName="SYS_ATTACHMENT_CATEGORY"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SYS_ATTACHMENT_CATEGORY" remarks="附件类型表">
+            <column name="CATEGORY_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ATTACHMENT_CATEGORY_PK_AI"/>
             </column>
-            <column name="category_name" type="VARCHAR(200)" remarks="类型名称"/>
-            <column name="source_type" type="VARCHAR(100)" remarks="附件类型">
-                <constraints nullable="false" unique="true" uniqueConstraintName="sys_attachment_category_uk_st"/>
+            <column name="CATEGORY_NAME" type="VARCHAR(200)" remarks="类型名称"/>
+            <column name="SOURCE_TYPE" type="VARCHAR(100)" remarks="附件类型">
+                <constraints nullable="false" unique="true" uniqueConstraintName="SYS_ATTACHMENT_CATEGORY_UK_ST"/>
             </column>
-            <column name="enable_flag" type="VARCHAR(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
-            <column name="unique_flag" type="VARCHAR(1)" defaultValue="N" remarks="是否唯一('Y','N')"/>
-            <column name="attachment_path" type="VARCHAR(200)">
+            <column name="ENABLE_FLAG" type="VARCHAR(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+            <column name="UNIQUE_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="是否唯一('Y','N')"/>
+            <column name="ATTACHMENT_PATH" type="VARCHAR(200)">
                 <constraints nullable="false" />
             </column>
-            <column name="created_by" type="BIGINT" defaultValue="-1" />
-            <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-            <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-            <column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+            <column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+            <column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+            <column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+                    remarks="最后更新人"/>
+            <column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
         </createTable>
     </changeSet>
     
-    <changeSet id="init_sys_attachment_category_data" author="ferry">
-        <insert tableName="sys_attachment_category">
-            <column name="category_name" value="文档模版"/>
-            <column name="source_type" value="DOC_TEMPLATE"/>
-            <column name="enable_flag" value="Y"/>
-            <column name="unique_flag" value="Y"/>
-            <column name="attachment_path" value="/doc/template"/>
-        </insert>
+    <changeSet id="CREATE_TABLE_ORACLE_SYS_ATTACHMENT_CATEGORY" dbms="oracle" author="FERRY">
+        <preConditions>
+            <not>
+                <tableExists tableName="SYS_ATTACHMENT_CATEGORY"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SYS_ATTACHMENT_CATEGORY" remarks="附件类型表">
+            <column name="CATEGORY_ID" type="BIGINT" remarks="PK">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ATTACHMENT_CATEGORY_PK_AI"/>
+            </column>
+            <column name="CATEGORY_NAME" type="VARCHAR2(200)" remarks="类型名称"/>
+            <column name="SOURCE_TYPE" type="VARCHAR2(100)" remarks="附件类型">
+                <constraints nullable="false" unique="true" uniqueConstraintName="SYS_ATTACHMENT_CATEGORY_UK_ST"/>
+            </column>
+            <column name="ENABLE_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+            <column name="UNIQUE_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="是否唯一('Y','N')"/>
+            <column name="ATTACHMENT_PATH" type="VARCHAR2(200)">
+                <constraints nullable="false" />
+            </column>
+            <column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+            <column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+            <column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+                    remarks="最后更新人"/>
+            <column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="CREATE_SEQUENCE_ORACLE_SYS_ATTACHMENT_CATEGORY" dbms="oracle" author="FERRY">
+        <preConditions>
+            <not>
+                <sequenceExists sequenceName="SYS_ATTACHMENT_CATEGORY_S"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="SYS_ATTACHMENT_CATEGORY_S"/>
     </changeSet>
  
 </databaseChangeLog>

@@ -104,6 +104,15 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!--oracle引入项目jar包-->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>oracle6</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/resources/lib/ojdbc6.jar</systemPath>
+		</dependency>
 	
 	</dependencies>
 	

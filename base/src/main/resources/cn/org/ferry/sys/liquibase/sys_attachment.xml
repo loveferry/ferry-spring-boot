@@ -18,22 +18,57 @@
     
     <!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
     
-    <changeSet id="create_sys_attachment" author="ferry">
-        <createTable tableName="sys_attachment" remarks="附件表">
-            <column name="attachment_id" type="BIGINT" autoIncrement="true" remarks="pk">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="sys_attachment_pk_ai"/>
+    <changeSet id="CREATE_TABLE_MYSQL_SYS_ATTACHMENT" dbms="mysql" author="FERRY">
+        <preConditions>
+            <not>
+                <tableExists tableName="SYS_ATTACHMENT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SYS_ATTACHMENT" remarks="附件表">
+            <column name="ATTACHMENT_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ATTACHMENT_PK_AI"/>
             </column>
-            <column name="source_type" type="VARCHAR(100)" remarks="附件类型"/>
-            <column name="source_key" type="VARCHAR(100)" remarks="附件编码"/>
-            <column name="created_by" type="BIGINT" defaultValue="-1" />
-            <column name="creation_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
-            <column name="last_updated_by" type="BIGINT" defaultValue="-1" />
-            <column name="last_update_date" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP"/>
+            <column name="SOURCE_TYPE" type="VARCHAR(100)" remarks="附件类型"/>
+            <column name="SOURCE_KEY" type="VARCHAR(100)" remarks="附件编码"/>
+            <column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+            <column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+            <column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+                    remarks="最后更新人"/>
+            <column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
         </createTable>
     </changeSet>
     
-    <changeSet id="create_sys_attachment_index" author="ferry">
-        <addUniqueConstraint tableName="sys_attachment" columnNames="source_type,source_key" constraintName="sys_attachment_uk_st_and_sk"/>
+    <changeSet id="CREATE_TABLE_ORACLE_SYS_ATTACHMENT" dbms="oracle" author="FERRY">
+        <preConditions>
+            <not>
+                <tableExists tableName="SYS_ATTACHMENT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SYS_ATTACHMENT" remarks="附件表">
+            <column name="ATTACHMENT_ID" type="BIGINT" remarks="PK">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ATTACHMENT_PK_AI"/>
+            </column>
+            <column name="SOURCE_TYPE" type="VARCHAR2(100)" remarks="附件类型"/>
+            <column name="SOURCE_KEY" type="VARCHAR2(100)" remarks="附件编码"/>
+            <column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+            <column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+            <column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+                    remarks="最后更新人"/>
+            <column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="CREATE_SEQUENCE_ORACLE_SYS_ATTACHMENT" dbms="oracle" author="FERRY">
+        <preConditions>
+            <not>
+                <sequenceExists sequenceName="SYS_ATTACHMENT_S"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="SYS_ATTACHMENT_S"/>
+    </changeSet>
+    
+    <changeSet id="CREATE_SYS_ATTACHMENT_INDEX" author="FERRY">
+        <addUniqueConstraint tableName="SYS_ATTACHMENT" columnNames="SOURCE_TYPE,SOURCE_KEY" constraintName="SYS_ATTACHMENT_UK_ST_AND_SK"/>
     </changeSet>
  
 </databaseChangeLog>
