@@ -4,7 +4,7 @@ import cn.org.ferry.core.dto.FerryRequest;
 import cn.org.ferry.core.dto.FerrySession;
 import cn.org.ferry.core.interceptors.AuthenticationInterceptor;
 import cn.org.ferry.core.interceptors.RegisterRequestInterceptor;
-import cn.org.ferry.mybatis.utils.ConfigUtil;
+import cn.org.ferry.core.utils.ConfigUtil;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;

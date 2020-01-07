@@ -1,4 +1,4 @@
-package cn.org.ferry.mybatis.utils;
+package cn.org.ferry.core.utils;
 
 import org.springframework.context.ConfigurableApplicationContext;
 

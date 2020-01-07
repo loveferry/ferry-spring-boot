@@ -1,6 +1,7 @@
 package cn.org.ferry.doc.service.impl;
 
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
+import cn.org.ferry.core.utils.ConfigUtil;
 import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.DocTemplateParam;
@@ -9,7 +10,6 @@ import cn.org.ferry.doc.mapper.DocTemplateMapper;
 import cn.org.ferry.doc.service.DocTemplateParamService;
 import cn.org.ferry.doc.service.DocTemplateService;
 import cn.org.ferry.doc.utils.Docx4jGenerateUtil;
-import cn.org.ferry.mybatis.utils.ConfigUtil;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.exceptions.AttachmentException;

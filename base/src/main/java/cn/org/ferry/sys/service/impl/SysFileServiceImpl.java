@@ -2,8 +2,8 @@ package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
+import cn.org.ferry.core.utils.ConfigUtil;
 import cn.org.ferry.mybatis.enums.IfOrNotFlag;
-import cn.org.ferry.mybatis.utils.ConfigUtil;
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;

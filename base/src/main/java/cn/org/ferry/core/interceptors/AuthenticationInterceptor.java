@@ -1,36 +1,51 @@
 package cn.org.ferry.core.interceptors;
 
 import cn.org.ferry.core.annotations.LoginPass;
-import cn.org.ferry.core.components.TokenTactics;
 import cn.org.ferry.core.exceptions.TokenException;
 import cn.org.ferry.core.utils.ConstantUtils;
+import cn.org.ferry.core.utils.NetWorkUtils;
+import cn.org.ferry.core.utils.TokenUtils;
+import cn.org.ferry.sys.dto.SysUser;
+import cn.org.ferry.sys.service.SysUserService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
-//    @Autowired
-//    private SysUserService sysUserService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
+
+    @Autowired
+    private SysUserService sysUserService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    @Autowired
-    private TokenTactics tokenTactics;
     @Value("#{'${ferry.filter.paths}'.split(',')}")
     private List<String> allowPaths;
 
     // 在业务处理器处理请求之前被调用
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        logger.info("Begin authentication validate.");
         if(matchUri(request.getRequestURI())){
+            logger.info("The uri {} does not require login.", request.getRequestURI());
             return true;
         }
         // 如果不是映射到方法直接通过
@@ -40,6 +55,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         if(method.isAnnotationPresent(LoginPass.class) || method.getDeclaringClass().isAnnotationPresent(LoginPass.class)){
+            logger.info("The uri {} does not require login.", request.getRequestURI());
             return true;
         }
         if(!method.getDeclaringClass().getPackage().getName().contains("cn.org.ferry")){
@@ -49,7 +65,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(StringUtils.isEmpty(_token)){
             throw new TokenException("unauthorized access!");
         }
-        /*SysUser user;
+        SysUser user;
         try{
             String userCode = JWT.decode(_token).getAudience().get(0);
             user = Optional.of(sysUserService.queryByUserCode(userCode)).get();
@@ -64,16 +80,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             String key = NetWorkUtils.getIpAddress(request)+"_"+user.getUserCode();
             String token = valueOperations.get(key);
             if(StringUtils.equals(_token, token)){
-                token = tokenTactics.generateToken(user.getUserCode(), user.getPassword());
-                tokenTactics.setTokenToRedisWithPeriodOfValidity(key, token);
+                token = TokenUtils.generateToken(user.getUserCode(), user.getPassword());
+                TokenUtils.setTokenToRedisWithPeriodOfValidity(key, token);
                 response.setStatus(TokenException.class.getAnnotation(ResponseStatus.class).code().value());
                 response.addHeader(ConstantUtils._TOKEN, token);
-                response.getWriter().append("refresh token");
+                response.getWriter().append("Refresh token");
                 return false;
             }else{
-                throw new TokenException("Invalid token! Please log in again!");
+                throw new TokenException("Invalid token! Please login again!");
             }
-        }*/
+        }
         return true;
     }
     // 请求处理之后进行调用，但是在视图被渲染之前（Controller方法调用之后）

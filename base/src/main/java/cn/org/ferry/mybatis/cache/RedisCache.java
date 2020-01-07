@@ -1,6 +1,6 @@
 package cn.org.ferry.mybatis.cache;
 
-import cn.org.ferry.mybatis.utils.ConfigUtil;
+import cn.org.ferry.core.utils.ConfigUtil;
 import cn.org.ferry.mybatis.utils.StringUtil;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
