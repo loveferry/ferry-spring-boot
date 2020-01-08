@@ -13,23 +13,21 @@ import java.util.Properties;
 
 /**
  * 通用Mapper属性配置
- *
- * @author liuzh
  */
 public class Config {
     public static final String PREFIX = "mapper";
 
     private List<Class> mappers = new ArrayList<>();
     private String  identity;
-    private boolean before;
-    private String  seqFormat;
+    private boolean before = true;
+    private String  seqFormat = "{0}.nextval";
     private String  catalog;
     private String  schema;
     //校验调用Example方法时，Example(entityClass)和Mapper<EntityClass>是否一致
     private boolean checkExampleEntityClass;
     //使用简单类型
     //3.5.0 后默认值改为 true
-    private boolean useSimpleType    = true;
+    private boolean useSimpleType = true;
     /**
      * @since 3.5.0
      */
@@ -45,7 +43,7 @@ public class Config {
     /**
      * 字段转换风格，默认驼峰转下划线
      */
-    private CaseFormat caseFormat;
+    private CaseFormat caseFormat = CaseFormat.UPPER_UNDERSCORE;
     /**
      * 处理关键字，默认空，mysql可以设置为 `{0}`, sqlserver 为 [{0}]，{0} 代表的列名
      */
@@ -84,23 +82,14 @@ public class Config {
      * 获取主键自增回写SQL
      */
     public String getIdentity() {
-        if (StringUtil.isNotEmpty(identity)) {
-            return identity;
-        }
-        //针对mysql的默认值
-        return IdentityDialect.MYSQL.getIdentityRetrievalStatement();
+        return identity;
     }
 
     /**
      * 主键自增回写方法,默认值MYSQL,详细说明请看文档
      */
     public void setIdentity(String identity) {
-        IdentityDialect identityDialect = IdentityDialect.getDatabaseDialect(identity);
-        if (identityDialect != null) {
-            this.identity = identityDialect.getIdentityRetrievalStatement();
-        } else {
-            this.identity = identity;
-        }
+        this.identity = identity;
     }
 
     /**
@@ -132,28 +121,21 @@ public class Config {
 
     /**
      * 获取序列格式化模板
-     *
-     * @return
      */
     public String getSeqFormat() {
-        if (StringUtil.isNotEmpty(this.seqFormat)) {
-            return this.seqFormat;
-        }
-        return "{0}.nextval";
+        return this.seqFormat;
     }
 
     /**
      * 序列的获取规则,使用{num}格式化参数，默认值为{0}.nextval，针对Oracle
-     * <br>可选参数一共3个，对应0,1,2,3分别为SequenceName，ColumnName, PropertyName，TableName
-     *
-     * @param seqFormat
+     * <br>可选参数一共4个，对应0,1,2分别为 TableName+"_S",ColumnName, PropertyName
      */
     public void setSeqFormat(String seqFormat) {
         this.seqFormat = seqFormat;
     }
 
     public CaseFormat getCaseFormat() {
-        return this.caseFormat == null ? caseFormat.UPPER_UNDERSCORE : this.caseFormat;
+        return this.caseFormat;
     }
 
     public void setCaseFormat(CaseFormat caseFormat) {
@@ -273,13 +255,11 @@ public class Config {
      */
     public void setProperties(Properties properties) {
         if (properties == null) {
-            //默认驼峰
-            this.caseFormat = CaseFormat.UPPER_UNDERSCORE;
             return;
         }
-        String identity = properties.getProperty("IDENTITY");
-        if (StringUtil.isNotEmpty(identity)) {
-            setIdentity(identity);
+        String dbType = properties.getProperty("dbType");
+        if (StringUtil.isNotEmpty(dbType)) {
+            setIdentity(IdentityDialect.getDataBaseIdentityByDialect(dbType));
         }
         String seqFormat = properties.getProperty("seqFormat");
         if (StringUtil.isNotEmpty(seqFormat)) {

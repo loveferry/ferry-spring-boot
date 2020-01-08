@@ -117,7 +117,6 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
      * <p/>
      * By default addToCofig is true.
      *
-     * @param addToConfig
      */
     public void setAddToConfig(boolean addToConfig) {
         this.addToConfig = addToConfig;
@@ -126,7 +125,6 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
     /**
      * 设置通用 Mapper 配置
      *
-     * @param mapperHelper
      */
     public void setMapperHelper(MapperHelper mapperHelper) {
         this.mapperHelper = mapperHelper;

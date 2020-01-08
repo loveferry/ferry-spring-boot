@@ -1,11 +1,8 @@
 package cn.org.ferry.mybatis.helpers;
 
 
-import cn.org.ferry.mybatis.annotations.LogicDelete;
 import cn.org.ferry.mybatis.annotations.Version;
 import cn.org.ferry.mybatis.entity.EntityColumn;
-import cn.org.ferry.mybatis.entity.IDynamicTableName;
-import cn.org.ferry.mybatis.exceptions.LogicDeleteException;
 import cn.org.ferry.mybatis.exceptions.VersionException;
 import cn.org.ferry.mybatis.utils.StringUtil;
 
@@ -14,63 +11,102 @@ import java.util.Set;
 /**
  * 拼常用SQL的工具类
  */
+
 public class SqlHelper {
+    public static final String LEFT_BRACKET = "(";
+    public static final String RIGHT_BRACKET = ")";
+    public static final String COMMA = ",";
+
+    /************************************* insert ********************************************/
 
     /**
-     * 获取表名 - 支持动态表名
+     * 表名
      */
-    public static String getDynamicTableName(Class<?> entityClass, String tableName) {
-        if (IDynamicTableName.class.isAssignableFrom(entityClass)) {
-            StringBuilder sql = new StringBuilder();
-            sql.append("<choose>");
-            sql.append("<when test=\"@tk.mybatis.mapper.util.OGNL@isDynamicParameter(_parameter) and dynamicTableName != null and dynamicTableName != ''\">");
-            sql.append("${dynamicTableName}\n");
-            sql.append("</when>");
-            //不支持指定列的时候查询全部列
-            sql.append("<otherwise>");
-            sql.append(tableName);
-            sql.append("</otherwise>");
-            sql.append("</choose>");
-            return sql.toString();
-        } else {
-            return tableName;
-        }
+    public static String insertIntoTable(String tableName) {
+        return "INSERT INTO "+tableName+" ";
     }
 
     /**
-     * 获取表名 - 支持动态表名，该方法用于多个入参时，通过parameterName指定入参中实体类的@Param的注解值
+     * 列名
      */
-    public static String getDynamicTableName(Class<?> entityClass, String tableName, String parameterName) {
-        if (IDynamicTableName.class.isAssignableFrom(entityClass)) {
-            if (StringUtil.isNotEmpty(parameterName)) {
-                StringBuilder sql = new StringBuilder();
-                sql.append("<choose>");
-                sql.append("<when test=\"@tk.mybatis.mapper.util.OGNL@isDynamicParameter(" + parameterName + ") and " + parameterName + ".dynamicTableName != null and " + parameterName + ".dynamicTableName != ''\">");
-                sql.append("${" + parameterName + ".dynamicTableName}");
-                sql.append("</when>");
-                //不支持指定列的时候查询全部列
-                sql.append("<otherwise>");
-                sql.append(tableName);
-                sql.append("</otherwise>");
-                sql.append("</choose>");
-                return sql.toString();
-            } else {
-                return getDynamicTableName(entityClass, tableName);
-            }
-
-        } else {
-            return tableName;
-        }
-    }
-
-    /**
-     * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
-     */
-    public static String getBindCache(EntityColumn column) {
+    public static String insertColumns(Class<?> entityClass, boolean isSelective) {
         StringBuilder sql = new StringBuilder();
-        sql.append("<bind name=\"");
-        sql.append(column.getProperty()).append("_cache\" ");
-        sql.append("value=\"").append(column.getProperty()).append("\"/>");
+        sql.append(trimBegin(LEFT_BRACKET, RIGHT_BRACKET, null, COMMA));
+        //获取全部列
+        Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
+        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
+        for (EntityColumn column : columnSet) {
+            if (!column.isInsertable()) {
+                continue;
+            }
+            if(!column.isIdentity() && isSelective){
+                sql.append(SqlHelper.getIfNotNull(column, column.getColumn() + COMMA, false));
+            }else{
+                sql.append(column.getColumn()).append(COMMA);
+            }
+        }
+        sql.append(trimEnd());
+        return sql.toString();
+    }
+
+    /**
+     * 列值
+     */
+    public static String insertValuesColumns(Class<?> entityClass, boolean isSelective) {
+        Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
+        StringBuilder sql = new StringBuilder();
+        sql.append(trimBegin("VALUES(", RIGHT_BRACKET, null, COMMA));
+        for (EntityColumn column : columnList) {
+            if (!column.isInsertable()) {
+                continue;
+            }
+            if (column.isIdentity()) {
+                sql.append(getIfCacheNotNull(column, column.getColumnHolder(null, "Cache", COMMA)));
+                sql.append(SqlHelper.getIfCacheNull(column, column.getColumnHolder(null, null, COMMA)));
+            } else {
+                sql.append(SqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, COMMA), false));
+                if(!isSelective){
+                    sql.append(SqlHelper.getIfNull(column, column.getColumnHolder(null, null, COMMA), false));
+                }
+            }
+        }
+        sql.append(trimEnd());
+        return sql.toString();
+    }
+
+    public static StringBuilder trimBegin(String prefix, String suffix, String prefixOverrides, String suffixOverrides){
+        StringBuilder trim = new StringBuilder();
+        trim.append("<trim prefix=\"")
+        .append(prefix)
+        .append("\" suffix=\"")
+        .append(suffix);
+        if(StringUtil.isNotEmpty(prefixOverrides)){
+            trim.append("\" prefixOverrides=\"")
+                    .append(prefixOverrides);
+        }
+        if(StringUtil.isNotEmpty(suffixOverrides)){
+            trim.append("\" suffixOverrides=\"")
+                    .append(suffixOverrides);
+        }
+        trim.append("\">");
+        return trim;
+    }
+
+    public static StringBuilder trimEnd(){
+        return new StringBuilder("</trim>");
+    }
+
+    /**
+     * <bind name="property_cache" value="property" />
+     */
+    public static String getBindCache(String property) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("<bind name=\"")
+                .append(property)
+                .append("Cache\" ")
+                .append("value=\"")
+                .append(property)
+                .append("\"/>");
         return sql.toString();
     }
 
@@ -89,22 +125,14 @@ public class SqlHelper {
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
      */
     public static String getIfCacheNotNull(EntityColumn column, String contents) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"").append(column.getProperty()).append("_cache != null\">");
-        sql.append(contents);
-        sql.append("</if>");
-        return sql.toString();
+        return "<if test=\""+column.getProperty()+"Cache != null\">"+contents+"</if>";
     }
 
     /**
      * 如果_cache == null
      */
-    public static String getIfCacheIsNull(EntityColumn column, String contents) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"").append(column.getProperty()).append("_cache == null\">");
-        sql.append(contents);
-        sql.append("</if>");
-        return sql.toString();
+    public static String getIfCacheNull(EntityColumn column, String contents) {
+        return "<if test=\""+column.getProperty()+"Cache == null\">"+contents+"</if>";
     }
 
     /**
@@ -117,7 +145,7 @@ public class SqlHelper {
     /**
      * 判断自动==null的条件结构
      */
-    public static String getIfIsNull(EntityColumn column, String contents, boolean empty) {
+    public static String getIfNull(EntityColumn column, String contents, boolean empty) {
         return getIfIsNull(null, column, contents, empty);
     }
 
@@ -224,115 +252,22 @@ public class SqlHelper {
     /**
      * from tableName - 动态表名
      */
-    public static String fromTable(Class<?> entityClass, String defaultTableName) {
-        StringBuilder sql = new StringBuilder();
-        sql.append(" FROM ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName));
-        sql.append(" ");
-        return sql.toString();
+    public static String fromTable(String tableName) {
+        return " FROM "+tableName+" ";
     }
 
     /**
      * update tableName - 动态表名
      */
-    public static String updateTable(Class<?> entityClass, String defaultTableName) {
-        return updateTable(entityClass, defaultTableName, null);
-    }
-
-    /**
-     * update tableName - 动态表名
-     */
-    public static String updateTable(Class<?> entityClass, String defaultTableName, String entityName) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName, entityName));
-        sql.append(" ");
-        return sql.toString();
+    public static String updateTable(String tableName) {
+        return "UPDATE "+tableName+" ";
     }
 
     /**
      * delete tableName - 动态表名
      */
-    public static String deleteFromTable(Class<?> entityClass, String defaultTableName) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName));
-        sql.append(" ");
-        return sql.toString();
-    }
-
-    /**
-     * insert into tableName - 动态表名
-     */
-    public static String insertIntoTable(Class<?> entityClass, String defaultTableName) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName));
-        sql.append(" ");
-        return sql.toString();
-    }
-
-    /**
-     * insert into tableName - 动态表名
-     */
-    public static String insertIntoTable(Class<?> entityClass, String defaultTableName, String parameterName) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName, parameterName));
-        sql.append(" ");
-        return sql.toString();
-    }
-
-    /**
-     * insert table()列
-     */
-    public static String insertColumns(Class<?> entityClass, boolean skipId, boolean notNull, boolean notEmpty) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
-        //获取全部列
-        Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
-        for (EntityColumn column : columnSet) {
-            if (!column.isInsertable()) {
-                continue;
-            }
-            if (skipId && column.isId()) {
-                continue;
-            }
-            if (notNull) {
-                sql.append(SqlHelper.getIfNotNull(column, column.getColumn() + ",", notEmpty));
-            } else {
-                sql.append(column.getColumn() + ",");
-            }
-        }
-        sql.append("</trim>");
-        return sql.toString();
-    }
-
-    /**
-     * insert-values()列
-     */
-    public static String insertValuesColumns(Class<?> entityClass, boolean skipId, boolean notNull, boolean notEmpty) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<trim prefix=\"VALUES (\" suffix=\")\" suffixOverrides=\",\">");
-        //获取全部列
-        Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
-        for (EntityColumn column : columnSet) {
-            if (!column.isInsertable()) {
-                continue;
-            }
-            if (skipId && column.isId()) {
-                continue;
-            }
-            if (notNull) {
-                sql.append(SqlHelper.getIfNotNull(column, column.getColumnHolder() + ",", notEmpty));
-            } else {
-                sql.append(column.getColumnHolder() + ",");
-            }
-        }
-        sql.append("</trim>");
-        return sql.toString();
+    public static String deleteFromTable(String tableName) {
+        return "DELETE FROM "+tableName+" ";
     }
 
     /**
@@ -345,8 +280,6 @@ public class SqlHelper {
         Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
         //对乐观锁的支持
         EntityColumn versionColumn = null;
-        // 逻辑删除列
-        EntityColumn logicDeleteColumn = null;
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnSet) {
             if (column.getEntityField().isAnnotationPresent(Version.class)) {
@@ -354,12 +287,6 @@ public class SqlHelper {
                     throw new VersionException(entityClass.getCanonicalName() + " 中包含多个带有 @Version 注解的字段，一个类中只能存在一个带有 @Version 注解的字段!");
                 }
                 versionColumn = column;
-            }
-            if (column.getEntityField().isAnnotationPresent(LogicDelete.class)) {
-                if (logicDeleteColumn != null) {
-                    throw new LogicDeleteException(entityClass.getCanonicalName() + " 中包含多个带有 @LogicDelete 注解的字段，一个类中只能存在一个带有 @LogicDelete 注解的字段!");
-                }
-                logicDeleteColumn = column;
             }
             if (!column.isId() && column.isUpdatable()) {
                 if (column == versionColumn) {
@@ -374,8 +301,6 @@ public class SqlHelper {
                     }
                     sql.append(column.getProperty()).append(")\"/>");
                     sql.append(column.getColumn()).append(" = #{").append(column.getProperty()).append("Version},");
-                } else if (column == logicDeleteColumn) {
-                    sql.append(logicDeleteColumnEqualsValue(column, false)).append(",");
                 } else if (notNull) {
                     sql.append(SqlHelper.getIfNotNull(entityName, column, column.getColumnEqualsHolder(entityName) + ",", notEmpty));
                 } else {
@@ -395,21 +320,11 @@ public class SqlHelper {
         sql.append("<set>");
         //获取全部列
         Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        // 逻辑删除列
-        EntityColumn logicDeleteColumn = null;
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnSet) {
-            if (column.getEntityField().isAnnotationPresent(LogicDelete.class)) {
-                if (logicDeleteColumn != null) {
-                    throw new LogicDeleteException(entityClass.getCanonicalName() + " 中包含多个带有 @LogicDelete 注解的字段，一个类中只能存在一个带有 @LogicDelete 注解的字段!");
-                }
-                logicDeleteColumn = column;
-            }
             if (!column.isId() && column.isUpdatable()) {
                 if(column.getEntityField().isAnnotationPresent(Version.class)){
                     //ignore
-                } else if (column == logicDeleteColumn) {
-                    sql.append(logicDeleteColumnEqualsValue(column, false)).append(",");
                 } else if (notNull) {
                     sql.append(SqlHelper.getIfNotNull(entityName, column, column.getColumnEqualsHolder(entityName) + ",", notEmpty));
                 } else {
@@ -469,7 +384,6 @@ public class SqlHelper {
      */
     public static String wherePKColumns(Class<?> entityClass, String entityName, boolean useVersion) {
         StringBuilder sql = new StringBuilder();
-        boolean hasLogicDelete = hasLogicDeleteColumn(entityClass);
 
         sql.append("<where>");
         //获取全部列
@@ -480,10 +394,6 @@ public class SqlHelper {
         }
         if (useVersion) {
             sql.append(whereVersion(entityClass));
-        }
-
-        if (hasLogicDelete) {
-            sql.append(whereLogicDelete(entityClass, false));
         }
 
         sql.append("</where>");
@@ -502,28 +412,18 @@ public class SqlHelper {
      */
     public static String whereAllIfColumns(Class<?> entityClass, boolean empty, boolean useVersion) {
         StringBuilder sql = new StringBuilder();
-        boolean hasLogicDelete = false;
 
         sql.append("<where>");
         //获取全部列
         Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        EntityColumn logicDeleteColumn = SqlHelper.getLogicDeleteColumn(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnSet) {
             if (!useVersion || !column.getEntityField().isAnnotationPresent(Version.class)) {
-                // 逻辑删除，后面拼接逻辑删除字段的未删除条件
-                if (logicDeleteColumn != null && logicDeleteColumn == column) {
-                    hasLogicDelete = true;
-                    continue;
-                }
                 sql.append(getIfNotNull(column, " AND " + column.getColumnEqualsHolder(), empty));
             }
         }
         if (useVersion) {
             sql.append(whereVersion(entityClass));
-        }
-        if (hasLogicDelete) {
-            sql.append(whereLogicDelete(entityClass, false));
         }
 
         sql.append("</where>");
@@ -547,92 +447,6 @@ public class SqlHelper {
             }
         }
         return result;
-    }
-
-    /**
-     * 逻辑删除的where条件，没有逻辑删除注解则返回空字符串
-     * <br>
-     * AND column = value
-     */
-    public static String whereLogicDelete(Class<?> entityClass, boolean isDeleted) {
-        String value = logicDeleteColumnEqualsValue(entityClass, isDeleted);
-        return "".equals(value) ? "" : " AND " + value;
-    }
-
-    /**
-     * 返回格式: column = value
-     * <br>
-     * 默认isDeletedValue = 1  notDeletedValue = 0
-     * <br>
-     * 则返回is_deleted = 1 或 is_deleted = 0
-     * <br>
-     * 若没有逻辑删除注解，则返回空字符串
-     */
-    public static String logicDeleteColumnEqualsValue(Class<?> entityClass, boolean isDeleted) {
-        EntityColumn logicDeleteColumn = SqlHelper.getLogicDeleteColumn(entityClass);
-
-        if (logicDeleteColumn != null) {
-            return logicDeleteColumnEqualsValue(logicDeleteColumn, isDeleted);
-        }
-
-        return "";
-    }
-
-    /**
-     * 返回格式: column = value
-     * <br>
-     * 默认isDeletedValue = 1  notDeletedValue = 0
-     * <br>
-     * 则返回is_deleted = 1 或 is_deleted = 0
-     * <br>
-     * 若没有逻辑删除注解，则返回空字符串
-     */
-    public static String logicDeleteColumnEqualsValue(EntityColumn column, boolean isDeleted) {
-        String result = "";
-        if (column.getEntityField().isAnnotationPresent(LogicDelete.class)) {
-            result = column.getColumn() + " = " + getLogicDeletedValue(column, isDeleted);
-        }
-        return result;
-    }
-
-    /**
-     * 获取逻辑删除注解的参数值
-     */
-    public static int getLogicDeletedValue(EntityColumn column, boolean isDeleted) {
-        if (!column.getEntityField().isAnnotationPresent(LogicDelete.class)) {
-            throw new LogicDeleteException(column.getColumn() + " 没有 @LogicDelete 注解!");
-        }
-        LogicDelete logicDelete = column.getEntityField().getAnnotation(LogicDelete.class);
-        if (isDeleted) {
-            return logicDelete.isDeletedValue();
-        }
-        return logicDelete.notDeletedValue();
-    }
-
-    /**
-     * 是否有逻辑删除的注解
-     */
-    public static boolean hasLogicDeleteColumn(Class<?> entityClass) {
-        return getLogicDeleteColumn(entityClass) != null;
-    }
-
-    /**
-     * 获取逻辑删除注解的列，若没有返回null
-     */
-    public static EntityColumn getLogicDeleteColumn(Class<?> entityClass) {
-        EntityColumn logicDeleteColumn = null;
-        Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        boolean hasLogicDelete = false;
-        for (EntityColumn column : columnSet) {
-            if (column.getEntityField().isAnnotationPresent(LogicDelete.class)) {
-                if (hasLogicDelete) {
-                    throw new LogicDeleteException(entityClass.getCanonicalName() + " 中包含多个带有 @LogicDelete 注解的字段，一个类中只能存在一个带有 @LogicDelete 注解的字段!");
-                }
-                hasLogicDelete = true;
-                logicDeleteColumn = column;
-            }
-        }
-        return logicDeleteColumn;
     }
 
     /**

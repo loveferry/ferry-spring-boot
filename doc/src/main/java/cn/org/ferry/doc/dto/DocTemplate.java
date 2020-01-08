@@ -4,6 +4,7 @@ import cn.org.ferry.core.dto.BaseDTO;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -19,7 +20,7 @@ public class DocTemplate extends BaseDTO {
      * primary key
      */
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long templateId;
 
     /**

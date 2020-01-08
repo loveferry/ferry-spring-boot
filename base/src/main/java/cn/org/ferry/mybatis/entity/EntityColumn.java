@@ -22,7 +22,7 @@ public class EntityColumn {
     private Class<? extends TypeHandler<?>> typeHandler;
     private boolean id = false;
     private boolean identity = false;
-    private Class<? extends GenId> genIdClass;
+    private String sequenceName;
     //字段是否为 blob
     private boolean blob;
     private String generator;
@@ -36,6 +36,7 @@ public class EntityColumn {
     private ORDER order = ORDER.DEFAULT;
     //是否设置 javaType
     private boolean useJavaType;
+    private boolean uuid;
     /**
      * 对应的字段信息
      *
@@ -87,21 +88,20 @@ public class EntityColumn {
             sb.append(entityName);
             sb.append(".");
         }
-        sb.append(this.property);
+        sb.append(property);
         if (StringUtil.isNotEmpty(suffix)) {
             sb.append(suffix);
         }
         //如果 null 被当作值来传递，对于所有可能为空的列，JDBC Type 是需要的
-        if (this.jdbcType != null) {
+        if (jdbcType != null) {
             sb.append(", jdbcType=");
-            sb.append(this.jdbcType.toString());
+            sb.append(jdbcType.toString());
         }
         //为了以后定制类型处理方式，你也可以指定一个特殊的类型处理器类，例如枚举
-        if (this.typeHandler != null) {
+        if (typeHandler != null) {
             sb.append(", typeHandler=");
-            sb.append(this.typeHandler.getCanonicalName());
+            sb.append(typeHandler.getCanonicalName());
         }
-        //3.4.0 以前的 mybatis 无法获取父类中泛型的 javaType，所以如果使用低版本，就需要设置 useJavaType = true
         //useJavaType 默认 false,没有 javaType 限制时，对 ByPrimaryKey 方法的参数校验就放宽了，会自动转型
         if (useJavaType && !this.javaType.isArray()) {//当类型为数组时，不设置javaType#103
             sb.append(", javaType=");
@@ -255,12 +255,12 @@ public class EntityColumn {
         this.identity = identity;
     }
 
-    public Class<? extends GenId> getGenIdClass() {
-        return genIdClass;
+    public String getSequenceName() {
+        return sequenceName;
     }
 
-    public void setGenIdClass(Class<? extends GenId> genIdClass) {
-        this.genIdClass = genIdClass;
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
     }
 
     public boolean isInsertable() {
@@ -309,6 +309,14 @@ public class EntityColumn {
 
     public void setOrderPriority(int orderPriority) {
         this.orderPriority = orderPriority;
+    }
+
+    public boolean isUuid() {
+        return uuid;
+    }
+
+    public void setUuid(boolean uuid) {
+        this.uuid = uuid;
     }
 
     @Override

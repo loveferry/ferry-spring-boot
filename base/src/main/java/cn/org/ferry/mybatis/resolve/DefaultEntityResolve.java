@@ -1,17 +1,12 @@
 package cn.org.ferry.mybatis.resolve;
 
 import cn.org.ferry.mybatis.annotations.ColumnType;
-import cn.org.ferry.mybatis.annotations.KeySql;
-import cn.org.ferry.mybatis.annotations.Order;
 import cn.org.ferry.mybatis.code.IdentityDialect;
-import cn.org.ferry.mybatis.code.ORDER;
 import cn.org.ferry.mybatis.entity.Config;
 import cn.org.ferry.mybatis.entity.EntityColumn;
 import cn.org.ferry.mybatis.entity.EntityField;
 import cn.org.ferry.mybatis.entity.EntityTable;
 import cn.org.ferry.mybatis.exceptions.CommonMapperException;
-import cn.org.ferry.mybatis.genid.GenId;
-import cn.org.ferry.mybatis.gensql.GenSql;
 import cn.org.ferry.mybatis.helpers.FieldHelper;
 import cn.org.ferry.mybatis.utils.SimpleTypeUtil;
 import cn.org.ferry.mybatis.utils.SqlReservedWords;
@@ -30,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -48,9 +44,7 @@ public class DefaultEntityResolve implements EntityResolve {
         CaseFormat caseFormat = config.getCaseFormat();
         // caseFormat，该注解优先于全局配置
         if (entityClass.isAnnotationPresent(cn.org.ferry.mybatis.annotations.CaseFormat.class)) {
-            cn.org.ferry.mybatis.annotations.CaseFormat caseFormatAnnotation =
-                    entityClass.getAnnotation(cn.org.ferry.mybatis.annotations.CaseFormat.class);
-            caseFormat = caseFormatAnnotation.value();
+            caseFormat = entityClass.getAnnotation(cn.org.ferry.mybatis.annotations.CaseFormat.class).value();
         }
 
         // 创建并缓存EntityTable
@@ -66,7 +60,7 @@ public class DefaultEntityResolve implements EntityResolve {
             entityTable = new EntityTable(entityClass);
             // 通过自定义的映射关系将实体类名转化成表名
             String tableName = convertByCaseFormat(entityClass.getSimpleName(), caseFormat);
-            //自动处理关键字
+            // 自动处理关键字
             if (StringUtil.isNotEmpty(config.getWrapKeyword()) && SqlReservedWords.containsWord(tableName)) {
                 tableName = MessageFormat.format(config.getWrapKeyword(), tableName);
             }
@@ -75,7 +69,7 @@ public class DefaultEntityResolve implements EntityResolve {
         entityTable.setEntityClassColumns(new LinkedHashSet<>());
         entityTable.setEntityClassPKColumns(new LinkedHashSet<>());
         //处理所有列
-        List<EntityField> fields = null;
+        List<EntityField> fields;
         if (config.isEnableMethodAnnotation()) {
             fields = FieldHelper.getAll(entityClass);
         } else {
@@ -95,7 +89,7 @@ public class DefaultEntityResolve implements EntityResolve {
             }
             processField(entityTable, field, config, caseFormat);
         }
-        //当pk.size=0的时候使用所有列作为主键
+        // 当pk.size=0的时候使用所有列作为主键
         if (entityTable.getEntityClassPKColumns().size() == 0) {
             entityTable.setEntityClassPKColumns(entityTable.getEntityClassColumns());
         }
@@ -106,21 +100,21 @@ public class DefaultEntityResolve implements EntityResolve {
     /**
      * 处理字段
      */
-    protected void processField(EntityTable entityTable, EntityField field, Config config, CaseFormat caseFormat) {
-        //排除字段
+    private void processField(EntityTable entityTable, EntityField field, Config config, CaseFormat caseFormat) {
+        // 排除字段
         if (field.isAnnotationPresent(Transient.class)) {
             return;
         }
-        //Id
+        // Id
         EntityColumn entityColumn = new EntityColumn(entityTable);
-        //是否使用 {xx, javaType=xxx}
+        // 是否使用 {xx, javaType=xxx}
         entityColumn.setUseJavaType(config.isUseJavaType());
-        //记录 field 信息，方便后续扩展使用
+        // 记录 field 信息，方便后续扩展使用
         entityColumn.setEntityField(field);
         if (field.isAnnotationPresent(Id.class)) {
             entityColumn.setId(true);
         }
-        //Column
+        // Column
         String columnName = null;
         if (field.isAnnotationPresent(Column.class)) {
             Column column = field.getAnnotation(Column.class);
@@ -128,12 +122,12 @@ public class DefaultEntityResolve implements EntityResolve {
             entityColumn.setUpdatable(column.updatable());
             entityColumn.setInsertable(column.insertable());
         }
-        //ColumnType
+        // ColumnType
         if (field.isAnnotationPresent(ColumnType.class)) {
             ColumnType columnType = field.getAnnotation(ColumnType.class);
-            //是否为 blob 字段
+            // 是否为 blob 字段
             entityColumn.setBlob(columnType.isBlob());
-            //column可以起到别名的作用
+            // column可以起到别名的作用
             if (StringUtil.isEmpty(columnName) && StringUtil.isNotEmpty(columnType.column())) {
                 columnName = columnType.column();
             }
@@ -158,9 +152,9 @@ public class DefaultEntityResolve implements EntityResolve {
         if (field.getJavaType().isPrimitive()) {
             logger.warn("通用 Mapper 警告信息: <[" + entityColumn + "]> 使用了基本类型，基本类型在动态 SQL 中由于存在默认值，因此任何时候都不等于 null，建议修改基本类型为对应的包装类型!");
         }
-        //OrderBy
-        processOrderBy(entityTable, field, entityColumn);
-        //处理主键策略
+        // OrderBy
+        processOrderBy(field, entityColumn);
+        // 处理主键策略
         processKeyGenerator(entityTable, field, entityColumn);
         entityTable.getEntityClassColumns().add(entityColumn);
         if (entityColumn.isId()) {
@@ -171,127 +165,69 @@ public class DefaultEntityResolve implements EntityResolve {
     /**
      * 处理排序
      */
-    protected void processOrderBy(EntityTable entityTable, EntityField field, EntityColumn entityColumn) {
-        String orderBy = "";
+    private void processOrderBy(EntityField field, EntityColumn entityColumn) {
+        String orderBy;
         if(field.isAnnotationPresent(OrderBy.class)){
             orderBy = field.getAnnotation(OrderBy.class).value();
             if ("".equals(orderBy)) {
                 orderBy = "ASC";
             }
-            logger.warn(OrderBy.class + " is outdated, use " + Order.class + " instead!");
-        }
-        if (field.isAnnotationPresent(Order.class)) {
-            Order order = field.getAnnotation(Order.class);
-            if ("".equals(order.value()) && "".equals(orderBy)) {
-                orderBy = "ASC";
-            } else {
-                orderBy = order.value();
-            }
-            entityColumn.setOrderPriority(order.priority());
-        }
-        if (StringUtil.isNotEmpty(orderBy)) {
             entityColumn.setOrderBy(orderBy);
         }
     }
 
     /**
      * 处理主键策略
-     *
-     * @param entityTable
-     * @param field
-     * @param entityColumn
      */
-    protected void processKeyGenerator(EntityTable entityTable, EntityField field, EntityColumn entityColumn) {
-        //KeySql 优先级最高
-        if (field.isAnnotationPresent(KeySql.class)) {
-            processKeySql(entityTable, entityColumn, field.getAnnotation(KeySql.class));
-        } else if (field.isAnnotationPresent(GeneratedValue.class)) {
-            //执行 sql - selectKey
-            processGeneratedValue(entityTable, entityColumn, field.getAnnotation(GeneratedValue.class));
+    private void processKeyGenerator(EntityTable entityTable, EntityField field, EntityColumn entityColumn) {
+        if (!field.isAnnotationPresent(GeneratedValue.class)) {
+            return ;
         }
-    }
+        //执行 sql - selectKey
+//        processGeneratedValue(entityTable, entityColumn, field.getAnnotation(GeneratedValue.class));
 
-    /**
-     * 处理 GeneratedValue 注解
-     *
-     * @param entityTable
-     * @param entityColumn
-     * @param generatedValue
-     */
-    protected void processGeneratedValue(EntityTable entityTable, EntityColumn entityColumn, GeneratedValue generatedValue) {
-        if ("JDBC".equals(generatedValue.generator())) {
-            entityColumn.setIdentity(true);
-            entityColumn.setGenerator("JDBC");
-            entityTable.setKeyProperties(entityColumn.getProperty());
-            entityTable.setKeyColumns(entityColumn.getColumn());
-        } else {
-            //允许通过generator来设置获取id的sql,例如mysql=CALL IDENTITY(),hsqldb=SELECT SCOPE_IDENTITY()
-            //允许通过拦截器参数设置公共的generator
-            if (generatedValue.strategy() == GenerationType.IDENTITY) {
-                //mysql的自动增长
+
+        GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+        String generator = generatedValue.generator();
+        switch (generatedValue.strategy()){
+            case SEQUENCE:
                 entityColumn.setIdentity(true);
-                if (!"".equals(generatedValue.generator())) {
-                    String generator = null;
-                    IdentityDialect identityDialect = IdentityDialect.getDatabaseDialect(generatedValue.generator());
-                    if (identityDialect != null) {
-                        generator = identityDialect.getIdentityRetrievalStatement();
-                    } else {
-                        generator = generatedValue.generator();
-                    }
+                entityColumn.setGenerator("SEQUENCE");
+                if(field.isAnnotationPresent(SequenceGenerator.class)){
+                    entityColumn.setSequenceName(field.getAnnotation(SequenceGenerator.class).sequenceName());
+                }else{
+                    entityColumn.setSequenceName(entityTable.getName()+"_S");
+                }
+                break;
+            case IDENTITY:
+                entityColumn.setIdentity(true);
+                if (!"".equals(generator)) {
                     entityColumn.setGenerator(generator);
                 }
-            } else {
-                throw new CommonMapperException(entityColumn.getProperty()
-                        + " - 该字段@GeneratedValue配置只允许以下几种形式:" +
-                        "\n1.useGeneratedKeys的@GeneratedValue(generator=\\\"JDBC\\\")  " +
-                        "\n2.类似mysql数据库的@GeneratedValue(strategy=GenerationType.IDENTITY[,generator=\"Mysql\"])");
-            }
+                break;
+            case AUTO:
+                String upperCaseGenerator = generator.toUpperCase();
+                switch (upperCaseGenerator){
+                    case "JDBC":
+                    case "SEQUENCE":
+                        entityColumn.setIdentity(true);
+                        entityColumn.setGenerator(upperCaseGenerator);
+                        entityTable.setKeyProperties(entityColumn.getProperty());
+                        entityTable.setKeyColumns(entityColumn.getColumn());
+                        break;
+                    default:
+                        entityColumn.setIdentity(true);
+                        entityColumn.setGenerator(null);
+                        entityTable.setKeyProperties(entityColumn.getProperty());
+                        entityTable.setKeyColumns(entityColumn.getColumn());
+                }
+                break;
+            case TABLE:
+            default:
+                throw new CommonMapperException("通用 Mapper 不支持该主键生成策略："+generatedValue+" 实体类："+entityTable.getEntityClass());
         }
-    }
 
-    /**
-     * 处理 KeySql 注解
-     *
-     * @param entityTable
-     * @param entityColumn
-     * @param keySql
-     */
-    protected void processKeySql(EntityTable entityTable, EntityColumn entityColumn, KeySql keySql) {
-        if (keySql.useGeneratedKeys()) {
-            entityColumn.setIdentity(true);
-            entityColumn.setGenerator("JDBC");
-            entityTable.setKeyProperties(entityColumn.getProperty());
-            entityTable.setKeyColumns(entityColumn.getColumn());
-        } else if (keySql.dialect() == IdentityDialect.DEFAULT) {
-            entityColumn.setIdentity(true);
-            entityColumn.setOrder(ORDER.AFTER);
-        }  else if (keySql.dialect() != IdentityDialect.NULL) {
-            //自动增长
-            entityColumn.setIdentity(true);
-            entityColumn.setOrder(ORDER.AFTER);
-            entityColumn.setGenerator(keySql.dialect().getIdentityRetrievalStatement());
-        } else if (StringUtil.isNotEmpty(keySql.sql())){
 
-            entityColumn.setIdentity(true);
-            entityColumn.setOrder(keySql.order());
-            entityColumn.setGenerator(keySql.sql());
-        } else if (keySql.genSql() != GenSql.NULL.class){
-            entityColumn.setIdentity(true);
-            entityColumn.setOrder(keySql.order());
-            try {
-                GenSql genSql = keySql.genSql().newInstance();
-                entityColumn.setGenerator(genSql.genSql(entityTable, entityColumn));
-            } catch (Exception e) {
-                logger.error("实例化 GenSql 失败: " + e, e);
-                throw new CommonMapperException("实例化 GenSql 失败: " + e, e);
-            }
-        } else if(keySql.genId() != GenId.NULL.class){
-            entityColumn.setIdentity(false);
-            entityColumn.setGenIdClass(keySql.genId());
-        } else {
-            throw new CommonMapperException(entityTable.getEntityClass().getCanonicalName()
-                    + " 类中的 @KeySql 注解配置无效!");
-        }
     }
 
     /**

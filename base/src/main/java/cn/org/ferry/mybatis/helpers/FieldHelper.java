@@ -62,8 +62,8 @@ public class FieldHelper {
         List<EntityField> fields = fieldHelper.getFields(entityClass);
         List<EntityField> properties = fieldHelper.getProperties(entityClass);
         //拼到一起，名字相同的合并
-        List<EntityField> all = new ArrayList<EntityField>();
-        Set<EntityField> usedSet = new HashSet<EntityField>();
+        List<EntityField> all = new ArrayList<>();
+        Set<EntityField> usedSet = new HashSet<>();
         for (EntityField field : fields) {
             for (EntityField property : properties) {
                 if (!usedSet.contains(property) && field.getName().equals(property.getName())) {
@@ -106,56 +106,48 @@ public class FieldHelper {
          */
         @Override
         public List<EntityField> getFields(Class<?> entityClass) {
-            List<EntityField> fields = _getFields(entityClass, null, null);
-            List<EntityField> properties = getProperties(entityClass);
-            Set<EntityField> usedSet = new HashSet<EntityField>();
-            for (EntityField field : fields) {
+            List<EntityField> fields = _getFields(entityClass, null);
+//            List<EntityField> properties = getProperties(entityClass);
+            /*for (EntityField field : fields) {
                 for (EntityField property : properties) {
-                    if (!usedSet.contains(property) && field.getName().equals(property.getName())) {
+                    if (field.getName().equals(property.getName())) {
                         //泛型的情况下通过属性可以得到实际的类型
                         field.setJavaType(property.getJavaType());
                         break;
                     }
                 }
-            }
+            }*/
             return fields;
         }
 
         /**
+         * 递归方法
          * 获取全部的Field，仅仅通过Field获取
          */
-        private List<EntityField> _getFields(Class<?> entityClass, List<EntityField> fieldList, Integer level) {
+        private List<EntityField> _getFields(Class<?> entityClass, List<EntityField> fieldList) {
             if (fieldList == null) {
-                fieldList = new ArrayList<EntityField>();
-            }
-            if (level == null) {
-                level = 0;
+                fieldList = new ArrayList<>();
             }
             if (entityClass.equals(Object.class)) {
                 return fieldList;
             }
             Field[] fields = entityClass.getDeclaredFields();
-            int index = 0;
             for (int i = 0; i < fields.length; i++) {
                 Field field = fields[i];
-                //排除静态字段，解决bug#2
+                // 排除静态字段
                 if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
-                    if (level.intValue() != 0) {
-                        //将父类的字段放在前面
-                        fieldList.add(index, new EntityField(field, null));
-                        index++;
-                    } else {
-                        fieldList.add(new EntityField(field, null));
-                    }
+                    fieldList.add(new EntityField(field, null));
                 }
             }
             Class<?> superClass = entityClass.getSuperclass();
             if (superClass != null
-                    && !superClass.equals(Object.class)
-                    && (superClass.isAnnotationPresent(Entity.class)
-                    || (!Map.class.isAssignableFrom(superClass)
-                    && !Collection.class.isAssignableFrom(superClass)))) {
-                return _getFields(entityClass.getSuperclass(), fieldList, ++level);
+                && !superClass.equals(Object.class)
+                && (
+                    superClass.isAnnotationPresent(Entity.class)
+                        || (!Map.class.isAssignableFrom(superClass) && !Collection.class.isAssignableFrom(superClass))
+                )
+            ) {
+                return _getFields(superClass, fieldList);
             }
             return fieldList;
         }
@@ -165,8 +157,8 @@ public class FieldHelper {
          */
         @Override
         public List<EntityField> getProperties(Class<?> entityClass) {
-            List<EntityField> entityFields = new ArrayList<EntityField>();
-            BeanInfo beanInfo = null;
+            List<EntityField> entityFields = new ArrayList<>();
+            BeanInfo beanInfo;
             try {
                 beanInfo = Introspector.getBeanInfo(entityClass);
             } catch (IntrospectionException e) {

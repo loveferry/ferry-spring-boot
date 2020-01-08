@@ -212,4 +212,13 @@ public abstract class MapperTemplate {
         }
     }
 
+    /**
+     * 获取序列下个值的表达式
+     */
+    protected String getSeqNextVal(EntityColumn column) {
+        if(StringUtil.isNotEmpty(column.getSequenceName())){
+            return column.getSequenceName()+".nextval";
+        }
+        return MessageFormat.format(mapperHelper.getConfig().getSeqFormat(), (column.getTable().getName()+"_s").toUpperCase(), column.getColumn(), column.getProperty());
+    }
 }

@@ -1,5 +1,7 @@
 package cn.org.ferry.mybatis.utils;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -936,10 +938,7 @@ public class SqlReservedWords {
         };
 
         RESERVED_WORDS = new HashSet<>(words.length);
-
-        for (String word : words) {
-            RESERVED_WORDS.add(word);
-        }
+        Collections.addAll(RESERVED_WORDS, words);
     }
 
     /**
@@ -949,6 +948,6 @@ public class SqlReservedWords {
     }
 
     public static boolean containsWord(String word) {
-        return word == null ? false : RESERVED_WORDS.contains(word.toUpperCase());
+        return word != null && RESERVED_WORDS.contains(word.toUpperCase());
     }
 }

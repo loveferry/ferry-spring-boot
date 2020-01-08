@@ -1,12 +1,11 @@
 package cn.org.ferry.mybatis.autoconfigure;
 
 import cn.org.ferry.mybatis.annotations.RegisterMapper;
+import cn.org.ferry.mybatis.code.IdentityDialect;
 import cn.org.ferry.mybatis.entity.Config;
-import cn.org.ferry.mybatis.exceptions.CommonMapperException;
 import cn.org.ferry.mybatis.helpers.MapperHelper;
 import cn.org.ferry.mybatis.utils.SpringBootBindUtil;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
+import cn.org.ferry.mybatis.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -18,17 +17,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.env.Environment;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.AssignableTypeFilter;
-import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -42,18 +32,6 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     private Logger logger = LoggerFactory.getLogger(ClassPathMapperScanner.class);
 
     private boolean addToConfig = true;
-
-    private SqlSessionFactory sqlSessionFactory;
-
-    private SqlSessionTemplate sqlSessionTemplate;
-
-    private String sqlSessionTemplateBeanName;
-
-    private String sqlSessionFactoryBeanName;
-
-    private Class<? extends Annotation> annotationClass;
-
-    private Class<?> markerInterface;
 
     private MapperHelper mapperHelper;
 
@@ -73,43 +51,16 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
      * those annotated with the annotationClass
      */
     public void registerFilters() {
-        boolean acceptAllInterfaces = true;
-
-        if (this.annotationClass != null) {
-            addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));
-            acceptAllInterfaces = false;
-        }
-        if (this.markerInterface != null) {
-            addIncludeFilter(new AssignableTypeFilter(this.markerInterface) {
-                @Override
-                protected boolean matchClassName(String className) {
-                    return false;
-                }
-            });
-            acceptAllInterfaces = false;
-        }
-
-        if (acceptAllInterfaces) {
-            // default include filter that accepts all classes
-            addIncludeFilter(new TypeFilter() {
-                @Override
-                public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
-                    return true;
-                }
-            });
-        }
+        addIncludeFilter((metadataReader, metadataReaderFactory) -> {return true;});
 
         // exclude package-info.java
-        addExcludeFilter(new TypeFilter() {
-            @Override
-            public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
-                String className = metadataReader.getClassMetadata().getClassName();
-                if(className.endsWith("package-info")){
-                    return true;
-                }
-                return metadataReader.getAnnotationMetadata()
-                    .hasAnnotation(RegisterMapper.class.getName());
+        addExcludeFilter((metadataReader, metadataReaderFactory) -> {
+            String className = metadataReader.getClassMetadata().getClassName();
+            if(className.endsWith("package-info")){
+                return true;
             }
+            return metadataReader.getAnnotationMetadata()
+                    .hasAnnotation(RegisterMapper.class.getName());
         });
 
         logger.info("Add register Mybatis mapper filter rules.");
@@ -157,33 +108,8 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
             definition.getPropertyValues().add("addToConfig", this.addToConfig);
 
-            boolean explicitFactoryUsed = false;
-            if (StringUtils.hasText(this.sqlSessionFactoryBeanName)) {
-                definition.getPropertyValues().add("sqlSessionFactory", new RuntimeBeanReference(this.sqlSessionFactoryBeanName));
-                explicitFactoryUsed = true;
-            } else if (this.sqlSessionFactory != null) {
-                definition.getPropertyValues().add("sqlSessionFactory", this.sqlSessionFactory);
-                explicitFactoryUsed = true;
-            }
-
-            if (StringUtils.hasText(this.sqlSessionTemplateBeanName)) {
-                if (explicitFactoryUsed) {
-                    logger.warn("Cannot use both: sqlSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
-                }
-                definition.getPropertyValues().add("sqlSessionTemplate", new RuntimeBeanReference(this.sqlSessionTemplateBeanName));
-                explicitFactoryUsed = true;
-            } else if (this.sqlSessionTemplate != null) {
-                if (explicitFactoryUsed) {
-                    logger.warn("Cannot use both: sqlSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
-                }
-                definition.getPropertyValues().add("sqlSessionTemplate", this.sqlSessionTemplate);
-                explicitFactoryUsed = true;
-            }
-
-            if (!explicitFactoryUsed) {
-                logger.info("Enabling autowire by type for MapperFactoryBean with name '" + holder.getBeanName() + "'.");
-                definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-            }
+            logger.info("Enabling autowire by type for MapperFactoryBean with name '" + holder.getBeanName() + "'.");
+            definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         }
     }
 
@@ -222,14 +148,8 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         this.addToConfig = addToConfig;
     }
 
-    public void setAnnotationClass(Class<? extends Annotation> annotationClass) {
-        this.annotationClass = annotationClass;
-    }
-
     /**
      * 配置通用 Mapper
-     *
-     * @param config
      */
     public void setConfig(Config config) {
         if (mapperHelper == null) {
@@ -248,10 +168,9 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
     /**
      * 从环境变量中获取 mapper 配置信息
-     *
-     * @param environment
      */
     public void setMapperProperties(Environment environment) {
+        String jdbcUrl = environment.getProperty("spring.datasource.url");
         Config config = SpringBootBindUtil.bind(environment, Config.class, Config.PREFIX);
         if (mapperHelper == null) {
             mapperHelper = new MapperHelper();
@@ -259,51 +178,9 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         if(config != null){
             mapperHelper.setConfig(config);
         }
-    }
-
-    /**
-     * 从 properties 数组获取 mapper 配置信息
-     *
-     * @param properties
-     */
-    public void setMapperProperties(String[] properties) {
-        Properties props = new Properties();
-        for (String property : properties) {
-            property = property.trim();
-            int index = property.indexOf("=");
-            if(index < 0){
-                throw new CommonMapperException("通过 @MapperScan 注解的 properties 参数配置出错:" + property + " !\n"
-                        + "请保证配置项按 properties 文件格式要求进行配置，例如：\n"
-                        + "properties = {\n"
-                        + "\t\"mappers=cn.org.ferry.system.mapper.Mapper\",\n"
-                        + "\t\"notEmpty=true\"\n"
-                        + "}"
-                );
-            }
-            props.put(property.substring(0, index).trim(), property.substring(index + 1).trim());
+        if(StringUtil.isNotEmpty(jdbcUrl)){
+            String dbType = jdbcUrl.split(":")[1].toUpperCase();
+            mapperHelper.getConfig().setIdentity(IdentityDialect.getDataBaseIdentityByDialect(dbType));
         }
-        if (mapperHelper == null) {
-            mapperHelper = new MapperHelper(props);
-        }
-    }
-
-    public void setMarkerInterface(Class<?> markerInterface) {
-        this.markerInterface = markerInterface;
-    }
-
-    public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
-        this.sqlSessionFactory = sqlSessionFactory;
-    }
-
-    public void setSqlSessionFactoryBeanName(String sqlSessionFactoryBeanName) {
-        this.sqlSessionFactoryBeanName = sqlSessionFactoryBeanName;
-    }
-
-    public void setSqlSessionTemplate(SqlSessionTemplate sqlSessionTemplate) {
-        this.sqlSessionTemplate = sqlSessionTemplate;
-    }
-
-    public void setSqlSessionTemplateBeanName(String sqlSessionTemplateBeanName) {
-        this.sqlSessionTemplateBeanName = sqlSessionTemplateBeanName;
     }
 }

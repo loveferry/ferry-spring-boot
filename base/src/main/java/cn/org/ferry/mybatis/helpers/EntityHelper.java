@@ -26,7 +26,7 @@ public class EntityHelper {
     /**
      * 实体类 => 表对象
      */
-    private static final Map<Class<?>, EntityTable> entityTableMap = new ConcurrentHashMap<Class<?>, EntityTable>();
+    private static final Map<Class<?>, EntityTable> entityTableMap = new ConcurrentHashMap<>();
 
     /**
      * 默认的实体类解析器
@@ -51,9 +51,6 @@ public class EntityHelper {
 
     /**
      * 获取默认的orderby语句
-     *
-     * @param entityClass
-     * @return
      */
     public static String getOrderByClause(Class<?> entityClass) {
         EntityTable table = getEntityTable(entityClass);
@@ -88,9 +85,6 @@ public class EntityHelper {
 
     /**
      * 获取全部列
-     *
-     * @param entityClass
-     * @return
      */
     public static Set<EntityColumn> getColumns(Class<?> entityClass) {
         return getEntityTable(entityClass).getEntityClassColumns();
@@ -98,9 +92,6 @@ public class EntityHelper {
 
     /**
      * 获取主键信息
-     *
-     * @param entityClass
-     * @return
      */
     public static Set<EntityColumn> getPKColumns(Class<?> entityClass) {
         return getEntityTable(entityClass).getEntityClassPKColumns();
@@ -108,9 +99,6 @@ public class EntityHelper {
 
     /**
      * 获取查询的Select
-     *
-     * @param entityClass
-     * @return
      */
     public static String getSelectColumns(Class<?> entityClass) {
         EntityTable entityTable = getEntityTable(entityClass);

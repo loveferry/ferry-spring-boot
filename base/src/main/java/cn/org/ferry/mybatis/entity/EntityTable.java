@@ -119,7 +119,7 @@ public class EntityTable {
      * 初始化 - Example 会使用
      */
     public void initPropertyMap() {
-        propertyMap = new HashMap<String, EntityColumn>(getEntityClassColumns().size());
+        propertyMap = new HashMap<>(getEntityClassColumns().size());
         for (EntityColumn column : getEntityClassColumns()) {
             propertyMap.put(column.getProperty(), column);
         }
@@ -212,7 +212,7 @@ public class EntityTable {
 
     public void setKeyProperties(String keyProperty) {
         if (this.keyProperties == null) {
-            this.keyProperties = new ArrayList<String>();
+            this.keyProperties = new ArrayList<>();
             this.keyProperties.add(keyProperty);
         } else {
             this.keyProperties.add(keyProperty);

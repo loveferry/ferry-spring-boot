@@ -42,22 +42,25 @@ public class MapperHelper {
     /**
      * 注册的接口
      */
-    private List<Class<?>> registerClass = new ArrayList<>();
+    private List<Class<?>> registerClass;
 
     /**
      * 注册的通用Mapper接口
      */
-    private Map<Class<?>, MapperTemplate> registerMapper = new ConcurrentHashMap<>();
+    private Map<Class<?>, MapperTemplate> registerMapper;
 
     /**
      * 通用Mapper配置
      */
-    private Config config = new Config();
+    private Config config;
 
     /**
      * 默认构造方法
      */
     public MapperHelper() {
+        registerClass = new ArrayList<>();
+        registerMapper = new ConcurrentHashMap<>();
+        config = new Config();
     }
 
     /**
@@ -145,8 +148,6 @@ public class MapperHelper {
 
     /**
      * 注册通用Mapper接口
-     *
-     * @param mapperClass
      */
     public void registerMapper(String mapperClass) {
         try {

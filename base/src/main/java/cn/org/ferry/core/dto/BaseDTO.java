@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 /**
@@ -13,6 +14,7 @@ import javax.persistence.Transient;
  */
 
 @ApiModel(value = "基础字段类")
+@Entity
 public class BaseDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 

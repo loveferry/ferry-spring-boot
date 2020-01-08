@@ -23,7 +23,7 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         return new StringBuilder()
                 .append(SqlHelper.selectAllColumns(entityClass))
-                .append(SqlHelper.fromTable(entityClass, tableName(entityClass)))
+                .append(SqlHelper.fromTable(tableName(entityClass)))
                 .append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()))
                 .toString();
     }
@@ -34,11 +34,7 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-        // 逻辑删除的未删除查询条件
-        sql.append("<where>");
-        sql.append(SqlHelper.whereLogicDelete(entityClass, false));
-        sql.append("</where>");
+        sql.append(SqlHelper.fromTable(tableName(entityClass)));
 
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
@@ -50,7 +46,7 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         return new StringBuilder()
                 .append(SqlHelper.selectAllColumns(entityClass))
-                .append(SqlHelper.fromTable(entityClass, tableName(entityClass)))
+                .append(SqlHelper.fromTable(tableName(entityClass)))
                 .append(SqlHelper.wherePKColumns(entityClass))
                 .toString();
     }
@@ -59,7 +55,7 @@ public class BaseSelectProvider extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectCount(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.fromTable(tableName(entityClass)));
         sql.append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()));
         return sql.toString();
     }
@@ -70,7 +66,7 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.fromTable(tableName(entityClass)));
         sql.append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();

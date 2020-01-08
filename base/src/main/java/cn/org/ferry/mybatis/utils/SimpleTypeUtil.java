@@ -14,7 +14,7 @@ import java.util.Set;
  */
 
 public class SimpleTypeUtil {
-    public static final  String[]      JAVA8_DATE_TIME = {
+    public static final String[] JAVA8_DATE_TIME = {
             "java.time.Instant",
             "java.time.LocalDateTime",
             "java.time.LocalDate",
@@ -26,7 +26,8 @@ public class SimpleTypeUtil {
             "java.time.Month",
             "java.time.YearMonth"
     };
-    private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<Class<?>>();
+
+    private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<>();
 
     /**
      * 特别注意：由于基本类型有默认值，因此在实体类中不建议使用基本类型作为数据库字段类型
@@ -55,8 +56,6 @@ public class SimpleTypeUtil {
 
     /**
      * 注册新的类型
-     *
-     * @param clazz
      */
     public static void registerSimpleType(Class<?> clazz){
         SIMPLE_TYPE_SET.add(clazz);
@@ -78,8 +77,6 @@ public class SimpleTypeUtil {
 
     /**
      * 注册新的类型
-     *
-     * @param classes
      */
     public static void registerSimpleType(String classes){
         if(StringUtil.isNotEmpty(classes)){
@@ -96,8 +93,6 @@ public class SimpleTypeUtil {
 
     /**
      * 注册新的类型，不存在时不抛出异常
-     *
-     * @param clazz
      */
     private static void registerSimpleTypeSilence(String clazz) {
         try {
