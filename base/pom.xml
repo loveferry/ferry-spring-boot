@@ -108,10 +108,10 @@
 		<!--oracle引入项目jar包-->
 		<dependency>
 			<groupId>com.oracle</groupId>
-			<artifactId>oracle6</artifactId>
-			<version>1.0.0</version>
+			<artifactId>oracle7</artifactId>
+			<version>12.1.0.1.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/main/resources/lib/ojdbc6.jar</systemPath>
+			<systemPath>${basedir}/src/main/resources/lib/ojdbc7-12.1.0.1.0.jar</systemPath>
 		</dependency>
 	
 	</dependencies>
