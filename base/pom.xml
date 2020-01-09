@@ -18,6 +18,27 @@
 	</properties>
 	
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		
+		<!-- persistence-api -->
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
 		<!--mybatis -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -66,12 +87,12 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 		
+		<!--poi-->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>${poi.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -92,19 +113,26 @@
 			<version>28.0-jre</version>
 		</dependency>
 		
-		<!--docx4j-->
+		<!--alibaba-->
 		<dependency>
-			<groupId>org.docx4j</groupId>
-			<artifactId>docx4j</artifactId>
-			<version>6.1.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.54</version>
 		</dependency>
 		
+		<!--aspectj-->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+		
+		
+		<!--mysql依赖-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
 		<!--oracle引入项目jar包-->
 		<dependency>
 			<groupId>com.oracle</groupId>
@@ -113,7 +141,29 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/src/main/resources/lib/ojdbc7-12.1.0.1.0.jar</systemPath>
 		</dependency>
-	
+		
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+		
+		<!--swagger-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
 	</dependencies>
 	
 	<build>

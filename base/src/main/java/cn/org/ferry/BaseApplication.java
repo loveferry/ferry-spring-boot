@@ -11,11 +11,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @MapperScan(basePackages = "cn.org.ferry.**.mapper")
-public class ClientApplication extends SpringBootServletInitializer {
+public class BaseApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
         // SpringApplication.run(FerryApplication.class, args);
-		SpringApplication springApplication = new SpringApplication(ClientApplication.class);
+		SpringApplication springApplication = new SpringApplication(BaseApplication.class);
 		// 设置监听
 		springApplication.addListeners(new ConfigInitListener());
 		// 关闭 logo 显示效果
@@ -26,7 +26,7 @@ public class ClientApplication extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(ClientApplication.class);
+		return application.sources(BaseApplication.class);
 	}
 }
 

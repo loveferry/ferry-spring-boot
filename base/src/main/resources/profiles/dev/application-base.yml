@@ -1,6 +1,6 @@
 # 服务
 server:
-  port: 50318
+  port: 58080
   session-timeout: 30
   tomcat:
     max-threads: 500
@@ -9,7 +9,7 @@ server:
 
 # 日志
 logging:
-  path: log/
+  path: /u01/ferry/logs/base/
   level:
     root: INFO
     cn.org.ferry : DEBUG
@@ -19,16 +19,18 @@ logging:
 # dataSource
 spring:
   datasource:
-    url: jdbc:mysql://106.13.78.137:3306/ferry
+    url: jdbc:oracle:thin:@localhost:49161:xe
+#    url: jdbc:mysql://127.0.0.1:3306/ferry
+    driver-class-name: oracle.jdbc.OracleDriver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
     username: ferry
     password: ferry
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    type: oracle.jdbc.pool.OracleDataSource
   redis:
-    host: 106.13.78.137
+    host: 127.0.0.1
     port: 6379
-    database: 3
+    database: 0
     timeout: 5000ms
-    password: redis
     client-name: ferry
     token-period: 900
     jedis:
@@ -40,6 +42,25 @@ spring:
   liquibase:
     enabled: false
 
+
+
+# mybatis
+mybatis:
+  mapper-locations: classpath:cn/org/ferry/**/mapper/*Mapper.xml
+  #  type-aliases-package: "cn.org.ferry.sys.dto"
+  configuration:
+    jdbc-type-for-null: 'null'
+    map-underscore-to-camel-case: true   # 开启驼峰映射
+    cache-enabled: true
+
+
+pagehelper:
+  helperDialect: mysql   # 指定数据库分页类型
+  reasonable: true    # 页码<=0 查询第一页，页码>=总页数查询最后一页
+  supportMethodsArguments: true   # 支持通过 Mapper 接口参数来传递分页参数
+  params: count=countSql
+
+
 # actuator 配置参数
 management:
   endpoint:
@@ -50,7 +71,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: info,health,logfile
+        include: "*"        # 打开所有的监控点
         exclude: shutdown   # 禁用关机服务
       base-path: /actuator  # 定制监控点路径，默认为 /actuator
 # 定制 actuator 信息
@@ -61,13 +82,14 @@ info:
     email: ferry_sy@163.com
     desciption: 人生而自由，却无往不在枷锁之中
 
+
 # 自定义的配置属性
 ferry:
   upload: /u01/ferry/upload
   liquibase:
     enabled: true
   swagger:
-    enabled: false
+    enabled: true
   cxf:
     path: /ws
   cors:

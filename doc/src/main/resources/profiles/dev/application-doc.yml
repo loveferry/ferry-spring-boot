@@ -1,0 +1,34 @@
+# 服务
+server:
+  port: 58082
+
+
+# 日志
+logging:
+  path: /u01/ferry/logs/doc/
+
+spring:
+  profiles:
+    include: base
+  # dataSource
+  datasource:
+    url: jdbc:oracle:thin:@localhost:49161:xe
+    #    url: jdbc:mysql://127.0.0.1:3306/ferry
+    driver-class-name: oracle.jdbc.OracleDriver
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ferry
+    password: ferry
+  #    type: oracle.jdbc.pool.OracleDataSource
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 2
+    timeout: 5000ms
+    client-name: ferry
+    token-period: 900
+    jedis:
+      pool:
+        max-active: 50
+        max-idle: 20
+        min-idle: 2
+        max-wait: 3000ms

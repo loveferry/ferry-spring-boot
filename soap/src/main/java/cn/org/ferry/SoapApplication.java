@@ -1,6 +1,5 @@
 package cn.org.ferry;
 
-
 import cn.org.ferry.core.listeners.ConfigInitListener;
 import cn.org.ferry.mybatis.annotations.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -11,11 +10,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @MapperScan(basePackages = "cn.org.ferry.**.mapper")
-public class ClientApplication extends SpringBootServletInitializer {
+public class SoapApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
         // SpringApplication.run(FerryApplication.class, args);
-		SpringApplication springApplication = new SpringApplication(ClientApplication.class);
+		SpringApplication springApplication = new SpringApplication(SoapApplication.class);
 		// 设置监听
 		springApplication.addListeners(new ConfigInitListener());
 		// 关闭 logo 显示效果
@@ -26,7 +25,7 @@ public class ClientApplication extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(ClientApplication.class);
+		return application.sources(SoapApplication.class);
 	}
 }
 

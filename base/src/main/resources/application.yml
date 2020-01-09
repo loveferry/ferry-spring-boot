@@ -1,4 +1,4 @@
 spring:
   profiles:
     active: ${activeProfile}
-    include: client
+    include: base

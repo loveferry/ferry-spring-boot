@@ -21,6 +21,19 @@
 			<artifactId>base</artifactId>
 			<version>${ferry.version}</version>
 		</dependency>
+		
+		<!--docx4j-->
+		<dependency>
+			<groupId>org.docx4j</groupId>
+			<artifactId>docx4j</artifactId>
+			<version>6.1.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	
 	<build>
