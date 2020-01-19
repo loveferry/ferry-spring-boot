@@ -28,7 +28,7 @@ public class BaseDeleteProvider extends MapperTemplate {
             sql.append(SqlHelper.notAllNullParameterCheck("_parameter", EntityHelper.getColumns(entityClass)));
         }
         sql.append(SqlHelper.deleteFromTable(tableName(entityClass)));
-        sql.append(SqlHelper.whereAllIfColumns(entityClass, isNotEmpty()));
+        sql.append(SqlHelper.whereAllIfColumns(entityClass));
         return sql.toString();
     }
 

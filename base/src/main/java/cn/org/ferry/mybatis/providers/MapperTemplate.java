@@ -99,7 +99,7 @@ public abstract class MapperTemplate {
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
         EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
-        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+        List<ResultMap> resultMaps = new ArrayList<>();
         resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
         MetaObject metaObject = MetaObjectUtil.forObject(ms);
         metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));

@@ -33,7 +33,5 @@
 	<build>
 		<!--产生的构建的文件名-->
 		<finalName>ferry</finalName>
-		<!--构建产生的所有文件存放的目录-->
-		<directory>../target/client</directory>
 	</build>
 </project>

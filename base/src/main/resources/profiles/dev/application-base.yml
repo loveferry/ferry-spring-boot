@@ -1,6 +1,6 @@
 # 服务
 server:
-  port: 58080
+  port: 8888
   session-timeout: 30
   tomcat:
     max-threads: 500

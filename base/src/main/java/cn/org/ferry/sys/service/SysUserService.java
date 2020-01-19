@@ -4,6 +4,7 @@ import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.sys.dto.SysUser;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 public interface SysUserService extends BaseService<SysUser> {
@@ -18,4 +19,9 @@ public interface SysUserService extends BaseService<SysUser> {
      * 登陆
      */
     ResponseData login(HttpServletRequest request, SysUser sysUser);
+
+    /**
+     * 用户信息查询
+     */
+    List<SysUser> query(String userNameEn, String userNameZh);
 }

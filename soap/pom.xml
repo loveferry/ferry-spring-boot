@@ -24,11 +24,4 @@
 	
 	</dependencies>
 	
-	<build>
-		<!--构建产生的所有文件存放的目录-->
-		<directory>../target/soap</directory>
-	
-	</build>
-	
-
 </project>

@@ -165,11 +165,5 @@
 			<version>${swagger.version}</version>
 		</dependency>
 	</dependencies>
-	
-	<build>
-		<!--构建产生的所有文件存放的目录-->
-		<directory>../target/base</directory>
-		
-	</build>
 
 </project>

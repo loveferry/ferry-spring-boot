@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,5 +45,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         responseData.setToken(token);
         responseData.setMessage("登陆成功!");
         return responseData;
+    }
+
+    @Override
+    public List<SysUser> query(String userNameEn, String userNameZh) {
+        SysUser sysUser = new SysUser();
+        sysUser.setUserNameEn(userNameEn);
+        sysUser.setUserNameZh(userNameZh);
+        return sysUserMapper.select(sysUser);
     }
 }

@@ -8,16 +8,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "用户控制器")
-@RestController
+@RestController(value = "/api")
 public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
@@ -32,8 +34,19 @@ public class SysUserController {
             @ApiImplicitParam(name = "_token", required = false)
     )
     @LoginPass
-    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseData login(HttpServletRequest request, @RequestBody SysUser sysUser){
         return sysUserService.login(request, sysUser);
+    }
+
+    /**
+     * 用户信息查询
+     */
+    @ApiOperation("用户信息查询")
+    @LoginPass
+    @RequestMapping(value = "/sys/user/query", method = RequestMethod.GET)
+    public ResponseData query(@ApiParam(name = "userNameEn", value = "英文名") @RequestParam(value = "userNameEn",required = false)String userNameEn,
+                              @ApiParam(name = "userNameZh", value = "中文名") @RequestParam(value = "userNameZh", required = false)String userNameZh){
+        return new ResponseData(sysUserService.query(userNameEn, userNameZh));
     }
 }

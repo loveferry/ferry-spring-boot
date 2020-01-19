@@ -8,6 +8,8 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -24,6 +26,11 @@ import javax.persistence.Table;
  */
 
 public class EntityTable {
+    /**
+     * 日志对象
+     */
+    private static final Logger logger = LoggerFactory.getLogger(EntityTable.class);
+
     public static final Pattern DELIMITER = Pattern.compile("^[`\\[\"]?(.*?)[`\\]\"]?$");
 
     /**
@@ -40,6 +47,7 @@ public class EntityTable {
     private String orderByClause;
 
     private String baseSelect;
+
     /**
      * 实体类 => 全部列属性
      */
@@ -73,9 +81,6 @@ public class EntityTable {
 
     /**
      * 生成当前实体的resultMap对象
-     *
-     * @param configuration
-     * @return
      */
     public ResultMap getResultMap(Configuration configuration) {
         if (this.resultMap != null) {
@@ -84,12 +89,12 @@ public class EntityTable {
         if (entityClassColumns == null || entityClassColumns.size() == 0) {
             return null;
         }
-        List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+        List<ResultMapping> resultMappings = new ArrayList<>();
         for (EntityColumn entityColumn : entityClassColumns) {
             String column = entityColumn.getColumn();
             //去掉可能存在的分隔符
             Matcher matcher = DELIMITER.matcher(column);
-            if(matcher.find()){
+            if (matcher.find()) {
                 column = matcher.group(1);
             }
             ResultMapping.Builder builder = new ResultMapping.Builder(configuration, entityColumn.getProperty(), column, entityColumn.getJavaType());
@@ -98,7 +103,7 @@ public class EntityTable {
             }
             if (entityColumn.getTypeHandler() != null) {
                 try {
-                    builder.typeHandler(getInstance(entityColumn.getJavaType(),entityColumn.getTypeHandler()));
+                    builder.typeHandler(getInstance(entityColumn.getJavaType(), entityColumn.getTypeHandler()));
                 } catch (Exception e) {
                     throw new CommonMapperException(e);
                 }
@@ -110,7 +115,7 @@ public class EntityTable {
             builder.flags(flags);
             resultMappings.add(builder.build());
         }
-        ResultMap.Builder builder = new ResultMap.Builder(configuration, "BaseMapperResultMap", this.entityClass, resultMappings, true);
+        ResultMap.Builder builder = new ResultMap.Builder(configuration, "CommonMapperResultMap", this.entityClass, resultMappings, true);
         this.resultMap = builder.build();
         return this.resultMap;
     }
@@ -127,29 +132,26 @@ public class EntityTable {
 
     /**
      * 实例化TypeHandler
-     * @param javaTypeClass
-     * @param typeHandlerClass
-     * @return
      */
     @SuppressWarnings("unchecked")
     public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
         if (javaTypeClass != null) {
-          try {
-            Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
-            return (TypeHandler<T>) c.newInstance(javaTypeClass);
-          } catch (NoSuchMethodException ignored) {
-            // ignored
-          } catch (Exception e) {
-            throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
-          }
+            try {
+                Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
+                return (TypeHandler<T>) c.newInstance(javaTypeClass);
+            } catch (NoSuchMethodException ignored) {
+                logger.warn("Can not found constructor for handler " + typeHandlerClass, ignored);
+            } catch (Exception e) {
+                throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
+            }
         }
         try {
-          Constructor<?> c = typeHandlerClass.getConstructor();
-          return (TypeHandler<T>) c.newInstance();
+            Constructor<?> c = typeHandlerClass.getConstructor();
+            return (TypeHandler<T>) c.newInstance();
         } catch (Exception e) {
-          throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
+            throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
         }
-      }
+    }
 
     public String getBaseSelect() {
         return baseSelect;
@@ -196,7 +198,7 @@ public class EntityTable {
 
     public void setKeyColumns(String keyColumn) {
         if (this.keyColumns == null) {
-            this.keyColumns = new ArrayList<String>();
+            this.keyColumns = new ArrayList<>();
             this.keyColumns.add(keyColumn);
         } else {
             this.keyColumns.add(keyColumn);

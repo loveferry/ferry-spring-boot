@@ -1,15 +1,11 @@
-package cn.org.ferry.core.configurations;
+package cn.org.ferry.doc.configurations;
 
 import cn.org.ferry.core.utils.SwaggerUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -31,21 +27,21 @@ import java.util.List;
 public class SwaggerConfiguration {
 
     /**
-     * 系统接口api
+     * 文档操作接口api
      */
     @Bean
-    public Docket sysDocket() {
+    public Docket docDocket() {
         List<Parameter> parameterList = new ArrayList<>(1);
         parameterList.add(SwaggerUtils.initParameter("_token", "token认证", String.class.getSimpleName(), "header", true));
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .pathMapping("/") // 默认请求都是以 / 根路径开始，如果我们的应用不是部署在根路径，比如以/validator部署，则可以通过一下方式设置请求的统一前缀
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("cn.org.ferry.sys.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("cn.org.ferry.doc.controllers"))
                 .paths(PathSelectors.any())
                 .build()
-                .groupName("系统模块")
+                .groupName("文档模块")
                 .globalOperationParameters(parameterList)
-                .apiInfo(SwaggerUtils.apiInfo("系统模块", "2.0.0", "你努力后的成功，不能弥补你成功前的痛苦"));
+                .apiInfo(SwaggerUtils.apiInfo("文档模块", "2.0.0", "当爱已成往事，沉默是最好的道别"));
     }
 }

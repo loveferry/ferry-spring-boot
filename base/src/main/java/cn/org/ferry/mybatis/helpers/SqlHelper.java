@@ -74,6 +74,15 @@ public class SqlHelper {
         return sql.toString();
     }
 
+    /************************************* select ********************************************/
+
+    /**
+     * select xxx,xxx...
+     */
+    public static String selectAllColumns(Class<?> entityClass) {
+        return "SELECT " + getAllColumns(entityClass) + " ";
+    }
+
     public static StringBuilder trimBegin(String prefix, String suffix, String prefixOverrides, String suffixOverrides){
         StringBuilder trim = new StringBuilder();
         trim.append("<trim prefix=\"")
@@ -208,17 +217,6 @@ public class SqlHelper {
     }
 
     /**
-     * select xxx,xxx...
-     */
-    public static String selectAllColumns(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append(getAllColumns(entityClass));
-        sql.append(" ");
-        return sql.toString();
-    }
-
-    /**
      * select count(x)
      */
     public static String selectCount(Class<?> entityClass) {
@@ -253,7 +251,7 @@ public class SqlHelper {
      * from tableName - 动态表名
      */
     public static String fromTable(String tableName) {
-        return " FROM "+tableName+" ";
+        return " FROM " + tableName + " ";
     }
 
     /**
@@ -369,7 +367,22 @@ public class SqlHelper {
      * where主键条件
      */
     public static String wherePKColumns(Class<?> entityClass) {
-        return wherePKColumns(entityClass, false);
+        return wherePKColumns(entityClass, null);
+    }
+
+    /**
+     * where主键条件
+     */
+    public static String wherePKColumns(Class<?> entityClass, String entityName) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("<where>");
+        //获取全部列
+        Set<EntityColumn> columnSet = EntityHelper.getPKColumns(entityClass);
+        for (EntityColumn column : columnSet) {
+            sql.append(" AND ").append(column.getColumnEqualsHolder(entityName));
+        }
+        sql.append("</where>");
+        return sql.toString();
     }
 
     /**
@@ -403,29 +416,15 @@ public class SqlHelper {
     /**
      * where所有列的条件，会判断是否!=null
      */
-    public static String whereAllIfColumns(Class<?> entityClass, boolean empty) {
-        return whereAllIfColumns(entityClass, empty, false);
-    }
-
-    /**
-     * where所有列的条件，会判断是否!=null
-     */
-    public static String whereAllIfColumns(Class<?> entityClass, boolean empty, boolean useVersion) {
+    public static String whereAllIfColumns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
-
         sql.append("<where>");
         //获取全部列
         Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnSet) {
-            if (!useVersion || !column.getEntityField().isAnnotationPresent(Version.class)) {
-                sql.append(getIfNotNull(column, " AND " + column.getColumnEqualsHolder(), empty));
-            }
+            sql.append(getIfNotNull(column, " AND " + column.getColumnEqualsHolder(), false));
         }
-        if (useVersion) {
-            sql.append(whereVersion(entityClass));
-        }
-
         sql.append("</where>");
         return sql.toString();
     }
