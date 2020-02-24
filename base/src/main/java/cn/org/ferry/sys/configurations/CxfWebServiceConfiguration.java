@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.Objects;
 
@@ -21,8 +22,9 @@ import java.util.Objects;
  */
 @Configuration
 @ConditionalOnClass({SpringBus.class, CXFServlet.class})
+@PropertySource(value = {"classpath:config_base.properties"})
 public class CxfWebServiceConfiguration {
-    @Value("${ferry.cxf.path}")
+    @Value("${cxf.path}")
     private String path;
 
     /**

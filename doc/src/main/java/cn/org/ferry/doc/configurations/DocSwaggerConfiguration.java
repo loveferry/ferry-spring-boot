@@ -24,7 +24,7 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 @ConditionalOnExpression("${ferry.swagger.enabled:true}")
-public class SwaggerConfiguration {
+public class DocSwaggerConfiguration {
 
     /**
      * 文档操作接口api

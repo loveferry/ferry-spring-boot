@@ -1,6 +1,6 @@
 # 服务
 server:
-  port: 8888
+  port: 58080
   session-timeout: 30
   tomcat:
     max-threads: 500
@@ -9,7 +9,7 @@ server:
 
 # 日志
 logging:
-  path: /u01/ferry/logs/base/
+  path: /u01/ferry/logs/
   level:
     root: INFO
     cn.org.ferry : DEBUG
@@ -19,18 +19,16 @@ logging:
 # dataSource
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:49161:xe
-#    url: jdbc:mysql://127.0.0.1:3306/ferry
-    driver-class-name: oracle.jdbc.OracleDriver
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.100.232.59:3306/ferry
     username: ferry
     password: ferry
-  #    type: oracle.jdbc.pool.OracleDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 127.0.0.1
+    host: 47.100.232.59
     port: 6379
     database: 0
     timeout: 5000ms
+    password: redis
     client-name: ferry
     token-period: 900
     jedis:
@@ -41,7 +39,6 @@ spring:
         max-wait: 3000ms
   liquibase:
     enabled: false
-
 
 
 # mybatis
@@ -71,7 +68,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"        # 打开所有的监控点
+        include: info,health,logfile
         exclude: shutdown   # 禁用关机服务
       base-path: /actuator  # 定制监控点路径，默认为 /actuator
 # 定制 actuator 信息
@@ -81,22 +78,3 @@ info:
     author: ferry
     email: ferry_sy@163.com
     desciption: 人生而自由，却无往不在枷锁之中
-
-
-# 自定义的配置属性
-ferry:
-  upload: /u01/ferry/upload
-  liquibase:
-    enabled: true
-  swagger:
-    enabled: true
-  cxf:
-    path: /ws
-  cors:
-    allowedOrigins: "*"
-    allowedHeaders: DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,If-Modified-Since,Cache-Control,Content-Type,_token
-    allowedMethod: GET,POST,OPTIONS,DELETE,PUT
-    maxAge: 1800
-    url: "/api/**"
-  filter:
-    paths: "/swagger,/actuator/**"

@@ -4,7 +4,6 @@ import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.mybatis.enums.EnableFlag;
 import cn.org.ferry.mybatis.enums.IfOrNotFlag;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,7 +16,6 @@ import javax.persistence.Table;
  */
 
 @Data
-@NoArgsConstructor
 @Table(name = "sys_attachment_category")
 public class SysAttachmentCategory extends BaseDTO {
     @Id

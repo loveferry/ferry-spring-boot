@@ -4,6 +4,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import javax.sql.DataSource;
@@ -16,7 +17,8 @@ import javax.sql.DataSource;
  */
 
 @Configuration
-@ConditionalOnExpression("${ferry.liquibase.enabled:true}")
+@PropertySource("classpath:config_base.properties")
+@ConditionalOnExpression("${liquibase.enabled:true}")
 public class DocLiquibaseConfiguration {
 
     /**

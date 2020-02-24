@@ -5,6 +5,8 @@ import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +23,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @RestController
+@Api(tags = "附件类型控制器")
 public class SysAttachmentCategoryController extends BaseDTO {
-    @Autowired private SysAttachmentCategoryService sysAttachmentCategoryService;
+    @Autowired
+    private SysAttachmentCategoryService sysAttachmentCategoryService;
 
     /**
      * 更新附件类型定义
      */
+    @ApiOperation("更新附件类型")
     @RequestMapping(value = "/api/attachment/category/save", method = RequestMethod.POST)
     public ResponseData save(HttpServletRequest httpServletRequest,@RequestBody SysAttachmentCategory sysAttachmentCategory){
         return sysAttachmentCategoryService.save(sysAttachmentCategory);
@@ -35,6 +40,7 @@ public class SysAttachmentCategoryController extends BaseDTO {
     /**
      * 查询附件类型
      */
+    @ApiOperation("查询附件类型")
     @LoginPass
     @RequestMapping(value = "/api/attachment/category/query", method = RequestMethod.GET)
     public ResponseData query(SysAttachmentCategory sysAttachmentCategory,

@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -38,6 +40,7 @@ import java.util.UUID;
  */
 
 @Service
+@PropertySource("classpath:config_base.properties")
 public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> implements DocTemplateService {
     protected static final Logger logger = LoggerFactory.getLogger(DocTemplateServiceImpl.class);
 
@@ -51,6 +54,8 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
     private SysFileService sysFileService;
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;
+    @Value("upload.path")
+    private String uploadPath;
 
     @Override
     public DocTemplate queryByTemplateCode(String templateCode) {
@@ -75,7 +80,7 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         List<DocTemplateParam> docTemplateParamList = docTemplateParamService.queryByTemplateCode(templateCode);
         // 目标附件
         SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sourceType);
-        String targetPath = ConfigUtil.getProperty("ferry.upload")+File.separator+sysAttachmentCategory.getAttachmentPath()+File.separator+ UUID.randomUUID().toString();
+        String targetPath = uploadPath+File.separator+sysAttachmentCategory.getAttachmentPath()+File.separator+ UUID.randomUUID().toString();
         // 书签替换
         Map<String, Object> bookMarkParams = new HashMap<>(docTemplateParamList.size());
         Map<String, BookMarkType> bookMarkTypes = new HashMap<>(docTemplateParamList.size());

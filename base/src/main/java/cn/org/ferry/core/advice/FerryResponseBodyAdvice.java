@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ControllerAdvice
 public class FerryResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     private static final Logger logger = LoggerFactory.getLogger(FerryResponseBodyAdvice.class);
@@ -37,25 +34,21 @@ public class FerryResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass,
                                   ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        ResponseData responseData = new ResponseData();
         if(o instanceof ResponseData){
-            responseData = (ResponseData)o;
-        }else if(o instanceof List){
-            responseData.setMaps((List)o);
-        }else {
-            List list = new ArrayList(1);
-            list.add(o);
-            responseData.setMaps(list);
-        }
-        if(null == responseData.getCode()){
-            responseData.setCode(((ServletServerHttpResponse) serverHttpResponse).getServletResponse().getStatus());
-        }
-        if(StringUtils.isEmpty(responseData.getToken())){
+            ResponseData responseData = (ResponseData)o;
+            if(null == responseData.getCode()){
+                responseData.setCode(((ServletServerHttpResponse) serverHttpResponse).getServletResponse().getStatus());
+            }
+            if(StringUtils.isEmpty(responseData.getToken())){
 //            responseData.setToken();
+            }
+            if(!responseData.getSuccess()){
+                logger.error(responseData.getMessage());
+            }
+            return responseData;
+        }else {
+            return o;
         }
-        if(!responseData.getSuccess()){
-            logger.error(responseData.getMessage());
-        }
-        return responseData;
+
     }
 }

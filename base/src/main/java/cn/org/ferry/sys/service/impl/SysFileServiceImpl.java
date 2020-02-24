@@ -21,6 +21,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -41,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
+@PropertySource("classpath:config_base.properties")
 public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysFileService {
     private static final Logger logger = LoggerFactory.getLogger(SysFileServiceImpl.class);
 
@@ -50,7 +53,8 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
     private SysAttachmentService sysAttachmentService;
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;
-
+    @Value("upload.path")
+    private String upload_path;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -73,7 +77,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             }
             deleteByAttachmentId(sysAttachment.getAttachmentId());
         }
-        String uploadPath = ConfigUtil.getProperty("ferry.upload")+sysAttachmentCategory.getAttachmentPath();
+        String uploadPath = upload_path+sysAttachmentCategory.getAttachmentPath();
         for(MultipartFile multipartFile : files){
             String name = UUID.randomUUID().toString();
             SysFile sysFile = new SysFile();

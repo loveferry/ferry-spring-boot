@@ -26,4 +26,12 @@ public class EnumTest {
         System.out.println(Apple.valueOf("pear"));
 
     }
+
+    @Test
+    public void snc(){
+        String msg = "F3";
+
+        System.out.println(msg.substring(0,1).charAt(0)-64);
+
+    }
 }

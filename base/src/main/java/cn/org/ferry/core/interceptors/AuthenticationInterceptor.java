@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@PropertySource("classpath:config_base.properties")
 public class AuthenticationInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
@@ -37,7 +39,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private SysUserService sysUserService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    @Value("#{'${ferry.filter.paths}'.split(',')}")
+    @Value("#{'${filter.paths}'.split(',')}")
     private List<String> allowPaths;
 
     // 在业务处理器处理请求之前被调用
