@@ -74,6 +74,37 @@ public class SqlHelper {
         return sql.toString();
     }
 
+    /************************************* update ********************************************/
+
+    /**
+     * update tableName - 动态表名
+     */
+    public static String updateTable(String tableName) {
+        return "UPDATE "+tableName+" ";
+    }
+
+    /**
+     * update set列
+     */
+    public static String updateSetColumns(Class<?> entityClass, String entityName, boolean notNull, boolean notEmpty) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("<set>");
+        //获取全部列
+        Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
+        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
+        for (EntityColumn column : columnSet) {
+            if (!column.isId() && column.isUpdatable()) {
+                if (notNull) {
+                    sql.append(SqlHelper.getIfNotNull(entityName, column, column.getColumnEqualsHolder(entityName) + ",", notEmpty));
+                } else {
+                    sql.append(column.getColumnEqualsHolder(entityName) + ",");
+                }
+            }
+        }
+        sql.append("</set>");
+        return sql.toString();
+    }
+
     /************************************* select ********************************************/
 
     /**
@@ -255,59 +286,10 @@ public class SqlHelper {
     }
 
     /**
-     * update tableName - 动态表名
-     */
-    public static String updateTable(String tableName) {
-        return "UPDATE "+tableName+" ";
-    }
-
-    /**
      * delete tableName - 动态表名
      */
     public static String deleteFromTable(String tableName) {
         return "DELETE FROM "+tableName+" ";
-    }
-
-    /**
-     * update set列
-     */
-    public static String updateSetColumns(Class<?> entityClass, String entityName, boolean notNull, boolean notEmpty) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<set>");
-        //获取全部列
-        Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        //对乐观锁的支持
-        EntityColumn versionColumn = null;
-        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
-        for (EntityColumn column : columnSet) {
-            if (column.getEntityField().isAnnotationPresent(Version.class)) {
-                if (versionColumn != null) {
-                    throw new VersionException(entityClass.getCanonicalName() + " 中包含多个带有 @Version 注解的字段，一个类中只能存在一个带有 @Version 注解的字段!");
-                }
-                versionColumn = column;
-            }
-            if (!column.isId() && column.isUpdatable()) {
-                if (column == versionColumn) {
-                    Version version = versionColumn.getEntityField().getAnnotation(Version.class);
-                    String versionClass = version.nextVersion().getCanonicalName();
-                    sql.append("<bind name=\"").append(column.getProperty()).append("Version\" value=\"");
-                    //version = ${@tk.mybatis.mapper.version@nextVersionClass("versionClass", version)}
-                    sql.append("@tk.mybatis.mapper.version.VersionUtil@nextVersion(")
-                        .append("@").append(versionClass).append("@class, ");
-                    if (StringUtil.isNotEmpty(entityName)) {
-                        sql.append(entityName).append(".");
-                    }
-                    sql.append(column.getProperty()).append(")\"/>");
-                    sql.append(column.getColumn()).append(" = #{").append(column.getProperty()).append("Version},");
-                } else if (notNull) {
-                    sql.append(SqlHelper.getIfNotNull(entityName, column, column.getColumnEqualsHolder(entityName) + ",", notEmpty));
-                } else {
-                    sql.append(column.getColumnEqualsHolder(entityName) + ",");
-                }
-            }
-        }
-        sql.append("</set>");
-        return sql.toString();
     }
 
     /**
@@ -339,7 +321,7 @@ public class SqlHelper {
      */
     public static String notAllNullParameterCheck(String parameterName, Set<EntityColumn> columnSet) {
         StringBuilder sql = new StringBuilder();
-        sql.append("<bind name=\"notAllNullParameterCheck\" value=\"@tk.mybatis.mapper.util.OGNL@notAllNullParameterCheck(");
+        sql.append("<bind name=\"notAllNullParameterCheck\" value=\"@cn.org.ferry.mybatis.utils.OGNL@notAllNullParameterCheck(");
         sql.append(parameterName).append(", '");
         StringBuilder fields = new StringBuilder();
         for (EntityColumn column : columnSet) {
@@ -386,42 +368,13 @@ public class SqlHelper {
     }
 
     /**
-     * where主键条件
-     */
-    public static String wherePKColumns(Class<?> entityClass, boolean useVersion) {
-        return wherePKColumns(entityClass, null, useVersion);
-    }
-
-    /**
-     * where主键条件
-     */
-    public static String wherePKColumns(Class<?> entityClass, String entityName, boolean useVersion) {
-        StringBuilder sql = new StringBuilder();
-
-        sql.append("<where>");
-        //获取全部列
-        Set<EntityColumn> columnSet = EntityHelper.getPKColumns(entityClass);
-        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
-        for (EntityColumn column : columnSet) {
-            sql.append(" AND ").append(column.getColumnEqualsHolder(entityName));
-        }
-        if (useVersion) {
-            sql.append(whereVersion(entityClass));
-        }
-
-        sql.append("</where>");
-        return sql.toString();
-    }
-
-    /**
      * where所有列的条件，会判断是否!=null
      */
     public static String whereAllIfColumns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("<where>");
-        //获取全部列
+        // 获取全部列
         Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnSet) {
             sql.append(getIfNotNull(column, " AND " + column.getColumnEqualsHolder(), false));
         }
