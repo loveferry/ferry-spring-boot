@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public enum IdentityDialect {
     DB2("VALUES IDENTITY_VAL_LOCAL()"),
-    MYSQL("SELECT LAST_INSERT_ID()"),
+    MYSQL("SELECT LAST_INSERT_ID() + 1"),
     ORACLE("SEQUENCE"),
     SQLSERVER("SELECT SCOPE_IDENTITY()"),
     CLOUDSCAPE("VALUES IDENTITY_VAL_LOCAL()"),
