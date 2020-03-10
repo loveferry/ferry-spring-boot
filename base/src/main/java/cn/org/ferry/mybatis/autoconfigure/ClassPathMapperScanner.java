@@ -181,6 +181,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         if(StringUtil.isNotEmpty(jdbcUrl)){
             String dbType = jdbcUrl.split(":")[1].toUpperCase();
             mapperHelper.getConfig().setIdentity(IdentityDialect.getDataBaseIdentityByDialect(dbType));
+            mapperHelper.getConfig().setBefore(IdentityDialect.getDataBaseBeforeByDialect(dbType));
         }
     }
 }

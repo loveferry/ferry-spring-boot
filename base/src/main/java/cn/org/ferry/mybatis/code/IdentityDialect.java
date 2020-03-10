@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public enum IdentityDialect {
     DB2("VALUES IDENTITY_VAL_LOCAL()"),
-    MYSQL("SELECT LAST_INSERT_ID() + 1"),
+    MYSQL("SELECT LAST_INSERT_ID()"),
     ORACLE("SEQUENCE"),
     SQLSERVER("SELECT SCOPE_IDENTITY()"),
     CLOUDSCAPE("VALUES IDENTITY_VAL_LOCAL()"),
@@ -31,6 +31,17 @@ public enum IdentityDialect {
         }catch (IllegalArgumentException e){
             logger.error("Can not get identity for "+dbType, e);
             return null;
+        }
+
+    }
+
+    public static boolean getDataBaseBeforeByDialect(String dbType) {
+        try {
+            IdentityDialect identityDialect = IdentityDialect.valueOf(dbType);
+            return identityDialect != MYSQL;
+        }catch (IllegalArgumentException e){
+            logger.error("Can not get isBefore for "+dbType, e);
+            return true;
         }
 
     }
