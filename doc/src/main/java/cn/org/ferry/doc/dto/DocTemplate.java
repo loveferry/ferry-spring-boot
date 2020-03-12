@@ -4,7 +4,6 @@ import cn.org.ferry.core.dto.BaseDTO;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -32,4 +31,14 @@ public class DocTemplate extends BaseDTO {
      * 模版名称
      */
     private String templateName;
+
+    /**
+     * 说明
+     */
+    private String description;
+
+    /**
+     * 图片
+     */
+    private String templateImage;
 }

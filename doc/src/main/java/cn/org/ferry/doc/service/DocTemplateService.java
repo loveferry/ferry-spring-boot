@@ -2,7 +2,9 @@ package cn.org.ferry.doc.service;
 
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.doc.dto.DocTemplate;
+import cn.org.ferry.doc.dto.query.DocTemplateQuery;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +20,11 @@ public interface DocTemplateService extends BaseService<DocTemplate> {
     String DOC_TEMPLATE_ATTACHMENT_CATEGORY = "DOC_TEMPLATE";
 
     /**
+     * 查询模版
+     */
+    List<DocTemplate> query(DocTemplateQuery query, int page, int pageSize);
+
+    /**
      * 查找模版
      */
     DocTemplate queryByTemplateCode(String templateCode);
@@ -30,4 +37,6 @@ public interface DocTemplateService extends BaseService<DocTemplate> {
      * @param params 模版书签各个数据源的参数集
      */
     void generateWord(String templateCode, String sourceType, String sourceKey, Map<String, Object> params);
+
+
 }

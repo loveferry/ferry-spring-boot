@@ -25,7 +25,8 @@
 	<changeSet id="MYSQL_INIT_DOC_TEMPLATE" dbms="mysql" author="FERRY">
 		<insert tableName="DOC_TEMPLATE">
 			<column name="TEMPLATE_CODE" value="FERRY"/>
-			<column name="TEMPLATE_NAME" value="ferry文档模版"/>
+			<column name="TEMPLATE_NAME" value="参数替换样例"/>
+			<column name="DESCRIPTION" value="文档书签替换的demo，实现将文档的关键信息定义为书签，通过系统取值完成替换书签的功能，将模版文档替换并生成有效文档。"/>
 		</insert>
 	</changeSet>
 	

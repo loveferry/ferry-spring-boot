@@ -5,13 +5,40 @@
 		<id column="template_id" property="templateId" jdbcType="BIGINT" javaType="java.lang.Long"/>
 		<result column="template_code" property="templateCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="template_name" property="templateName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result column="description" property="description" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result column="template_image" property="templateImage" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
+	
+	<select id="query" parameterType="cn.org.ferry.doc.dto.query.DocTemplateQuery" resultMap="BaseResultMap">
+		select
+			dt.template_id,
+			dt.template_code,
+			dt.template_name,
+			dt.description,
+			dt.template_image
+		from
+			doc_template dt
+		<where>
+			<if test="templateId != null">
+				and dt.template_id = #{templateId}
+			</if>
+			<if test="templateCode != null">
+				<bind name="templateCode" value="'%'+templateCode+'%'"/>
+				and dt.template_code like #{templateCode}
+			</if>
+			<if test="templateName != null">
+				<bind name="templateName" value="'%'+templateName+'%'"/>
+				and dt.template_name like #{templateName}
+			</if>
+		</where>
+	</select>
 	
 	<select id="queryByTemplateCode" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 			dt.template_id,
 			dt.template_code,
-			dt.template_name
+			dt.template_name,
+			dt.description
 		from
 			doc_template dt
 		where

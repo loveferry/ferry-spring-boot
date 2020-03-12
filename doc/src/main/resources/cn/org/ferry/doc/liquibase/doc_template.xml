@@ -34,6 +34,8 @@
 			<column name="TEMPLATE_NAME" type="VARCHAR(200)" remarks="模版名称">
 				<constraints nullable="false"/>
 			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)" remarks="说明"/>
+			<column name="TEMPLATE_IMAGE" type="VARCHAR(200)" remarks="图片"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
@@ -58,6 +60,8 @@
 			<column name="TEMPLATE_NAME" type="VARCHAR2(200)" remarks="模版名称">
 				<constraints nullable="false"/>
 			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(255)" remarks="说明"/>
+			<column name="TEMPLATE_IMAGE" type="VARCHAR2(200)" remarks="图片"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"

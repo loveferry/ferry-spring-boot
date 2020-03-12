@@ -1,7 +1,10 @@
 package cn.org.ferry.doc.service.impl;
 
+import cn.org.ferry.core.exceptions.CommonException;
+import cn.org.ferry.core.exceptions.QueryParamsException;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.core.utils.ConfigUtil;
+import cn.org.ferry.doc.dto.query.DocTemplateQuery;
 import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.DocTemplateParam;
@@ -17,6 +20,7 @@ import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.sys.service.SysSqlService;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,6 +60,15 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
     private SysAttachmentCategoryService sysAttachmentCategoryService;
     @Value("upload.path")
     private String uploadPath;
+
+    @Override
+    public List<DocTemplate> query(DocTemplateQuery query, int page, int pageSize) {
+        if(null == query){
+            throw new QueryParamsException();
+        }
+        PageHelper.startPage(page, pageSize);
+        return docTemplateMapper.query(query);
+    }
 
     @Override
     public DocTemplate queryByTemplateCode(String templateCode) {
