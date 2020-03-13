@@ -2,7 +2,6 @@ package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.core.annotations.LoginPass;
 import cn.org.ferry.core.dto.ResponseData;
-import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.service.SysFileService;
 import io.swagger.annotations.Api;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Api(tags = "文件控制器")
@@ -21,15 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 public class SysFileController {
     @Autowired
     private SysFileService iSysFileService;
-
-    /**
-     * 文件上传,可以上传多个文件
-     */
-    @ApiOperation("文件上传")
-    @RequestMapping(value = "/api/sys/file/upload", method = RequestMethod.POST)
-    public void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment) {
-        iSysFileService.upload(httpServletRequest, sysAttachment);
-    }
 
     /**
      * 文件下载

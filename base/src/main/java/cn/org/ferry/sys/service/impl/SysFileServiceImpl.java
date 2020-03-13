@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
-@PropertySource("classpath:config_base.properties")
 public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysFileService {
     private static final Logger logger = LoggerFactory.getLogger(SysFileServiceImpl.class);
 
@@ -53,54 +52,6 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
     private SysAttachmentService sysAttachmentService;
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;
-    @Value("upload.path")
-    private String upload_path;
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment) {
-        List<MultipartFile> files = ((StandardMultipartHttpServletRequest) httpServletRequest).getFiles("files");
-        if(CollectionUtils.isEmpty(files)){
-            throw new AttachmentException("上传附件为空!");
-        }
-        SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sysAttachment.getSourceType());
-        SysAttachment attachment = sysAttachmentService.queryBySourceTypeAndSourceKey(sysAttachment.getSourceType(), sysAttachment.getSourceKey());
-        if(null == attachment){
-            sysAttachmentService.insertSelective(sysAttachment);
-        }else{
-            sysAttachment.setAttachmentId(attachment.getAttachmentId());
-            sysAttachmentService.updateByPrimaryKeySelective(sysAttachment);
-        }
-        if(IfOrNotFlag.Y == sysAttachmentCategory.getUniqueFlag()){
-            if(files.size() > 1){
-                throw new AttachmentException("该类型的附件只允许上传一份!");
-            }
-            deleteByAttachmentId(sysAttachment.getAttachmentId());
-        }
-        String uploadPath = upload_path+sysAttachmentCategory.getAttachmentPath();
-        for(MultipartFile multipartFile : files){
-            String name = UUID.randomUUID().toString();
-            SysFile sysFile = new SysFile();
-            sysFile.setFileName(multipartFile.getOriginalFilename());
-            sysFile.setFileType(multipartFile.getContentType());
-            sysFile.setFilePath(uploadPath+File.separator+name);
-            sysFile.setFileSize(multipartFile.getSize());
-            sysFile.setAttachmentId(sysAttachment.getAttachmentId());
-            this.insertSelective(sysFile);
-            File dir = new File(uploadPath);
-            if(!dir.exists()){
-                dir.mkdirs();
-            }
-            File f = new File(sysFile.getFilePath());
-            try {
-                multipartFile.transferTo(f);
-            } catch (IOException e) {
-                AttachmentException ata = new AttachmentException("文件上传出错");
-                ata.initCause(e);
-                throw ata;
-            }
-        }
-    }
 
     @Override
     public void download(HttpServletResponse httpServletResponse, Long fileId) throws FileException {

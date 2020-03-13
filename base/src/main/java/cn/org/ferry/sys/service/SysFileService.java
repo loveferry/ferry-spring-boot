@@ -2,24 +2,17 @@ package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.service.BaseService;
-import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.exceptions.FileException;
 
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文件处理的接口层
  */
 public interface SysFileService extends BaseService<SysFile> {
-    /**
-     * 文件上传
-     */
-    void upload(HttpServletRequest httpServletRequest, SysAttachment sysAttachment);
-
     /**
      * 文件下载
      */

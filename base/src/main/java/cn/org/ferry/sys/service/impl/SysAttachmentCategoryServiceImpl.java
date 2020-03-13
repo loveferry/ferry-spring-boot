@@ -21,6 +21,20 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
     private SysAttachmentCategoryMapper sysAttachmentCategoryMapper;
 
     @Override
+    public void verify(String sourceType) {
+        if(StringUtils.isEmpty(sourceType)){
+            throw new AttachmentException("附件类型为空");
+        }
+        SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryMapper.queryBySourceType(sourceType);
+        if(null == sysAttachmentCategory){
+            throw new AttachmentException("附件类型不存在");
+        }
+        if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
+            throw new AttachmentException("附件类型已禁用");
+        }
+    }
+
+    @Override
     public SysAttachmentCategory queryBySourceType(String sourceType) {
         if(StringUtils.isEmpty(sourceType)){
             throw new AttachmentException("附件类型为空");
