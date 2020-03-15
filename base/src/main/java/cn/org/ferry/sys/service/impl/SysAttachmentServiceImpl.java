@@ -108,14 +108,17 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
 
     @Override
     public void download(HttpServletResponse response, String sourceType, String sourceKey) {
+        logger.info("开始处理附件下载业务...");
         List<SysFile> sysFileList = sysFileService.queryBySourceTypeAndSourceKey(sourceType, sourceKey);
         if(CollectionUtils.isEmpty(sysFileList)){
             throw new AttachmentException("附件列表为空！");
         }
         try {
             if(sysFileList.size() == 1){
+                logger.info("单个文件直接下载原文件");
                 sysFileService.download(response, sysFileList.get(0).getFileId());
             }else{
+                logger.info("多个文件压缩成ZIP打包下载");
                 // 查找得到附件类型名称
                 SysAttachmentCategory category = sysAttachmentCategoryService.queryBySourceType(sourceType);
                 if(category == null){
@@ -147,6 +150,7 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
             attachmentException.initCause(e);
             throw attachmentException;
         }
+        logger.info("附件下载成功...");
     }
 
     @Override

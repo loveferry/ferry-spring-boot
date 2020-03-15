@@ -18,6 +18,11 @@ public interface SysFileMapper extends Mapper<SysFile> {
     List<SysFile> queryByAttachmentId(@Param("attachmentId") Long attachmentId);
 
     /**
+     * 根据附件id逻辑删除文件
+     */
+    int deleteFileByAttachmentId(@Param("attachmentId") Long attachmentId);
+
+    /**
      * 根据附件类型，附件编码查询文件列表
      * @param sourceType 附件类型
      * @param sourceKey 附件编码

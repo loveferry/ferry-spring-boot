@@ -59,4 +59,8 @@
         from sys_attachment sa,sys_file sf
         where sa.source_key = #{sourceKey} and sa.source_type = #{sourceType} and sa.attachment_id = sf.attachment_id
     </select>
+    
+    <delete id="deleteFileByAttachmentId" parameterType="long" flushCache="true">
+        delete from SYS_FILE where attachment_id = #{attachmentId}
+    </delete>
 </mapper>

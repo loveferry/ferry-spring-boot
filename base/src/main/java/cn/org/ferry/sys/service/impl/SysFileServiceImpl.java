@@ -125,32 +125,34 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
         if(null == attachmentId){
             throw new AttachmentException("附件id为空");
         }
+        logger.info("开始删除文件...");
         List<SysFile> sysFileList = sysFileMapper.queryByAttachmentId(attachmentId);
         if(CollectionUtils.isEmpty(sysFileList)){
             return ;
         }
+        // 物理删除
         for (SysFile sysFile : sysFileList) {
             File file = new File(sysFile.getFilePath());
             if(file.exists()){
                 file.delete();
             }
-            // todo 待完善删除
-//            sysFileMapper.deleteByPrimaryKey(sysFile.getFileId());
         }
+        // 逻辑删除
+        int count = sysFileMapper.deleteFileByAttachmentId(attachmentId);
+        logger.info("删除文件{}份", count);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteFileByPrimaryKey(Long fileId) {
-        // todo 待完善查询
-//        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
-        SysFile sysFile = selectByPrimaryKey(fileId);
+        logger.info("开始删除文件...");
+        SysFile sysFile = sysFileMapper.selectByPrimaryKey(fileId);
         File file = new File(sysFile.getFilePath());
         if(file.exists()){
             file.delete();
         }
-        // todo 待完善删除
-//        sysFileMapper.deleteByPrimaryKey(fileId);
+        int count = sysFileMapper.deleteByPrimaryKey(fileId);
+        logger.info("删除文件{}份", count);
     }
 
     @Override
