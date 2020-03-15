@@ -153,6 +153,24 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
         logger.info("附件下载成功...");
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int deleteAttachment(Long attachmentId) {
+        sysFileService.deleteByAttachmentId(attachmentId);
+        return sysAttachmentMapper.deleteByPrimaryKey(-1);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int deleteAttachment(String sourceType, String sourceKey) {
+        SysAttachment sysAttachment = sysAttachmentMapper.queryBySourceTypeAndSourceKey(sourceType, sourceKey);
+        if(null != sysAttachment){
+            return deleteAttachment(sysAttachment.getAttachmentId());
+        }else{
+            return 0;
+        }
+    }
+
     @Override
     public SysAttachment queryBySourceTypeAndSourceKey(String sourceType, String sourceKey) {
         if(StringUtils.isEmpty(sourceType)){

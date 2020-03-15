@@ -1,4 +1,4 @@
-package cn.org.ferry.doc.dto.query;
+package cn.org.ferry.doc.dto.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

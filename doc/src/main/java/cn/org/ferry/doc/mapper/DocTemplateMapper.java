@@ -2,7 +2,7 @@ package cn.org.ferry.doc.mapper;
 
 import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.doc.dto.DocTemplate;
-import cn.org.ferry.doc.dto.query.DocTemplateQuery;
+import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

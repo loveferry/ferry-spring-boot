@@ -3,6 +3,7 @@ package cn.org.ferry.core.advice;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.exceptions.BaseException;
 import cn.org.ferry.core.exceptions.CommonException;
+import cn.org.ferry.core.exceptions.ParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -47,14 +48,12 @@ public class WebExceptionHandler {
 
     @ExceptionHandler
     @ResponseBody
-    public ResponseData handlerException(NullPointerException e){
-        logger.error("空值异常：{}", e);
+    public ResponseData handlerException(ParameterException e){
+        logger.error("抛出的运行时参数异常：{}", e);
         ResponseData responseData = new ResponseData();
         responseData.setSuccess(false);
-        responseData.setCode(500);
+        responseData.setCode(e.getCode());
         responseData.setMessage(e.getMessage());
         return responseData;
     }
-
-
 }

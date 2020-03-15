@@ -2,7 +2,8 @@ package cn.org.ferry.doc.controllers;
 
 import cn.org.ferry.core.annotations.LoginPass;
 import cn.org.ferry.core.dto.ResponseData;
-import cn.org.ferry.doc.dto.query.DocTemplateQuery;
+import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
+import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.service.DocTemplateService;
 import cn.org.ferry.doc.utils.Docx4jGenerateUtil;
@@ -29,6 +30,7 @@ import java.util.Map;
 @Api(tags = "文件模版接口", position = 10)
 @RestController
 @RequestMapping("/api/doc/template")
+@LoginPass
 public class DocTemplateController {
     @Autowired
     private DocTemplateService docTemplateService;
@@ -36,17 +38,24 @@ public class DocTemplateController {
     /**
      * 文档模版-查询
      */
-    @ApiOperation(value = "文档模版-查询", notes = "根据参数查询出文档模版列表", position = 10)
+    @ApiOperation(value = "文档模版-查询", notes = "根据参数查询出文档模版列表", position = 100)
     @RequestMapping(value = "/query", method = RequestMethod.GET)
-    @LoginPass
     public ResponseData query(DocTemplateQuery query,
                               @RequestParam(value = "page", defaultValue = "1")int page,
                               @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
         return new ResponseData(docTemplateService.query(query, page, pageSize));
     }
 
+    /**
+     * 文档模版-定义
+     */
+    @ApiOperation(value = "文档模版-定义", notes = "定义文档模版", position = 90)
+    @RequestMapping(value = "/definition", method = RequestMethod.POST)
+    public ResponseData definition(DocTemplateDefinition definition) {
+        return docTemplateService.definition(definition);
+    }
+
     @ApiOperation(value = "书签替换测试", hidden = true, position = 20)
-    @LoginPass
     @RequestMapping(value = "/replace", method = RequestMethod.POST)
     public void replace(@RequestBody Map<String, Object> map) throws FileException {
         Map<String, Object> bookMarkValue = (Map<String, Object>) (map.get("bookMarkValue"));

@@ -9,7 +9,7 @@
 		<result column="template_image" property="templateImage" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
-	<select id="query" parameterType="cn.org.ferry.doc.dto.query.DocTemplateQuery" resultMap="BaseResultMap">
+	<select id="query" parameterType="cn.org.ferry.doc.dto.model.DocTemplateQuery" resultMap="BaseResultMap">
 		select
 			dt.template_id,
 			dt.template_code,

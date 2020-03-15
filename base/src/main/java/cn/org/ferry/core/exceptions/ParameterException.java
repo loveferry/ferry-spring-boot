@@ -2,31 +2,31 @@ package cn.org.ferry.core.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class QueryParamsException extends CommonException {
+public class ParameterException extends CommonException {
     private String message;
 
     private int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
-    public QueryParamsException(){
-        super("查询参数不能为空");
+    public ParameterException(){
+        super("参数不能为空");
     }
 
-    public QueryParamsException(String message){
+    public ParameterException(String message){
         super(message);
         this.message = message;
     }
 
-    public QueryParamsException(Throwable cause){
+    public ParameterException(Throwable cause){
         super(cause);
     }
 
-    public QueryParamsException(String message, int code){
+    public ParameterException(String message, int code){
         super(message);
         this.message = message;
         this.code = code;
     }
 
-    public QueryParamsException(String message, Throwable cause){
+    public ParameterException(String message, Throwable cause){
         super(message, cause);
         this.message = message;
     }

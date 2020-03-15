@@ -22,6 +22,20 @@ public interface SysAttachmentService extends BaseService<SysAttachment> {
     void download(HttpServletResponse response, String sourceType, String sourceKey);
 
     /**
+     * 删除附件
+     * 物理删除+逻辑删除
+     */
+    int deleteAttachment(Long attachmentId);
+
+    /**
+     * 删除附件
+     * 物理删除+逻辑删除
+     */
+    int deleteAttachment(String sourceType, String sourceKey);
+
+
+
+    /**
      * 查询附件信息
      * @param sourceKey 附件编码为必传参数
      * @param sourceType 附件类型为必传参数

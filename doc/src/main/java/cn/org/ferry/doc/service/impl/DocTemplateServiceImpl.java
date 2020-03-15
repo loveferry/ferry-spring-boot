@@ -1,10 +1,10 @@
 package cn.org.ferry.doc.service.impl;
 
-import cn.org.ferry.core.exceptions.CommonException;
-import cn.org.ferry.core.exceptions.QueryParamsException;
+import cn.org.ferry.core.dto.ResponseData;
+import cn.org.ferry.core.exceptions.ParameterException;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.core.utils.ConfigUtil;
-import cn.org.ferry.doc.dto.query.DocTemplateQuery;
+import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
+import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.DocTemplateParam;
@@ -18,6 +18,7 @@ import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.exceptions.AttachmentException;
 import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
+import cn.org.ferry.sys.service.SysAttachmentService;
 import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.sys.service.SysSqlService;
 import com.github.pagehelper.PageHelper;
@@ -25,6 +26,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -58,16 +60,60 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
     private SysFileService sysFileService;
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;
+    @Autowired
+    private SysAttachmentService sysAttachmentService;
     @Value("upload.path")
     private String uploadPath;
 
     @Override
     public List<DocTemplate> query(DocTemplateQuery query, int page, int pageSize) {
         if(null == query){
-            throw new QueryParamsException();
+            throw new ParameterException();
         }
         PageHelper.startPage(page, pageSize);
         return docTemplateMapper.query(query);
+    }
+
+    @Override
+    public ResponseData definition(DocTemplateDefinition definition) {
+        logger.info(("开始定义文档模版"));
+        ResponseData responseData = new ResponseData();
+        responseData.setSuccess(true);
+        responseData.setMessage("模版定义成功");
+        if(null == definition){
+            throw new ParameterException("模版参数必填！");
+        }
+        if(StringUtils.isBlank(definition.getTemplateCode())){
+            throw new ParameterException("模版代码必填!");
+        }
+        if(StringUtils.isBlank(definition.getTemplateName())){
+            throw new ParameterException("模版名称必填!");
+        }
+        if(StringUtils.isBlank(definition.getDescription())){
+            throw new ParameterException("模版说明必填!");
+        }
+        if(null == definition.getTemplateId()){ // 新增
+            DocTemplate docTemplate = new DocTemplate();
+            BeanUtils.copyProperties(docTemplate, definition);
+            int count = mapper.insertSelective(docTemplate);
+            logger.info("模版定义{}条", count);
+        }else{  // 更新
+            DocTemplate docTemplate = docTemplateMapper.selectByPrimaryKey(definition.getTemplateId());
+            if(null == docTemplate){
+                throw new ParameterException("未根据模版主键找到对应的模版!");
+            }
+            if(!StringUtils.equals(docTemplate.getTemplateCode(), definition.getTemplateCode())){
+                sysAttachmentService.deleteAttachment(DOC_TEMPLATE_ATTACHMENT_CATEGORY, docTemplate.getTemplateId().toString());
+                responseData.setMessage("模版代码更新，请重新上传模版!");
+                docTemplate.setTemplateCode(definition.getTemplateCode());
+            }
+            docTemplate.setTemplateName(definition.getTemplateName());
+            docTemplate.setDescription(definition.getDescription());
+            docTemplate.setTemplateImage(definition.getTemplateImage());
+            int count = docTemplateMapper.updateByPrimaryKey(docTemplate);
+            logger.info("模版更新{}条", count);
+        }
+        return responseData;
     }
 
     @Override

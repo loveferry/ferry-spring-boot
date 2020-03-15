@@ -1,8 +1,10 @@
 package cn.org.ferry.doc.service;
 
+import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.doc.dto.DocTemplate;
-import cn.org.ferry.doc.dto.query.DocTemplateQuery;
+import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
+import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,11 @@ public interface DocTemplateService extends BaseService<DocTemplate> {
      * 查询模版
      */
     List<DocTemplate> query(DocTemplateQuery query, int page, int pageSize);
+
+    /**
+     * 文档模版-定义
+     */
+    ResponseData definition(DocTemplateDefinition definition);
 
     /**
      * 查找模版
