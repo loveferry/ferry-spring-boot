@@ -19,11 +19,6 @@ public class ResponseData {
     private Boolean success = true;
 
     /**
-     * token
-     */
-    private String token;
-
-    /**
      * 返回数据
      */
     private List<?> maps;
@@ -56,14 +51,6 @@ public class ResponseData {
 
     public void setSuccess(Boolean success) {
         this.success = success;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public List<?> getMaps() {

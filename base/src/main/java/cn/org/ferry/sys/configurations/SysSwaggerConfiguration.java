@@ -7,13 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>swagger 配置类
@@ -33,8 +29,8 @@ public class SysSwaggerConfiguration {
      */
     @Bean
     public Docket sysDocket() {
-        List<Parameter> parameterList = new ArrayList<>(1);
-        parameterList.add(SwaggerUtils.initParameter("_token", "token认证", String.class.getSimpleName(), "header", true));
+//        List<Parameter> parameterList = new ArrayList<>(1);
+//        parameterList.add(SwaggerUtils.initParameter("_token", "token认证", String.class.getSimpleName(), "header", true));
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .pathMapping("/") // 默认请求都是以 / 根路径开始，如果我们的应用不是部署在根路径，比如以/validator部署，则可以通过一下方式设置请求的统一前缀
@@ -43,7 +39,7 @@ public class SysSwaggerConfiguration {
                 .paths(PathSelectors.any())
                 .build()
                 .groupName("系统模块")
-                .globalOperationParameters(parameterList)
+//                .globalOperationParameters(parameterList)
                 .apiInfo(SwaggerUtils.apiInfo("系统模块", "2.0.0", "你努力后的成功，不能弥补你成功前的痛苦"));
     }
 }

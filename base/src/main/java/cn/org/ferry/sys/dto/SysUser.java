@@ -36,14 +36,14 @@ public class SysUser extends BaseDTO {
     private String password;
 
     /**
-     * 系统用户名称(英文)
+     * 系统用户名称
      */
-    private String userNameEn;
+    private String userName;
 
     /**
-     * 系统用户名称(简体中文)
+     * 说明
      */
-    private String userNameZh;
+    private String description;
 
     /**
      * 系统用户性别

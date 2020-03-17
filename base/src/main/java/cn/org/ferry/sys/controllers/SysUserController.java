@@ -24,8 +24,8 @@ public class SysUserController {
     @ApiOperation("用户信息查询")
     @LoginPass
     @RequestMapping(value = "/sys/user/query", method = RequestMethod.GET)
-    public ResponseData query(@ApiParam(name = "userNameEn", value = "英文名") @RequestParam(value = "userNameEn",required = false)String userNameEn,
-                              @ApiParam(name = "userNameZh", value = "中文名") @RequestParam(value = "userNameZh", required = false)String userNameZh){
-        return new ResponseData(sysUserService.query(userNameEn, userNameZh));
+    public ResponseData query(@ApiParam(name = "userNameEn", value = "英文名") @RequestParam(value = "userNameEn",required = false)String userName,
+                              @ApiParam(name = "userNameZh", value = "中文名") @RequestParam(value = "userNameZh", required = false)String description){
+        return new ResponseData(sysUserService.query(userName, description));
     }
 }

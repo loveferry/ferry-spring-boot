@@ -1,7 +1,6 @@
 package cn.org.ferry.core.advice;
 
 import cn.org.ferry.core.dto.ResponseData;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -38,9 +37,6 @@ public class FerryResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             ResponseData responseData = (ResponseData)o;
             if(null == responseData.getCode()){
                 responseData.setCode(((ServletServerHttpResponse) serverHttpResponse).getServletResponse().getStatus());
-            }
-            if(StringUtils.isEmpty(responseData.getToken())){
-//            responseData.setToken();
             }
             if(!responseData.getSuccess()){
                 logger.error(responseData.getMessage());

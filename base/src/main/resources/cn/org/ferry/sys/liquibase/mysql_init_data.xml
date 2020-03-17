@@ -25,24 +25,13 @@
 		<insert tableName="SYS_USER">
 			<column name="USER_CODE" value="FERRY"/>
 			<column name="PASSWORD" value="FERRY"/>
-			<column name="USER_NAME_EN" value="ferry"/>
-			<column name="USER_NAME_ZH" value="盛玉"/>
+			<column name="USER_NAME" value="ferry"/>
+			<column name="DESCRIPTION" value="摆渡"/>
 			<column name="USER_SEX" value="MALE"/>
 			<column name="USER_BIRTHDAY" valueDate="1995-04-09"/>
 			<column name="USER_EMAIL" value="ferry_sy@163.com"/>
 			<column name="USER_PHONE" value="17512591407"/>
 			<column name="USER_FAMILY_ADDRESS" value="安徽省马鞍山市和县姥桥镇"/>
-		</insert>
-		<insert tableName="SYS_USER">
-			<column name="USER_CODE" value="EVER"/>
-			<column name="PASSWORD" value="EVER"/>
-			<column name="USER_NAME_EN" value="EVER"/>
-			<column name="USER_NAME_ZH" value="陈寅莹"/>
-			<column name="USER_SEX" value="FEMALE"/>
-			<column name="USER_BIRTHDAY" valueDate="1994-12-15"/>
-			<column name="USER_EMAIL" value="892938772@qq.com"/>
-			<column name="USER_PHONE" value="18861822241"/>
-			<column name="USER_FAMILY_ADDRESS" value="浙江省宁波市"/>
 		</insert>
 	</changeSet>
 	

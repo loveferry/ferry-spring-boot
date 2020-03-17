@@ -3,7 +3,6 @@ package cn.org.ferry.sys.service.impl;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.core.utils.NetWorkUtils;
-import cn.org.ferry.core.utils.TokenUtils;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.mapper.SysUserMapper;
 import cn.org.ferry.sys.service.LogLoginService;
@@ -39,19 +38,16 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             responseData.setMessage("用户不存在或密码输入错误!");
             return responseData;
         }
-        String token = TokenUtils.generateToken(sysUser.getUserCode(), sysUser.getPassword());
         logLoginService.insertLogLogin(sysUser.getUserCode(), NetWorkUtils.getIpAddress(request), NetWorkUtils.getUserAgent(request));
-        TokenUtils.setTokenToRedisWithPeriodOfValidity(request.getSession().getId()+"_"+sysUser.getUserCode(), token);
-        responseData.setToken(token);
         responseData.setMessage("登陆成功!");
         return responseData;
     }
 
     @Override
-    public List<SysUser> query(String userNameEn, String userNameZh) {
+    public List<SysUser> query(String userName, String description) {
         SysUser sysUser = new SysUser();
-        sysUser.setUserNameEn(userNameEn);
-        sysUser.setUserNameZh(userNameZh);
+        sysUser.setUserName(userName);
+        sysUser.setDescription(description);
         return sysUserMapper.select(sysUser);
     }
 }

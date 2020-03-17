@@ -34,8 +34,8 @@
 			<column name="PASSWORD" type="VARCHAR(100)" remarks="用户密码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="USER_NAME_EN" type="VARCHAR(100)" remarks="用户名称(英文)"/>
-			<column name="USER_NAME_ZH" type="VARCHAR(100)" remarks="用户名称(简体中文)"/>
+			<column name="USER_NAME" type="VARCHAR(50)" remarks="用户名称"/>
+			<column name="DESCRIPTION" type="VARCHAR(50)" remarks="描述"/>
 			<column name="USER_SEX" type="VARCHAR(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
 				<constraints nullable="false"/>
 			</column>
@@ -67,8 +67,8 @@
 			<column name="PASSWORD" type="VARCHAR2(100)" remarks="用户密码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="USER_NAME_EN" type="VARCHAR2(100)" remarks="用户名称(英文)"/>
-			<column name="USER_NAME_ZH" type="VARCHAR2(100)" remarks="用户名称(简体中文)"/>
+			<column name="USER_NAME" type="VARCHAR2(50)" remarks="用户名称"/>
+			<column name="DESCRIPTION" type="VARCHAR2(50)" remarks="描述"/>
 			<column name="USER_SEX" type="VARCHAR2(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
 				<constraints nullable="false"/>
 			</column>

@@ -2,7 +2,6 @@ package cn.org.ferry.core.configurations;
 
 import cn.org.ferry.core.dto.FerryRequest;
 import cn.org.ferry.core.dto.FerrySession;
-import cn.org.ferry.core.interceptors.AuthenticationInterceptor;
 import cn.org.ferry.core.interceptors.RegisterRequestInterceptor;
 import cn.org.ferry.core.utils.ConfigUtil;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -56,20 +55,10 @@ public class FerryWebConfiguration implements WebMvcConfigurer {
         return new RegisterRequestInterceptor(ferrySession, ferryRequest(ferrySession));
     }
 
-    /**
-     * token认证拦截器
-     */
-    @Bean
-    public AuthenticationInterceptor authenticationInterceptor() {
-        return new AuthenticationInterceptor();
-    }
-
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
-        registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(registerRequestInterceptor()).addPathPatterns("/**");
     }
 

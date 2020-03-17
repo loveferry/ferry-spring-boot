@@ -20,8 +20,6 @@ public class FerrySession extends HashMap<String, Object> {
 
     public static final String USER_CODE = "userCode";
 
-    public static final String TOKEN = "token";
-
     private String sessionId;
 
     private String userId;
@@ -31,8 +29,6 @@ public class FerrySession extends HashMap<String, Object> {
     private String userNameEn;
 
     private String userCode;
-
-    private String token;
 
     public String getSessionId() {
         return sessionId;
@@ -77,14 +73,5 @@ public class FerrySession extends HashMap<String, Object> {
     public void setUserCode(String userCode) {
         super.put(USER_CODE, userCode);
         this.userCode = userCode;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        super.put(TOKEN, token);
-        this.token = token;
     }
 }
