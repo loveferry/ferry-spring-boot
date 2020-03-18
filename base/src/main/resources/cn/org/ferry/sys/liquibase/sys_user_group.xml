@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+	
+	<!--一个<changeSet>标签对应一个变更集，由id、name、以及changelog的文件路径组成唯一标识。
+	changelog在执行的时候并不是按照id的顺序，而是按照changeSet在changelog中出现的顺序。
+	LiquiBase在执行changelog时，会在数据库中插入两张表：DATABASECHANGELOG和DATABASECHANGELOGLOCK，分别记录changelog的执行日志和锁日志。
+	LiquiBase在执行changelog中的changeSet时，会首先查看DATABASECHANGELOG表，如果已经执行过，则会跳过（除非changeSet的runAlways属性为true，后面会介绍），
+	如果没有执行过，则执行并记录changelog日志；changelog中的一个changeSet对应一个事务，在changeSet执行完后commit，如果出现错误则rollback；
+	<changeSet>标签的主要属性有：
+	runAlways：即使已经执行过，仍然每次都执行；注意: 由于DATABASECHANGELOG表中还记录了changeSet的MD5校验值MD5SUM，
+	如果changeSet的id和name没变，而内容变了，则由于MD5值变了，即使runAlways的值为True，执行也是失败的，会报错。这种情况应该使用runOnChange属性。
+	runOnChange：第一次的时候执行以及当changeSet的内容发生变化时执行。不受MD5校验值的约束。
+	runInTransaction：是否作为一个事务执行，默认为true。设置为false时需要小心：如果执行过程中出错了则不会rollback，数据库很可能处于不一致的状态；
+	<changeSet>下有一个重要的子标签<rollback>，即定义回滚的SQL语句。对于create table, rename column和add column等，LiquiBase会自动生成对应的rollback语句，而对于drop table、insert data等则需要显示定义rollback语句。-->
+	
+	<!--以上来自  https://www.cnblogs.com/alighie/p/8242800.html-->
+	
+	<changeSet id="CREATE_TABLE_MYSQL_SYS_USER_GROUP" dbms="mysql" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_USER_GROUP"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_USER_GROUP" remarks="系统用户组表">
+			<column name="GROUP_ID" type="BIGINT" autoIncrement="true" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_USER_GROUP_PK_UI"/>
+			</column>
+			<column name="GROUP_CODE" type="VARCHAR(100)" remarks="用户组编码">
+				<constraints nullable="false" unique="true" uniqueConstraintName="SYS_USER_GROUP_UK_UC"/>
+			</column>
+			<column name="GROUP_NAME" type="VARCHAR(100)" remarks="用户组名称">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(200)" remarks="描述"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="DATETIME" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="CREATE_TABLE_ORACLE_SYS_USER_GROUP" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<tableExists tableName="SYS_USER_GROUP"/>
+			</not>
+		</preConditions>
+		<createTable tableName="SYS_USER_GROUP" remarks="系统用户组表">
+			<column name="GROUP_ID" type="BIGINT" remarks="PK">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_USER_GROUP_PK_UI"/>
+			</column>
+			<column name="GROUP_CODE" type="VARCHAR2(100)" remarks="用户组编码">
+				<constraints nullable="false" unique="true" uniqueConstraintName="SYS_USER_GROUP_UK_UC"/>
+			</column>
+			<column name="GROUP_NAME" type="VARCHAR2(100)" remarks="用户组名称">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(200)" remarks="描述"/>
+			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
+					remarks="最后更新人"/>
+			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="CREATE_SEQUENCE_ORACLE_SYS_USER_GROUP" dbms="oracle" author="FERRY">
+		<preConditions>
+			<not>
+				<sequenceExists sequenceName="SYS_USER_GROUP_S"/>
+			</not>
+		</preConditions>
+		<createSequence sequenceName="SYS_USER_GROUP_S" startValue="1" minValue="1" incrementBy="1"/>
+	</changeSet>
+
+</databaseChangeLog>

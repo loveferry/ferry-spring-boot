@@ -24,6 +24,12 @@
     
     
     <include file="sys_user.xml" relativeToChangelogFile="true" />
+    <include file="sys_user_group.xml" relativeToChangelogFile="true" />
+    <include file="sys_user_group_relation.xml" relativeToChangelogFile="true" />
+    <include file="sys_role.xml" relativeToChangelogFile="true" />
+    <include file="sys_user_role_relation.xml" relativeToChangelogFile="true" />
+    <include file="sys_authority.xml" relativeToChangelogFile="true" />
+    <include file="sys_role_authority_relation.xml" relativeToChangelogFile="true" />
     <include file="sys_attachment_category.xml" relativeToChangelogFile="true" />
     <include file="sys_attachment.xml" relativeToChangelogFile="true" />
     <include file="sys_file.xml" relativeToChangelogFile="true" />

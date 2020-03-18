@@ -23,6 +23,12 @@
 	<!--初始化用户表数据-->
 	<changeSet id="MYSQL_INIT_SYS_USER" dbms="mysql" author="FERRY">
 		<insert tableName="SYS_USER">
+			<column name="USER_CODE" value="ADMIN"/>
+			<column name="PASSWORD" value="ADMIN"/>
+			<column name="USER_NAME" value="admin"/>
+			<column name="DESCRIPTION" value="管理员"/>
+		</insert>
+		<insert tableName="SYS_USER">
 			<column name="USER_CODE" value="FERRY"/>
 			<column name="PASSWORD" value="FERRY"/>
 			<column name="USER_NAME" value="ferry"/>
@@ -32,6 +38,65 @@
 			<column name="USER_EMAIL" value="ferry_sy@163.com"/>
 			<column name="USER_PHONE" value="17512591407"/>
 			<column name="USER_FAMILY_ADDRESS" value="安徽省马鞍山市和县姥桥镇"/>
+		</insert>
+	</changeSet>
+	
+	<!--初始化用户组表数据-->
+	<changeSet id="MYSQL_INIT_SYS_USER_GROUP" dbms="mysql" author="FERRY">
+		<insert tableName="SYS_USER_GROUP">
+			<column name="GROUP_CODE" value="ADMIN"/>
+			<column name="GROUP_NAME" value="管理员"/>
+			<column name="DESCRIPTION" value="管理员用户组具有所有权限"/>
+		</insert>
+	</changeSet>
+	
+	<!--初始化用户和用户组关系表数据-->
+	<changeSet id="MYSQL_INIT_SYS_USER_GROUP_RELATION" dbms="mysql" author="FERRY">
+		<insert tableName="SYS_USER_GROUP_RELATION">
+			<column name="USER_CODE" value="FERRY"/>
+			<column name="GROUP_CODE" value="ADMIN"/>
+			<column name="DESCRIPTION" value="将用户'FERRY'添加到用户组'ADMIN'中"/>
+		</insert>
+	</changeSet>
+	
+	<!--初始化角色表数据-->
+	<changeSet id="MYSQL_INIT_SYS_ROLE" dbms="mysql" author="FERRY">
+		<insert tableName="SYS_ROLE">
+			<column name="ROLE_CODE" value="ADMIN"/>
+			<column name="ROLE_NAME" value="管理员"/>
+			<column name="DESCRIPTION" value="管理员角色具有所有权限"/>
+		</insert>
+	</changeSet>
+	
+	<!--初始化用户角色关系表数据-->
+	<changeSet id="MYSQL_INIT_SYS_USER_ROLE_RELATION" dbms="mysql" author="FERRY">
+		<insert tableName="SYS_USER_ROLE_RELATION">
+			<column name="SOURCE_TYPE" value="SYS_USER"/>
+			<column name="SOURCE_CODE" value="ADMIN"/>
+			<column name="ROLE_CODE" value="ADMIN"/>
+		</insert>
+		<insert tableName="SYS_USER_ROLE_RELATION">
+			<column name="SOURCE_TYPE" value="SYS_USER_GROUP"/>
+			<column name="SOURCE_CODE" value="ADMIN"/>
+			<column name="ROLE_CODE" value="ADMIN"/>
+		</insert>
+	</changeSet>
+	
+	<!--初始化权限表数据-->
+	<changeSet id="MYSQL_INIT_SYS_AUTHORITY" dbms="mysql" author="FERRY">
+		<insert tableName="SYS_AUTHORITY">
+			<column name="AUTHORITY_CODE" value="ADMIN"/>
+			<column name="AUTHORITY_NAME" value="管理员"/>
+			<column name="DESCRIPTION" value="管理员权限具有所有查看，定义，更新等操作的权限"/>
+		</insert>
+	</changeSet>
+	
+	<!--初始化权限表数据-->
+	<changeSet id="MYSQL_INIT_SYS_ROLE_AUTHORITY_RELATION" dbms="mysql" author="FERRY">
+		<insert tableName="SYS_ROLE_AUTHORITY_RELATION">
+			<column name="ROLE_CODE" value="ADMIN"/>
+			<column name="AUTHORITY_CODE" value="ADMIN"/>
+			<column name="DESCRIPTION" value="将权限'ADMIN'分配给角色'ADMIN'"/>
 		</insert>
 	</changeSet>
 	
