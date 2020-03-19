@@ -51,7 +51,7 @@ public class DocTemplateController {
      */
     @ApiOperation(value = "文档模版-定义", notes = "定义文档模版", position = 90)
     @RequestMapping(value = "/definition", method = RequestMethod.POST)
-    public ResponseData definition(DocTemplateDefinition definition) {
+    public ResponseData definition(@RequestBody DocTemplateDefinition definition) {
         return docTemplateService.definition(definition);
     }
 

@@ -93,8 +93,12 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
             throw new ParameterException("模版说明必填!");
         }
         if(null == definition.getTemplateId()){ // 新增
-            DocTemplate docTemplate = new DocTemplate();
-            BeanUtils.copyProperties(docTemplate, definition);
+            DocTemplate docTemplate = queryByTemplateCode(definition.getTemplateCode());
+            if(null != docTemplate){
+                throw new ParameterException("文档模版重复定义!");
+            }
+            docTemplate = new DocTemplate();
+            BeanUtils.copyProperties(definition, docTemplate);
             int count = mapper.insertSelective(docTemplate);
             logger.info("模版定义{}条", count);
         }else{  // 更新
