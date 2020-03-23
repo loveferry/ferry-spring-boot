@@ -3,7 +3,6 @@ package cn.org.ferry.doc.controllers;
 import cn.org.ferry.core.annotations.LoginPass;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
-import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.service.DocTemplateService;
 import cn.org.ferry.doc.utils.Docx4jGenerateUtil;
@@ -12,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,10 +40,13 @@ public class DocTemplateController {
      */
     @ApiOperation(value = "文档模版-查询", notes = "根据参数查询出文档模版列表", position = 100)
     @RequestMapping(value = "/query", method = RequestMethod.GET)
-    public ResponseData query(DocTemplateQuery query,
+    public ResponseData query(@ApiParam(name = "condition", value = "模版代码/模版名称")
+                              @RequestParam(value = "condition", defaultValue = "") String condition,
+                              @ApiParam(name = "page", value = "当前页")
                               @RequestParam(value = "page", defaultValue = "1")int page,
+                              @ApiParam(name = "pageSize", value = "页面大小")
                               @RequestParam(value = "pageSize", defaultValue = "10")int pageSize) {
-        return new ResponseData(docTemplateService.query(query, page, pageSize));
+        return new ResponseData(docTemplateService.queryByCondition(condition, page, pageSize));
     }
 
     /**
