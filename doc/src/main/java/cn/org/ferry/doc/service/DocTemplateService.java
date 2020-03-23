@@ -4,7 +4,6 @@ import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
-import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -23,8 +22,9 @@ public interface DocTemplateService extends BaseService<DocTemplate> {
 
     /**
      * 查询模版
+     * condition => 代码/名称
      */
-    List<DocTemplate> query(DocTemplateQuery query, int page, int pageSize);
+    List<DocTemplate> queryByCondition(String condition, int page, int pageSize);
 
     /**
      * 文档模版-定义

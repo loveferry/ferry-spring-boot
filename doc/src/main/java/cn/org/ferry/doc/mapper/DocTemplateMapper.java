@@ -2,7 +2,6 @@ package cn.org.ferry.doc.mapper;
 
 import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.doc.dto.DocTemplate;
-import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,8 +15,9 @@ public interface DocTemplateMapper extends Mapper<DocTemplate> {
 
     /**
      * 查询模版
+     * condition => 代码/名称
      */
-    List<DocTemplate> query(DocTemplateQuery query);
+    List<DocTemplate> queryByCondition(@Param("condition") String condition);
 
     /**
      * 查找模版
