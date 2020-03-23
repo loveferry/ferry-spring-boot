@@ -92,25 +92,13 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         if(StringUtils.isBlank(definition.getDescription())){
             throw new ParameterException("模版说明必填!");
         }
-        if(null == definition.getTemplateId()){ // 新增
-            DocTemplate docTemplate = queryByTemplateCode(definition.getTemplateCode());
-            if(null != docTemplate){
-                throw new ParameterException("文档模版重复定义!");
-            }
+        DocTemplate docTemplate = docTemplateMapper.queryByTemplateCode(definition.getTemplateCode());
+        if(null == docTemplate){
             docTemplate = new DocTemplate();
             BeanUtils.copyProperties(definition, docTemplate);
             int count = mapper.insertSelective(docTemplate);
             logger.info("模版定义{}条", count);
-        }else{  // 更新
-            DocTemplate docTemplate = docTemplateMapper.selectByPrimaryKey(definition.getTemplateId());
-            if(null == docTemplate){
-                throw new ParameterException("未根据模版主键找到对应的模版!");
-            }
-            if(!StringUtils.equals(docTemplate.getTemplateCode(), definition.getTemplateCode())){
-                sysAttachmentService.deleteAttachment(DOC_TEMPLATE_ATTACHMENT_CATEGORY, docTemplate.getTemplateId().toString());
-                responseData.setMessage("模版代码更新，请重新上传模版!");
-                docTemplate.setTemplateCode(definition.getTemplateCode());
-            }
+        }else{
             docTemplate.setTemplateName(definition.getTemplateName());
             docTemplate.setDescription(definition.getDescription());
             docTemplate.setTemplateImage(definition.getTemplateImage());

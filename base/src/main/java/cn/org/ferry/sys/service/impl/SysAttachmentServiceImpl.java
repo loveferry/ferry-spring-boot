@@ -111,7 +111,8 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
         logger.info("开始处理附件下载业务...");
         List<SysFile> sysFileList = sysFileService.queryBySourceTypeAndSourceKey(sourceType, sourceKey);
         if(CollectionUtils.isEmpty(sysFileList)){
-            throw new AttachmentException("附件列表为空！");
+            logger.info("附件列表为空！");
+            return ;
         }
         try {
             if(sysFileList.size() == 1){
