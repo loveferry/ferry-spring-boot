@@ -11,6 +11,29 @@
 		<result column="sql_code" property="sqlCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
+	<select id="query" parameterType="cn.org.ferry.doc.dto.model.DocTemplateParamQuery" resultMap="BaseResultMap">
+		select
+			dtp.param_id,
+			dtp.template_code,
+			dtp.param_type,
+			dtp.param_name,
+			dtp.book_mark,
+			dtp.sql_code
+		from doc_template_param dtp
+		where dtp.template_code = #{templateCode}
+		<if test="paramName != null and paramName != ''">
+			<bind name="paramName" value="'%'+paramName+'%'"/>
+			and dtp.param_name like #{paramName}
+		</if>
+		<if test="bookMark != null and bookMark != ''">
+			<bind name="bookMark" value="'%'+bookMark+'%'"/>
+			and dtp.book_mark like #{bookMark}
+		</if>
+		<if test="paramType != null">
+			and dtp.book_mark = #{paramType}
+		</if>
+	</select>
+	
 	<select id="queryByTemplateCode" parameterType="java.lang.String" resultMap="BaseResultMap">
 	select
 		dtp.param_id,
