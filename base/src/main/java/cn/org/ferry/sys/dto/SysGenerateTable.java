@@ -22,7 +22,7 @@ public class SysGenerateTable extends BaseDTO {
      * primary key
      */
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long generateId;
 
     /**

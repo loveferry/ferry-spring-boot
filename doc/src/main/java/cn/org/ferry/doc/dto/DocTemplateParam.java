@@ -20,7 +20,7 @@ public class DocTemplateParam extends BaseDTO {
      * primary key
      */
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long paramId;
 
     /**
