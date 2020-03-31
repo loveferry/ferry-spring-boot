@@ -2,9 +2,11 @@ package cn.org.ferry.doc.service.impl;
 
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.doc.dto.DocTemplateParam;
+import cn.org.ferry.doc.dto.model.DocTemplateParamQuery;
 import cn.org.ferry.doc.exceptions.DocException;
 import cn.org.ferry.doc.mapper.DocTemplateParamMapper;
 import cn.org.ferry.doc.service.DocTemplateParamService;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,12 @@ import javax.annotation.Resource;
 public class DocTemplateParamServiceImpl extends BaseServiceImpl<DocTemplateParam> implements DocTemplateParamService {
     @Resource
     private DocTemplateParamMapper docTemplateParamMapper;
+
+    @Override
+    public List<DocTemplateParam> query(DocTemplateParamQuery query, int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
+        return docTemplateParamMapper.query(query);
+    }
 
     @Override
     public List<DocTemplateParam> queryByTemplateCode(String templateCode) {

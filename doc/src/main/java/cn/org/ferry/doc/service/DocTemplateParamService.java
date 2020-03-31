@@ -2,6 +2,7 @@ package cn.org.ferry.doc.service;
 
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.doc.dto.DocTemplateParam;
+import cn.org.ferry.doc.dto.model.DocTemplateParamQuery;
 
 import java.util.List;
 
@@ -12,6 +13,11 @@ import java.util.List;
  */
 
 public interface DocTemplateParamService extends BaseService<DocTemplateParam> {
+    /**
+     * 查询模版参数
+     */
+    List<DocTemplateParam> query(DocTemplateParamQuery query, int page, int pageSize);
+
     /**
      * 获取指定模版的参数集
      */
