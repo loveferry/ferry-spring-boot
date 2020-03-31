@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Table(name = "sys_attachment")
 public class SysAttachment extends BaseDTO {
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long attachmentId;  // primary key
 
     private String sourceType;  // 附件类型

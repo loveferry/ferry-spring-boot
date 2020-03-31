@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "log_soap")
 public class LogSoap extends BaseDTO {
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long logId;
 
     /**
