@@ -19,7 +19,7 @@ logging:
 # dataSource
 spring:
   datasource:
-    url: jdbc:oracle:thin:@//106.13.78.137:1521/pdborcl
+    url: jdbc:oracle:thin:@localhost:1521:XE
 #    url: jdbc:mysql://127.0.0.1:3306/ferry
     driver-class-name: oracle.jdbc.OracleDriver
 #    driver-class-name: com.mysql.cj.jdbc.Driver

@@ -19,12 +19,12 @@ logging:
 # dataSource
 spring:
   datasource:
-    url: jdbc:mysql://106.13.78.137:3306/ferry
+    url: jdbc:mysql://ferry.org.cn:3306/ferry
     username: ferry
     password: ferry
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 106.13.78.137
+    host: ferry.org.cn
     port: 6379
     database: 0
     timeout: 5000ms
