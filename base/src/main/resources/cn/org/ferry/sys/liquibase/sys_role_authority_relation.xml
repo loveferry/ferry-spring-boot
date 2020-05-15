@@ -26,7 +26,7 @@
 		</preConditions>
 		<createTable tableName="SYS_ROLE_AUTHORITY_RELATION" remarks="系统角色权限关系表">
 			<column name="RELATION_ID" type="BIGINT" autoIncrement="true" remarks="PK">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ROLE_AUTHORITY_RELATION_PK_UI"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="S_R_A_R_PK_UI"/>
 			</column>
 			<column name="ROLE_CODE" type="VARCHAR(100)" remarks="角色编码">
 				<constraints nullable="false"/>
@@ -51,7 +51,7 @@
 		</preConditions>
 		<createTable tableName="SYS_ROLE_AUTHORITY_RELATION" remarks="系统角色权限关系表">
 			<column name="RELATION_ID" type="BIGINT" autoIncrement="true" remarks="PK">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ROLE_AUTHORITY_RELATION_PK_UI"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="S_R_A_R_PK_UI"/>
 			</column>
 			<column name="ROLE_CODE" type="VARCHAR(100)" remarks="角色编码">
 				<constraints nullable="false"/>

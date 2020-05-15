@@ -78,6 +78,6 @@
 	</changeSet>
 	
 	<changeSet id="CREATE_SYS_USER_GROUP_RELATION_INDEX" author="FERRY">
-		<addUniqueConstraint tableName="SYS_USER_GROUP_RELATION" columnNames="USER_CODE,GROUP_CODE" constraintName="SYS_USER_GROUP_RELATION_UK_UC_AND_GC"/>
+		<addUniqueConstraint tableName="SYS_USER_GROUP_RELATION" columnNames="USER_CODE,GROUP_CODE" constraintName="S_U_G_R_UK_UC_GC"/>
 	</changeSet>
 </databaseChangeLog>

@@ -84,6 +84,6 @@
 	</changeSet>
 	
 	<changeSet id="CREATE_SYS_USER_ROLE_RELATION_INDEX" author="FERRY">
-		<addUniqueConstraint tableName="SYS_USER_ROLE_RELATION" columnNames="SOURCE_TYPE,SOURCE_CODE,ROLE_CODE" constraintName="SYS_USER_ROLE_RELATION_UK_ST_SC_RC"/>
+		<addUniqueConstraint tableName="SYS_USER_ROLE_RELATION" columnNames="SOURCE_TYPE,SOURCE_CODE,ROLE_CODE" constraintName="S_U_R_R_UK_ST_SC_RC"/>
 	</changeSet>
 </databaseChangeLog>
