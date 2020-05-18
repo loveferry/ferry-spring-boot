@@ -2,8 +2,7 @@ package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.core.utils.ConfigUtil;
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
@@ -21,14 +20,10 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,9 +32,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
@@ -110,7 +103,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
         }else{
             sysFile.setAttachmentId(sysAttachment.getAttachmentId());
             SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sourceType);
-            if(sysAttachmentCategory.getUniqueFlag() == IfOrNotFlag.N){
+            if(sysAttachmentCategory.getUniqueFlag() == IfOrNot.N){
                 insertSelective(sysFile);
             }else{
                 deleteByAttachmentId(sysAttachment.getAttachmentId());

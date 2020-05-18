@@ -11,7 +11,7 @@ server:
 logging:
   path: /u01/ferry/logs/
   level:
-    root: INFO
+    root: DEBUG
     cn.org.ferry : DEBUG
     io.swagger.models.parameters.AbstractSerializableParameter: ERROR
 
@@ -19,10 +19,10 @@ logging:
 # dataSource
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:XE
-#    url: jdbc:mysql://127.0.0.1:3306/ferry
-    driver-class-name: oracle.jdbc.OracleDriver
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:oracle:thin:@localhost:1521:XE
+    url: jdbc:mysql://127.0.0.1:3306/ferry
+#    driver-class-name: oracle.jdbc.OracleDriver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     username: ferry
     password: ferry
   redis:

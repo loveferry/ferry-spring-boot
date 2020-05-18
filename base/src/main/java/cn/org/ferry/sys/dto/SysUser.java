@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.mybatis.enums.Sex;
 import lombok.Data;
 
@@ -69,4 +70,9 @@ public class SysUser extends BaseDTO {
      * 家庭住址
      */
     private String userFamilyAddress;
+
+    /**
+     * 启用标识
+     */
+    private IfOrNot enabledFlag;
 }

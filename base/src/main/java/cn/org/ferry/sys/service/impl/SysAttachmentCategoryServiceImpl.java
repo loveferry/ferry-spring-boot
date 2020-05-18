@@ -2,37 +2,23 @@ package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.mybatis.enums.EnableFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.exceptions.AttachmentException;
 import cn.org.ferry.sys.mapper.SysAttachmentCategoryMapper;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import javax.annotation.Resource;
 
 @Service
 public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachmentCategory> implements SysAttachmentCategoryService {
-    @Autowired
+    @Resource
     private SysAttachmentCategoryMapper sysAttachmentCategoryMapper;
-
-    @Override
-    public void verify(String sourceType) {
-        if(StringUtils.isEmpty(sourceType)){
-            throw new AttachmentException("附件类型为空");
-        }
-        SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryMapper.queryBySourceType(sourceType);
-        if(null == sysAttachmentCategory){
-            throw new AttachmentException("附件类型不存在");
-        }
-        if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
-            throw new AttachmentException("附件类型已禁用");
-        }
-    }
 
     @Override
     public SysAttachmentCategory queryBySourceType(String sourceType) {
@@ -43,7 +29,7 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
         if(null == sysAttachmentCategory){
             throw new AttachmentException("附件类型不存在");
         }
-        if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
+        if(IfOrNot.N == sysAttachmentCategory.getEnabledFlag()){
             throw new AttachmentException("附件类型已禁用");
         }
         return sysAttachmentCategory;
@@ -58,7 +44,7 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
         if(null == sysAttachmentCategory){
             throw new AttachmentException("附件类型不存在");
         }
-        if(EnableFlag.N == sysAttachmentCategory.getEnableFlag()){
+        if(IfOrNot.N == sysAttachmentCategory.getEnabledFlag()){
             throw new AttachmentException("附件类型已禁用");
         }
     }

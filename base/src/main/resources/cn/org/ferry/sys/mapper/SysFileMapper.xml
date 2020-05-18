@@ -30,7 +30,7 @@
             sys_attachment sa,
             sys_file sf
         WHERE
-            sac.enable_flag = 'Y'
+            sac.enabled_flag = 'Y'
             AND sac.source_type = sa.source_type
             AND sa.attachment_id = sf.attachment_id) t1
         <where>

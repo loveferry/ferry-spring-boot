@@ -35,6 +35,7 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR(200)" remarks="描述"/>
+			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
@@ -60,6 +61,7 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR2(200)" remarks="描述"/>
+			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"

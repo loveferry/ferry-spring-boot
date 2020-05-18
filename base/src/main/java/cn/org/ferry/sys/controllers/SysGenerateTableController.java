@@ -1,7 +1,7 @@
 package cn.org.ferry.sys.controllers;
 
 import cn.org.ferry.core.dto.ResponseData;
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.service.SysGenerateTableService;
@@ -53,27 +53,27 @@ public class SysGenerateTableController {
             responseData.setMessage("包路径不能为空!");
             return responseData;
         }
-        if(IfOrNotFlag.Y == sysGenerateTable.getEntityFlag() && StringUtils.isEmpty(sysGenerateTable.getEntityName())){
+        if(IfOrNot.Y == sysGenerateTable.getEntityFlag() && StringUtils.isEmpty(sysGenerateTable.getEntityName())){
             responseData.setMessage("实体类生成标志为\"是\"，但未给定实体类名称!");
             return responseData;
         }
-        if(IfOrNotFlag.Y == sysGenerateTable.getMapperJavaFlag() && StringUtils.isEmpty(sysGenerateTable.getMapperJavaName())){
+        if(IfOrNot.Y == sysGenerateTable.getMapperJavaFlag() && StringUtils.isEmpty(sysGenerateTable.getMapperJavaName())){
             responseData.setMessage("mybatis接口生成标志为\"是\"，但未给定mybatis接口名称!");
             return responseData;
         }
-        if(IfOrNotFlag.Y == sysGenerateTable.getMapperXmlFlag() && StringUtils.isEmpty(sysGenerateTable.getMapperXmlName())){
+        if(IfOrNot.Y == sysGenerateTable.getMapperXmlFlag() && StringUtils.isEmpty(sysGenerateTable.getMapperXmlName())){
             responseData.setMessage("mybatis xml文件生成标志为\"是\"，但未给定mybatis xml文件名称!");
             return responseData;
         }
-        if(IfOrNotFlag.Y == sysGenerateTable.getServiceFlag() && StringUtils.isEmpty(sysGenerateTable.getServiceName())){
+        if(IfOrNot.Y == sysGenerateTable.getServiceFlag() && StringUtils.isEmpty(sysGenerateTable.getServiceName())){
             responseData.setMessage("业务接口生成标志为\"是\"，但未给定业务接口名称!");
             return responseData;
         }
-        if(IfOrNotFlag.Y == sysGenerateTable.getServiceImplFlag() && StringUtils.isEmpty(sysGenerateTable.getServiceImplName())){
+        if(IfOrNot.Y == sysGenerateTable.getServiceImplFlag() && StringUtils.isEmpty(sysGenerateTable.getServiceImplName())){
             responseData.setMessage("业务接口实现类生成标志为\"是\"，但未给定业务接口实现类名称!");
             return responseData;
         }
-        if(IfOrNotFlag.Y == sysGenerateTable.getControllerFlag() && StringUtils.isEmpty(sysGenerateTable.getControllerName())){
+        if(IfOrNot.Y == sysGenerateTable.getControllerFlag() && StringUtils.isEmpty(sysGenerateTable.getControllerName())){
             responseData.setMessage("控制器生成标志为\"是\"，但未给定控制器名称!");
             return responseData;
         }

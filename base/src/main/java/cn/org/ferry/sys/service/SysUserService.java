@@ -16,6 +16,13 @@ public interface SysUserService extends BaseService<SysUser> {
     SysUser queryByUserCode(String userCode);
 
     /**
+     * 根据用户名称查询用户信息
+     * @param userName 用户名称
+     * @return 用户个人信息
+     */
+    SysUser queryByUserNameWithEnabled(String userName);
+
+    /**
      * 登陆
      */
     ResponseData login(HttpServletRequest request, SysUser sysUser);

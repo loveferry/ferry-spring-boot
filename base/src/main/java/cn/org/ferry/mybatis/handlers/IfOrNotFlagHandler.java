@@ -1,6 +1,6 @@
 package cn.org.ferry.mybatis.handlers;
 
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
@@ -12,24 +12,24 @@ import java.sql.SQLException;
 /**
  * 是否标志类型处理器
  */
-public class IfOrNotFlagHandler extends BaseTypeHandler<IfOrNotFlag> {
+public class IfOrNotFlagHandler extends BaseTypeHandler<IfOrNot> {
     @Override
-    public void setNonNullParameter(PreparedStatement preparedStatement, int i, IfOrNotFlag ifOrNotFlag, JdbcType jdbcType) throws SQLException {
+    public void setNonNullParameter(PreparedStatement preparedStatement, int i, IfOrNot ifOrNotFlag, JdbcType jdbcType) throws SQLException {
         preparedStatement.setString(i, ifOrNotFlag.name());
     }
 
     @Override
-    public IfOrNotFlag getNullableResult(ResultSet resultSet, String s) throws SQLException {
-        return resultSet.getString(s) == null ? null : IfOrNotFlag.valueOf(resultSet.getString(s));
+    public IfOrNot getNullableResult(ResultSet resultSet, String s) throws SQLException {
+        return resultSet.getString(s) == null ? null : IfOrNot.valueOf(resultSet.getString(s));
     }
 
     @Override
-    public IfOrNotFlag getNullableResult(ResultSet resultSet, int i) throws SQLException {
-        return resultSet.getString(i) == null ? null : IfOrNotFlag.valueOf(resultSet.getString(i));
+    public IfOrNot getNullableResult(ResultSet resultSet, int i) throws SQLException {
+        return resultSet.getString(i) == null ? null : IfOrNot.valueOf(resultSet.getString(i));
     }
 
     @Override
-    public IfOrNotFlag getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
-        return callableStatement.getString(i) == null ? null : IfOrNotFlag.valueOf(callableStatement.getString(i));
+    public IfOrNot getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
+        return callableStatement.getString(i) == null ? null : IfOrNot.valueOf(callableStatement.getString(i));
     }
 }

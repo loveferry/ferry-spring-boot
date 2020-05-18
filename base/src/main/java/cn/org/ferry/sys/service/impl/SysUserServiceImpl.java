@@ -24,7 +24,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
 
     @Override
     public SysUser queryByUserCode(String userCode) {
-        return sysUserMapper.queryByUserCode(userCode);
+        SysUser sysUser = new SysUser();
+        sysUser.setUserCode(userCode);
+        return sysUserMapper.selectOne(sysUser);
+    }
+
+    @Override
+    public SysUser queryByUserNameWithEnabled(String userName) {
+        return sysUserMapper.queryByUserNameWithEnabled(userName);
     }
 
     @Transactional(rollbackFor = Exception.class)

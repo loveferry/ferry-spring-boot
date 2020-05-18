@@ -130,7 +130,7 @@
 			<column name="CATEGORY_ID" valueComputed="${SYS_ATTACHMENT_CATEGORY_SEQUENCE_NEXT_VALUE}"/>
 			<column name="CATEGORY_NAME" value="文档模版"/>
 			<column name="SOURCE_TYPE" value="DOC_TEMPLATE"/>
-			<column name="ENABLE_FLAG" value="Y"/>
+			<column name="ENABLED_FLAG" value="Y"/>
 			<column name="UNIQUE_FLAG" value="Y"/>
 			<column name="ATTACHMENT_PATH" value="/doc/template"/>
 		</insert>
@@ -217,17 +217,10 @@
 		</insert>
 		<insert tableName="SYS_ENUM_TYPE">
 			<column name="TYPE_ID" valueComputed="${SYS_ENUM_TYPE_SEQUENCE_NEXT_VALUE}"/>
-			<column name="TYPE_CODE" value="IF_OR_NOT_FLAG"/>
-			<column name="JAVA_TYPE" value="cn.org.ferry.mybatis.enums.IfOrNotFlag"/>
+			<column name="TYPE_CODE" value="IF_OR_NOT"/>
+			<column name="JAVA_TYPE" value="cn.org.ferry.mybatis.enums.IfOrNot"/>
 			<column name="COLUMN_TYPE" value="VARCHAR2"/>
 			<column name="TYPE_HANDLER" value="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-		</insert>
-		<insert tableName="SYS_ENUM_TYPE">
-			<column name="TYPE_ID" valueComputed="${SYS_ENUM_TYPE_SEQUENCE_NEXT_VALUE}"/>
-			<column name="TYPE_CODE" value="ENABLE_FLAG"/>
-			<column name="JAVA_TYPE" value="cn.org.ferry.mybatis.enums.EnableFlag"/>
-			<column name="COLUMN_TYPE" value="VARCHAR2"/>
-			<column name="TYPE_HANDLER" value="cn.org.ferry.mybatis.handlers.EnableFlagHandler"/>
 		</insert>
 		<insert tableName="SYS_ENUM_TYPE">
 			<column name="TYPE_ID" valueComputed="${SYS_ENUM_TYPE_SEQUENCE_NEXT_VALUE}"/>

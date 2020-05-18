@@ -13,13 +13,17 @@
 		<result column="user_email" property="userEmail" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_family_address" property="userFamilyAddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
+				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
 	</resultMap>
 	
 	<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>
 	
-	<select id="queryByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select *
-        from sys_user
-        where user_code = #{userCode}
+	<select id="queryByUserNameWithEnabled" parameterType="string" resultMap="BaseResultMap">
+        select t.*
+        from sys_user t
+        where t.USER_NAME = #{userName} and t.ENABLED_FLAG = 'Y'
     </select>
+	
+	
 </mapper>

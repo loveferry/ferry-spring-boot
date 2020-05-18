@@ -5,15 +5,15 @@
         <id column="category_id" property="categoryId" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result column="category_name" property="categoryName" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="source_type" property="sourceType" jdbcType="VARCHAR" javaType="java.lang.String"/>
-        <result column="enable_flag" property="enableFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.EnableFlag"
-                typeHandler="cn.org.ferry.mybatis.handlers.EnableFlagHandler"/>
-        <result column="unique_flag" property="uniqueFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
+                typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
+        <result column="unique_flag" property="uniqueFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
         <result column="attachment_path" property="attachmentPath" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="queryBySourceType" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select sac.category_id,sac.category_name,sac.source_type,sac.enable_flag,sac.unique_flag,sac.attachment_path
+        select sac.category_id,sac.category_name,sac.source_type,sac.enabled_flag,sac.unique_flag,sac.attachment_path
         from sys_attachment_category sac where sac.source_type = #{sourceType}
     </select>
     
@@ -22,7 +22,7 @@
             sac.category_id,
             sac.category_name,
             sac.source_type,
-            sac.enable_flag,
+            sac.enabled_flag,
             sac.unique_flag,
             sac.attachment_path
         from
@@ -39,8 +39,8 @@
                 <bind name="sourceType" value="'%'+sourceType+'%'"/>
                 and sac.source_type like #{sourceType}
             </if>
-            <if test="enableFlag != null">
-            and sac.enable_flag = #{enableFlag}
+            <if test="enabledFlag != null">
+            and sac.enabled_flag = #{enabledFlag}
             </if>
             <if test="uniqueFlag != null">
             and sac.unique_flag = #{uniqueFlag}
@@ -49,7 +49,7 @@
     </select>
     
     <insert id="insertOne" parameterType="cn.org.ferry.sys.dto.SysAttachmentCategory">
-        insert into sys_attachment_category(CATEGORY_NAME,SOURCE_TYPE,ATTACHMENT_PATH, ENABLE_FLAG, UNIQUE_FLAG)
-        values(#{categoryName}, #{sourceType}, #{attachmentPath}, #{enableFlag}, #{uniqueFlag})
+        insert into sys_attachment_category(CATEGORY_NAME,SOURCE_TYPE,ATTACHMENT_PATH, ENABLED_FLAG, UNIQUE_FLAG)
+        values(#{categoryName}, #{sourceType}, #{attachmentPath}, #{enabledFlag}, #{uniqueFlag})
     </insert>
 </mapper>

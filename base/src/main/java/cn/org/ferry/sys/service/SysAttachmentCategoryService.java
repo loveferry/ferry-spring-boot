@@ -11,11 +11,6 @@ import java.util.List;
  */
 public interface SysAttachmentCategoryService extends BaseService<SysAttachmentCategory> {
     /**
-     * 校验附件类型
-     */
-    void verify(String sourceType);
-
-    /**
      * 查询附件类型信息
      * @param sourceType 必传参数，此字段有唯一约束，只能查出一条数据
      */

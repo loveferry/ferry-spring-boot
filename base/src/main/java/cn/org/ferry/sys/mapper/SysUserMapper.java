@@ -7,8 +7,10 @@ import org.apache.ibatis.annotations.Param;
 public interface SysUserMapper extends Mapper<SysUser> {
     /**
      * 查询员工信息
-     * @param userCode 员工代码
+     * @param userName 员工名称
      * @return 返回员工信息
      */
-    SysUser queryByUserCode(@Param("userCode") String userCode);
+    SysUser queryByUserNameWithEnabled(@Param("userName") String userName);
+
+
 }

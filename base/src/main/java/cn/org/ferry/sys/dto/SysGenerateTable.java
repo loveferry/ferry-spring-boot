@@ -1,7 +1,7 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
@@ -33,32 +33,32 @@ public class SysGenerateTable extends BaseDTO {
     /**
      * 控制器生成标志
      */
-    private IfOrNotFlag controllerFlag;
+    private IfOrNot controllerFlag;
 
     /**
      * 实体类生成标志
      */
-    private IfOrNotFlag entityFlag;
+    private IfOrNot entityFlag;
 
     /**
      * 业务接口生成标志
      */
-    private IfOrNotFlag serviceFlag;
+    private IfOrNot serviceFlag;
 
     /**
      * 业务实现生成标志
      */
-    private IfOrNotFlag serviceImplFlag;
+    private IfOrNot serviceImplFlag;
 
     /**
      * mybatis接口生成标志
      */
-    private IfOrNotFlag mapperJavaFlag;
+    private IfOrNot mapperJavaFlag;
 
     /**
      * sql层生成标志
      */
-    private IfOrNotFlag mapperXmlFlag;
+    private IfOrNot mapperXmlFlag;
 
     @Transient
     private String tableName;

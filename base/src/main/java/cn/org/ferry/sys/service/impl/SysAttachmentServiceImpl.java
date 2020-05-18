@@ -1,7 +1,7 @@
 package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.SysAttachmentCategory;
 import cn.org.ferry.sys.dto.SysFile;
@@ -74,7 +74,7 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
         }else{
             mapper.updateByPrimaryKeySelective(attachment);
         }
-        if(IfOrNotFlag.Y == sysAttachmentCategory.getUniqueFlag()){
+        if(IfOrNot.Y == sysAttachmentCategory.getUniqueFlag()){
             if(files.size() > 1){
                 throw new AttachmentException("该类型的附件只允许上传一份!");
             }

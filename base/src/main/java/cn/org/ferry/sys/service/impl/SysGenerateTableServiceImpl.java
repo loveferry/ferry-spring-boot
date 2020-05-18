@@ -4,7 +4,7 @@ import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysEnumType;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.exceptions.FileException;
@@ -65,7 +65,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         String dirPath = sysGenerateTable.getProjectPath()+File.separator+JAVA_PATH+File.separator+
                 sysGenerateTable.getPackagePath().replace(".", File.separator);
         // 生成实体类文件
-        if(IfOrNotFlag.Y == sysGenerateTable.getEntityFlag()){
+        if(IfOrNot.Y == sysGenerateTable.getEntityFlag()){
             String entity = buildEntity(sysGenerateTable, list);
             File entityFile = new File(dirPath+File.separator+"dto"+ File.separator+sysGenerateTable.getEntityName());
             if(entityFile.exists()){
@@ -86,7 +86,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             }
         }
         // 生成mybatis接口类文件
-        if(IfOrNotFlag.Y == sysGenerateTable.getMapperJavaFlag()){
+        if(IfOrNot.Y == sysGenerateTable.getMapperJavaFlag()){
             String mapperJava = buildMapperJava(sysGenerateTable);
             File mapperJavaFile = new File(dirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperJavaName());
             if(mapperJavaFile.exists()){
@@ -106,7 +106,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             }
         }
         // 生成mybatis xml文件
-        if(IfOrNotFlag.Y == sysGenerateTable.getMapperXmlFlag()){
+        if(IfOrNot.Y == sysGenerateTable.getMapperXmlFlag()){
             String resourcesDirPath = sysGenerateTable.getProjectPath()+File.separator+RESOURCE_PATH+File.separator+
                     sysGenerateTable.getPackagePath().replace(".", File.separator);
             String mapperXml = buildMapperXml(sysGenerateTable, list);
@@ -128,7 +128,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             }
         }
         // 生成业务接口
-        if(IfOrNotFlag.Y == sysGenerateTable.getServiceFlag()){
+        if(IfOrNot.Y == sysGenerateTable.getServiceFlag()){
             String service = buildService(sysGenerateTable);
             File serviceFile = new File(dirPath+File.separator+"service"+ File.separator+sysGenerateTable.getServiceName());
             if(serviceFile.exists()){
@@ -148,7 +148,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             }
         }
         // 生成业务实现
-        if(IfOrNotFlag.Y == sysGenerateTable.getServiceImplFlag()){
+        if(IfOrNot.Y == sysGenerateTable.getServiceImplFlag()){
             String serviceImpl = buildServiceImpl(sysGenerateTable);
             File serviceImplFile = new File(dirPath+File.separator+"service"+ File.separator+"impl"+
                     File.separator+sysGenerateTable.getServiceImplName());
@@ -169,7 +169,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             }
         }
         // 生成控制器
-        if(IfOrNotFlag.Y == sysGenerateTable.getControllerFlag()){
+        if(IfOrNot.Y == sysGenerateTable.getControllerFlag()){
             String controller = buildConttroller(sysGenerateTable);
             File controllerFile = new File(dirPath+File.separator+"controllers"+
                     File.separator+sysGenerateTable.getControllerName());

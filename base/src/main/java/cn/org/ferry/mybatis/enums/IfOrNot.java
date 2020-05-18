@@ -6,14 +6,14 @@ package cn.org.ferry.mybatis.enums;
  * @version 1.0
  */
 
-public enum IfOrNotFlag {
+public enum IfOrNot {
     Y("是"),
 
     N("否");
 
     private String description;
 
-    IfOrNotFlag(String description){
+    IfOrNot(String description){
         this.description = description;
     }
 

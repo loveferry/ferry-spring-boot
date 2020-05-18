@@ -32,7 +32,7 @@
             <column name="SOURCE_TYPE" type="VARCHAR(100)" remarks="附件类型">
                 <constraints nullable="false" unique="true" uniqueConstraintName="SYS_ATTACHMENT_CATEGORY_UK_ST"/>
             </column>
-            <column name="ENABLE_FLAG" type="VARCHAR(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+            <column name="ENABLED_FLAG" type="VARCHAR(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
             <column name="UNIQUE_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="是否唯一('Y','N')"/>
             <column name="ATTACHMENT_PATH" type="VARCHAR(200)">
                 <constraints nullable="false" />
@@ -59,7 +59,7 @@
             <column name="SOURCE_TYPE" type="VARCHAR2(100)" remarks="附件类型">
                 <constraints nullable="false" unique="true" uniqueConstraintName="SYS_ATTACHMENT_CATEGORY_UK_ST"/>
             </column>
-            <column name="ENABLE_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+            <column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
             <column name="UNIQUE_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="是否唯一('Y','N')"/>
             <column name="ATTACHMENT_PATH" type="VARCHAR2(200)">
                 <constraints nullable="false" />

@@ -1,8 +1,7 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
-import cn.org.ferry.mybatis.enums.EnableFlag;
-import cn.org.ferry.mybatis.enums.IfOrNotFlag;
+import cn.org.ferry.mybatis.enums.IfOrNot;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
@@ -28,7 +27,7 @@ public class SysAttachmentCategory extends BaseDTO {
 
     private String attachmentPath;  // 附件相对目录
 
-    private EnableFlag enableFlag;  // 启用标志
+    private IfOrNot enabledFlag;  // 启用标志
 
-    private IfOrNotFlag uniqueFlag;  // 唯一标志
+    private IfOrNot uniqueFlag;  // 唯一标志
 }

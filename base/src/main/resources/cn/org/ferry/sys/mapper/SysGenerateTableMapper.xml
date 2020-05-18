@@ -4,17 +4,17 @@
     <resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysGenerateTable">
         <id column="generate_id" property="generateId" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result column="generate_table" property="generateTable" jdbcType="VARCHAR" javaType="java.lang.String"/>
-        <result column="controller_flag" property="controllerFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="controller_flag" property="controllerFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-        <result column="service_flag" property="serviceFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="service_flag" property="serviceFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-        <result column="service_impl_flag" property="serviceImplFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="service_impl_flag" property="serviceImplFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-        <result column="mapper_java_flag" property="mapperJavaFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="mapper_java_flag" property="mapperJavaFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-        <result column="mapper_xml_flag" property="mapperXmlFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="mapper_xml_flag" property="mapperXmlFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-        <result column="entity_flag" property="entityFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNotFlag"
+        <result column="entity_flag" property="entityFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
                 typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
     
         <result column="table_name" property="tableName" jdbcType="VARCHAR" javaType="java.lang.String"/>
