@@ -1,22 +1,29 @@
 package cn.org.ferry.sys.controllers;
 
+import cn.org.ferry.core.annotations.LoginPass;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.service.SysGenerateTableService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 
+@Api(tags = "代码生成器控制器")
 @RestController
 @RequestMapping("/api")
+@LoginPass
 public class SysGenerateTableController {
     @Autowired
     private SysGenerateTableService sysGenerateTableService;
@@ -24,6 +31,7 @@ public class SysGenerateTableController {
     /**
      * 代码生成器
      */
+    @ApiOperation(value = "代码生成器", position = 10)
     @RequestMapping(value = "/generate/code", method = RequestMethod.POST)
     public ResponseData generate(HttpServletRequest httpServletRequest,@RequestBody SysGenerateTable sysGenerateTable) throws FileException {
         ResponseData responseData = new ResponseData();
@@ -81,4 +89,24 @@ public class SysGenerateTableController {
         responseData.setSuccess(true);
         return responseData;
     }
+
+    /**
+     * 查询表名
+     */
+    @ApiOperation(value = "表名查询", position = 10)
+    @RequestMapping(value = "/table/name/query", method = RequestMethod.GET)
+    public ResponseData queryAllTableName(HttpServletRequest httpServletRequest,
+                                          @ApiParam(name = "tableName", value = "表名")
+                                          @RequestParam(value = "tableName")String tableName,
+                                          @ApiParam(name = "page", value = "当前页")
+                                          @RequestParam(value = "page", defaultValue = "1")int page,
+                                          @ApiParam(name = "pageSize", value = "页面大小")
+                                          @RequestParam(value = "pageSize", defaultValue = "5")int pageSize
+                                          ) {
+        return new ResponseData(sysGenerateTableService.queryTableNames(tableName, page, pageSize));
+    }
+
+
+
+
 }

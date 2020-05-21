@@ -12,6 +12,7 @@ import cn.org.ferry.sys.mapper.SysGenerateTableMapper;
 import cn.org.ferry.sys.service.SysEnumTypeService;
 import cn.org.ferry.sys.service.SysGenerateTableService;
 import cn.org.ferry.sys.utils.FileUtils;
+import com.github.pagehelper.PageHelper;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -529,5 +530,11 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append('\n')
                 .append("}");
         return controller.toString();
+    }
+
+    @Override
+    public List<String> queryTableNames(String tableName, int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
+        return sysGenerateTableMapper.queryTableNames(tableName);
     }
 }

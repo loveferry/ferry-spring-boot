@@ -27,4 +27,9 @@ public interface SysGenerateTableMapper extends Mapper<SysGenerateTable> {
      * @return 返回字段的信息
      */
     List<SysGenerateTable> queryTableColumnsByTableName(@Param("tableName") String tableName);
+
+    /**
+     * 查询表名
+     */
+    List<String> queryTableNames(@Param("tableName")String tableName);
 }

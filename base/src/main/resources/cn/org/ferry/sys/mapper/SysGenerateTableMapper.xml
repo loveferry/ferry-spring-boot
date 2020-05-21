@@ -76,4 +76,19 @@
     order by ordinal_position
     </select>
     
+    <select id="queryTableNames" parameterType="string" resultType="string">
+        select
+            table_name,
+            table_comment
+        from
+            information_schema.TABLES
+        where
+            table_schema = (select database())
+            <if test="tableName != null and tableName != ''">
+                <bind name="tableName" value="'%'+tableName+'%'"/>
+                and table_name like #{tableName}
+            </if>
+            and table_name not like 'changelog_%'
+        order by table_name
+    </select>
 </mapper>
