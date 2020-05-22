@@ -31,5 +31,5 @@ public interface SysGenerateTableMapper extends Mapper<SysGenerateTable> {
     /**
      * 查询表名
      */
-    List<String> queryTableNames(@Param("tableName")String tableName);
+    List<SysGenerateTable> queryTableNames(@Param("tableName")String tableName);
 }

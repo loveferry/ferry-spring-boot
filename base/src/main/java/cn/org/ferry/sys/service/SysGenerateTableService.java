@@ -16,5 +16,5 @@ public interface SysGenerateTableService extends BaseService<SysGenerateTable> {
     /**
      * 查询表名
      */
-    List<String> queryTableNames(String tableName, int page, int pageSize);
+    List<SysGenerateTable> queryTableNames(String tableName, int page, int pageSize);
 }
