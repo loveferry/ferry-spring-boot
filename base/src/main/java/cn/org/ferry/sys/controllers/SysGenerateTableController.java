@@ -95,7 +95,7 @@ public class SysGenerateTableController {
      */
     @ApiOperation(value = "表名查询", position = 10)
     @RequestMapping(value = "/table/name/query", method = RequestMethod.GET)
-    public ResponseData queryAllTableName(HttpServletRequest httpServletRequest,
+    public ResponseData queryAllTableNames(HttpServletRequest httpServletRequest,
                                           @ApiParam(name = "tableName", value = "表名")
                                           @RequestParam(value = "tableName")String tableName,
                                           @ApiParam(name = "page", value = "当前页")

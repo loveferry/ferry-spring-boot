@@ -76,7 +76,7 @@
     order by ordinal_position
     </select>
     
-    <select id="queryTableNames" parameterType="string" resultType="string">
+    <select id="queryTableNames" parameterType="string" resultMap="BaseResultMap">
         select
             table_name,
             table_comment

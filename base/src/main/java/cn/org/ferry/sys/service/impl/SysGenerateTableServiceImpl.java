@@ -55,6 +55,8 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
 
     private static final String JAVA_PATH = "src"+File.separator+"main"+File.separator+"java";
     private static final String RESOURCE_PATH = "src"+File.separator+"main"+File.separator+"resources";
+    private static final String JAVA_SUFFIX = ".java";
+    private static final String XML_SUFFIX = ".xml";
 
     @Override
     public void generate(SysGenerateTable sysGenerateTable) throws FileException {
@@ -68,7 +70,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         // 生成实体类文件
         if(IfOrNot.Y == sysGenerateTable.getEntityFlag()){
             String entity = buildEntity(sysGenerateTable, list);
-            File entityFile = new File(dirPath+File.separator+"dto"+ File.separator+sysGenerateTable.getEntityName());
+            File entityFile = new File(dirPath+File.separator+"dto"+ File.separator+sysGenerateTable.getEntityName()+JAVA_SUFFIX);
             if(entityFile.exists()){
                 throw new FileException("实体类已存在");
             }else{
@@ -89,7 +91,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         // 生成mybatis接口类文件
         if(IfOrNot.Y == sysGenerateTable.getMapperJavaFlag()){
             String mapperJava = buildMapperJava(sysGenerateTable);
-            File mapperJavaFile = new File(dirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperJavaName());
+            File mapperJavaFile = new File(dirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperJavaName()+JAVA_SUFFIX);
             if(mapperJavaFile.exists()){
                 throw new FileException("mybatis接口类文件已存在");
             }else{
@@ -111,7 +113,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             String resourcesDirPath = sysGenerateTable.getProjectPath()+File.separator+RESOURCE_PATH+File.separator+
                     sysGenerateTable.getPackagePath().replace(".", File.separator);
             String mapperXml = buildMapperXml(sysGenerateTable, list);
-            File mapperXmlFile = new File(resourcesDirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperXmlName());
+            File mapperXmlFile = new File(resourcesDirPath+File.separator+"mapper"+ File.separator+sysGenerateTable.getMapperXmlName()+XML_SUFFIX);
             if(mapperXmlFile.exists()){
                 throw new FileException("mybatis xml文件已存在");
             }else{
@@ -131,7 +133,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         // 生成业务接口
         if(IfOrNot.Y == sysGenerateTable.getServiceFlag()){
             String service = buildService(sysGenerateTable);
-            File serviceFile = new File(dirPath+File.separator+"service"+ File.separator+sysGenerateTable.getServiceName());
+            File serviceFile = new File(dirPath+File.separator+"service"+ File.separator+sysGenerateTable.getServiceName()+JAVA_SUFFIX);
             if(serviceFile.exists()){
                 throw new FileException("业务接口文件已存在");
             }else{
@@ -152,7 +154,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         if(IfOrNot.Y == sysGenerateTable.getServiceImplFlag()){
             String serviceImpl = buildServiceImpl(sysGenerateTable);
             File serviceImplFile = new File(dirPath+File.separator+"service"+ File.separator+"impl"+
-                    File.separator+sysGenerateTable.getServiceImplName());
+                    File.separator+sysGenerateTable.getServiceImplName()+JAVA_SUFFIX);
             if(serviceImplFile.exists()){
                 throw new FileException("业务实现文件已存在");
             }else{
@@ -173,7 +175,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         if(IfOrNot.Y == sysGenerateTable.getControllerFlag()){
             String controller = buildConttroller(sysGenerateTable);
             File controllerFile = new File(dirPath+File.separator+"controllers"+
-                    File.separator+sysGenerateTable.getControllerName());
+                    File.separator+sysGenerateTable.getControllerName()+JAVA_SUFFIX);
             if(controllerFile.exists()){
                 throw new FileException("控制器文件已存在");
             }else{
@@ -331,7 +333,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse("")).append("\n")
                 .append(" */\n\n")
                 .append("@Table(name = \"").append(sysGenerateTable.getTableName()).append("\")\n")
-                .append("public class ").append(sysGenerateTable.getEntityName().split("\\.")[0]).append(" extends BaseDTO {\n")
+                .append("public class ").append(sysGenerateTable.getEntityName()).append(" extends BaseDTO {\n")
                 .append(entityBody).append(getterAndSetter).append("}");
         return entityFile.toString();
     }
@@ -340,14 +342,13 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
      * 构建mybatis接口类
      */
     private String buildMapperJava(SysGenerateTable sysGenerateTable){
-        String dtoName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName());
         StringBuilder mapperJavaFile = new StringBuilder();
         mapperJavaFile.append("package ").append(sysGenerateTable.getPackagePath()).append(".mapper;\n\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(dtoName).append(";\n\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n\n")
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" mybatis 接口层").append("\n").append(" */\n\n")
-                .append("public interface ").append(dtoName).append("{\n")
+                .append("public interface ").append(sysGenerateTable.getMapperJavaName()).append("{\n")
                 .append("\n")
                 .append("}");
         return mapperJavaFile.toString();
@@ -357,14 +358,13 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
      * 构建mybatis xml文件
      */
     private String buildMapperXml(SysGenerateTable sysGenerateTable, List<SysGenerateTable> list){
-        String dtoName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName());
         StringBuilder mapperXmlFile = new StringBuilder();
         mapperXmlFile.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n")
                 .append("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n")
                 .append("<mapper namespace=\"").append(sysGenerateTable.getPackagePath())
-                .append(".mapper.").append(dtoName).append("Mapper\">\n")
+                .append(".mapper.").append(sysGenerateTable.getMapperJavaName()).append("\">\n")
                 .append("\t<resultMap id=\"BaseResultMap\" type=\"").append(sysGenerateTable.getPackagePath())
-                .append(".dto.").append(dtoName).append("\">\n");
+                .append(".dto.").append(sysGenerateTable.getEntityName()).append("\">\n");
         for (SysGenerateTable generateTable : list) {
             if(StringUtils.equals("PRI", generateTable.getColumnKey())){
                 mapperXmlFile.append("\t\t<id ");
@@ -448,15 +448,14 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
      * 构建业务接口
      */
     private String buildService(SysGenerateTable sysGenerateTable){
-        String dtoName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName());
         StringBuilder serviceFile = new StringBuilder();
         serviceFile.append("package ").append(sysGenerateTable.getPackagePath()).append(".service;\n\n")
                 .append("import ").append(BaseService.class.getName()).append(";\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(dtoName).append(";\n\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n\n")
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" 业务接口").append("\n").append(" */\n\n")
-                .append("public interface ").append(dtoName).append("Service extends BaseService<").append(dtoName).append("> {\n")
+                .append("public interface ").append(sysGenerateTable.getServiceName()).append(" extends BaseService<").append(sysGenerateTable.getEntityName()).append("> {\n")
                 .append("\n")
                 .append("}");
         return serviceFile.toString();
@@ -466,37 +465,34 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
      * 构建业务接口
      */
     private String buildServiceImpl(SysGenerateTable sysGenerateTable){
-        String dtoName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName());
-        StringBuilder serviceImplFile = new StringBuilder();
-        serviceImplFile.append("package ").append(sysGenerateTable.getPackagePath()).append(".service.impl;\n\n")
+        return new StringBuilder().append("package ").append(sysGenerateTable.getPackagePath()).append(".service.impl;\n\n")
                 .append("import ").append(Service.class.getName()).append(";\n")
                 .append("import ").append(Logger.class.getName()).append(";\n")
                 .append("import ").append(LoggerFactory.class.getName()).append(";\n")
                 .append("import ").append(Autowired.class.getName()).append(";\n")
                 .append("import ").append(BaseServiceImpl.class.getName()).append(";\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(dtoName).append(";\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".mapper.").append(dtoName).append("Mapper;\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(dtoName).append("Service;\n\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".mapper.").append(sysGenerateTable.getMapperJavaName()).append(";\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(sysGenerateTable.getServiceName()).append(";\n\n")
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" 业务接口实现类").append("\n").append(" */\n\n")
                 .append("@Service\n")
-                .append("public class ").append(dtoName).append("ServiceImpl extends BaseServiceImpl<").append(dtoName).append("> implements ")
-                .append(dtoName).append("Service {\n")
+                .append("public class ").append(sysGenerateTable.getServiceImplName()).append(" extends BaseServiceImpl<")
+                .append(sysGenerateTable.getEntityName()).append("> implements ").append(sysGenerateTable.getServiceName()).append(" {\n")
                 .append("\t/**\n\t * 日志处理对象\n\t **/\n")
-                .append("\tprivate static final Logger logger = LoggerFactory.getLogger(").append(dtoName).append("ServiceImpl.class);\n\n")
-                .append("\t@Autowired\n").append("\tprivate ").append(dtoName).append("Mapper ")
-                .append(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, dtoName)).append("Mapper;\n\n")
-                .append("}");
-        return serviceImplFile.toString();
+                .append("\tprivate static final Logger logger = LoggerFactory.getLogger(").append(sysGenerateTable.getServiceImplName()).append(".class);\n\n")
+                .append("\t@Autowired\n").append("\tprivate ").append(sysGenerateTable.getMapperJavaName()).append(" ")
+                .append(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, sysGenerateTable.getMapperJavaName())).append(";\n\n")
+                .append("}").toString();
     }
 
     /**
      * 构建控制器
      */
     private String buildConttroller(SysGenerateTable sysGenerateTable){
-        String dtoName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName());
-        String lowerDtoName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, dtoName);
+        String lowerEntityName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, sysGenerateTable.getEntityName());
+        String lowerServiceName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, sysGenerateTable.getServiceName());
         StringBuilder controller = new StringBuilder();
         controller.append("package ").append(sysGenerateTable.getPackagePath()).append(".controllers;\n\n")
                 .append("import ").append(RestController.class.getName()).append(";\n")
@@ -505,8 +501,8 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append("import ").append(Autowired.class.getName()).append(";\n")
                 .append("import ").append(ResponseBody.class.getName()).append(";\n")
                 .append("import ").append(List.class.getName()).append(";\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(dtoName).append(";\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(dtoName).append("Service;\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(sysGenerateTable.getServiceName()).append(";\n")
                 .append('\n')
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
@@ -514,18 +510,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append('\n')
                 .append("@RestController\n")
                 .append("@RequestMapping(\"/api\")\n")
-                .append("public class ").append(dtoName).append("Controller {\n")
+                .append("public class ").append(sysGenerateTable.getControllerName()).append(" {\n")
                 .append("\t@Autowired\n")
-                .append("\tprivate ").append(dtoName).append("Service ")
-                .append(lowerDtoName).append("Service;\n")
+                .append("\tprivate ").append(sysGenerateTable.getServiceName()).append(" ")
+                .append(lowerServiceName).append(";\n")
                 .append('\n')
                 .append("\t/**\n\t * 查询\n\t */\n")
-                .append("\t@RequestMapping(\"/").append(sysGenerateTable.getTableName().toLowerCase().replaceAll("_", "/"))
+                .append("\t@RequestMapping(\"/").append(sysGenerateTable.getTableName().toLowerCase().replaceAll("_", "/")).append("/query")
                 .append("\")\n")
                 .append("\t@ResponseBody\n")
-                .append("\tpublic List<").append(dtoName).append("> query(").append(dtoName).append(" ").append(lowerDtoName)
+                .append("\tpublic List<").append(sysGenerateTable.getEntityName()).append("> query(")
+                .append(sysGenerateTable.getEntityName()).append(" ").append(lowerEntityName)
                 .append(", @RequestParam(defaultValue = \"1\") int page, @RequestParam(defaultValue = \"10\") int pageSize){\n")
-                .append("\t\treturn ").append(lowerDtoName).append("Service.select(").append(lowerDtoName).append(", page, pageSize);\n")
+                .append("\t\treturn ").append(lowerServiceName).append(".select(").append(lowerEntityName).append(", page, pageSize);\n")
                 .append("\t}\n")
                 .append('\n')
                 .append("}");
@@ -533,8 +530,26 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     }
 
     @Override
-    public List<String> queryTableNames(String tableName, int page, int pageSize) {
+    public List<SysGenerateTable> queryTableNames(String tableName, int page, int pageSize) {
         PageHelper.startPage(page, pageSize);
-        return sysGenerateTableMapper.queryTableNames(tableName);
+        List<SysGenerateTable> list = sysGenerateTableMapper.queryTableNames(tableName);
+        if(CollectionUtils.isNotEmpty(list)){
+            list.forEach(sysGenerateTable -> {
+                String entityName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName().toLowerCase());
+                sysGenerateTable.setEntityFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setEntityName(entityName);
+                sysGenerateTable.setServiceFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setServiceName(entityName+"Service");
+                sysGenerateTable.setServiceImplFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setServiceImplName(entityName+"ServiceImpl");
+                sysGenerateTable.setMapperJavaFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setMapperJavaName(entityName+"Mapper");
+                sysGenerateTable.setMapperXmlFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setMapperXmlName(entityName+"Mapper");
+                sysGenerateTable.setControllerFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setControllerName(entityName+"Controller");
+            });
+        }
+        return list;
     }
 }
