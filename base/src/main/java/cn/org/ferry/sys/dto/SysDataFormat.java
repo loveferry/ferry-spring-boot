@@ -20,7 +20,7 @@ public class SysDataFormat extends BaseDTO {
      * primary key
      */
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long dataFormatId;
 
     /**

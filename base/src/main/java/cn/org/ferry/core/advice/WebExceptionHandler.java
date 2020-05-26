@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @ControllerAdvice
 public class WebExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(WebExceptionHandler.class);
@@ -56,4 +58,17 @@ public class WebExceptionHandler {
         responseData.setMessage(e.getMessage());
         return responseData;
     }
+
+    @ExceptionHandler
+    @ResponseBody
+    public ResponseData handlerException(SQLIntegrityConstraintViolationException e){
+        logger.error("插入数据主键或者具有唯一性约束的列不要有重复数据：{}", e);
+        ResponseData responseData = new ResponseData();
+        responseData.setSuccess(false);
+        responseData.setCode(500);
+        responseData.setMessage("数据重复!");
+        return responseData;
+    }
+
+
 }

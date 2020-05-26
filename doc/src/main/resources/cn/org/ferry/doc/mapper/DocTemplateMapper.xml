@@ -9,26 +9,19 @@
 		<result column="template_image" property="templateImage" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
-	<select id="query" parameterType="cn.org.ferry.doc.dto.model.DocTemplateQuery" resultMap="BaseResultMap">
+	<select id="queryByCondition" parameterType="string" resultMap="BaseResultMap">
 		select
-			dt.template_id,
-			dt.template_code,
-			dt.template_name,
-			dt.description,
-			dt.template_image
+		dt.template_id,
+		dt.template_code,
+		dt.template_name,
+		dt.description,
+		dt.template_image
 		from
-			doc_template dt
+		doc_template dt
 		<where>
-			<if test="templateId != null">
-				and dt.template_id = #{templateId}
-			</if>
-			<if test="templateCode != null">
-				<bind name="templateCode" value="'%'+templateCode+'%'"/>
-				and dt.template_code like #{templateCode}
-			</if>
-			<if test="templateName != null">
-				<bind name="templateName" value="'%'+templateName+'%'"/>
-				and dt.template_name like #{templateName}
+			<if test="condition != null and condition != ''">
+				<bind name="condition" value="'%'+condition+'%'"/>
+				and (dt.template_code like #{condition} or dt.template_name like #{condition})
 			</if>
 		</where>
 	</select>

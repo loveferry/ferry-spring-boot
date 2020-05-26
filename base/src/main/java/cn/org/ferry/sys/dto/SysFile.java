@@ -18,7 +18,7 @@ import javax.persistence.Transient;
 @Table(name = "sys_file")
 public class SysFile extends BaseDTO {
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long fileId;  // primary key
 
     private Long attachmentId;  // 附件id

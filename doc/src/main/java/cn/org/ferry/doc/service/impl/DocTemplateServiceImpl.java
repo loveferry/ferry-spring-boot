@@ -4,7 +4,6 @@ import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.exceptions.ParameterException;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
-import cn.org.ferry.doc.dto.model.DocTemplateQuery;
 import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.DocTemplateParam;
@@ -18,7 +17,6 @@ import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.exceptions.AttachmentException;
 import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
-import cn.org.ferry.sys.service.SysAttachmentService;
 import cn.org.ferry.sys.service.SysFileService;
 import cn.org.ferry.sys.service.SysSqlService;
 import com.github.pagehelper.PageHelper;
@@ -37,6 +35,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -60,18 +59,13 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
     private SysFileService sysFileService;
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;
-    @Autowired
-    private SysAttachmentService sysAttachmentService;
     @Value("upload.path")
     private String uploadPath;
 
     @Override
-    public List<DocTemplate> query(DocTemplateQuery query, int page, int pageSize) {
-        if(null == query){
-            throw new ParameterException();
-        }
+    public List<DocTemplate> queryByCondition(String condition, int page, int pageSize) {
         PageHelper.startPage(page, pageSize);
-        return docTemplateMapper.query(query);
+        return docTemplateMapper.queryByCondition(Optional.ofNullable(condition).orElse("").trim());
     }
 
     @Override
@@ -92,21 +86,13 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         if(StringUtils.isBlank(definition.getDescription())){
             throw new ParameterException("模版说明必填!");
         }
-        if(null == definition.getTemplateId()){ // 新增
-            DocTemplate docTemplate = new DocTemplate();
-            BeanUtils.copyProperties(docTemplate, definition);
+        DocTemplate docTemplate = docTemplateMapper.queryByTemplateCode(definition.getTemplateCode());
+        if(null == docTemplate){
+            docTemplate = new DocTemplate();
+            BeanUtils.copyProperties(definition, docTemplate);
             int count = mapper.insertSelective(docTemplate);
             logger.info("模版定义{}条", count);
-        }else{  // 更新
-            DocTemplate docTemplate = docTemplateMapper.selectByPrimaryKey(definition.getTemplateId());
-            if(null == docTemplate){
-                throw new ParameterException("未根据模版主键找到对应的模版!");
-            }
-            if(!StringUtils.equals(docTemplate.getTemplateCode(), definition.getTemplateCode())){
-                sysAttachmentService.deleteAttachment(DOC_TEMPLATE_ATTACHMENT_CATEGORY, docTemplate.getTemplateId().toString());
-                responseData.setMessage("模版代码更新，请重新上传模版!");
-                docTemplate.setTemplateCode(definition.getTemplateCode());
-            }
+        }else{
             docTemplate.setTemplateName(definition.getTemplateName());
             docTemplate.setDescription(definition.getDescription());
             docTemplate.setTemplateImage(definition.getTemplateImage());

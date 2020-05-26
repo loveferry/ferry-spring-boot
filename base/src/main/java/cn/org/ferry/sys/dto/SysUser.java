@@ -23,7 +23,7 @@ public class SysUser extends BaseDTO {
      * primary key
      */
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue
     private Long userId;
 
     /**
