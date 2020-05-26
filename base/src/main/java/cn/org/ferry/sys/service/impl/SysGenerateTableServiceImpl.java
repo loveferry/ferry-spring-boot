@@ -45,9 +45,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Service
 @Slf4j
 public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTable> implements SysGenerateTableService {
+    /**
+     * 日志对象
+     */
+    private static final Logger logger = getLogger(SysGenerateTableServiceImpl.class);
+
     @Resource
     private SysGenerateTableMapper sysGenerateTableMapper;
     @Autowired
@@ -60,6 +67,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
 
     @Override
     public void generate(SysGenerateTable sysGenerateTable) throws FileException {
+        logger.info("generate code start...");
         sysGenerateTable.setTableComment(sysGenerateTableMapper.queryTablesByTableComment(sysGenerateTable.getTableName()).getTableComment());
         List<SysGenerateTable> list = sysGenerateTableMapper.queryTableColumnsByTableName(sysGenerateTable.getTableName());
         if(CollectionUtils.isEmpty(list)){
@@ -67,8 +75,10 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         }
         String dirPath = sysGenerateTable.getProjectPath()+File.separator+JAVA_PATH+File.separator+
                 sysGenerateTable.getPackagePath().replace(".", File.separator);
+        logger.info("generate directory is {}", dirPath);
         // 生成实体类文件
         if(IfOrNot.Y == sysGenerateTable.getEntityFlag()){
+
             String entity = buildEntity(sysGenerateTable, list);
             File entityFile = new File(dirPath+File.separator+"dto"+ File.separator+sysGenerateTable.getEntityName()+JAVA_SUFFIX);
             if(entityFile.exists()){
@@ -87,6 +97,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 }
 
             }
+            logger.info("generate dto file end, the file path is {}", entityFile.getAbsolutePath());
         }
         // 生成mybatis接口类文件
         if(IfOrNot.Y == sysGenerateTable.getMapperJavaFlag()){
@@ -107,6 +118,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     throw fileException;
                 }
             }
+            logger.info("generate mybatis interface file end, the file path is {}", mapperJavaFile.getAbsolutePath());
         }
         // 生成mybatis xml文件
         if(IfOrNot.Y == sysGenerateTable.getMapperXmlFlag()){
@@ -129,6 +141,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     throw fileException;
                 }
             }
+            logger.info("generate mybatis xml file end, the file path is {}", mapperXmlFile.getAbsolutePath());
         }
         // 生成业务接口
         if(IfOrNot.Y == sysGenerateTable.getServiceFlag()){
@@ -149,6 +162,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     throw fileException;
                 }
             }
+            logger.info("generate service interface file end, the file path is {}", serviceFile.getAbsolutePath());
         }
         // 生成业务实现
         if(IfOrNot.Y == sysGenerateTable.getServiceImplFlag()){
@@ -170,6 +184,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     throw fileException;
                 }
             }
+            logger.info("generate service impl file end, the file path is {}", serviceImplFile.getAbsolutePath());
         }
         // 生成控制器
         if(IfOrNot.Y == sysGenerateTable.getControllerFlag()){
@@ -191,6 +206,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     throw fileException;
                 }
             }
+            logger.info("generate controller file end, the file path is {}", controllerFile.getAbsolutePath());
         }
     }
 
@@ -531,22 +547,26 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
 
     @Override
     public List<SysGenerateTable> queryTableNames(String tableName, int page, int pageSize) {
+        logger.info("query table name start");
         PageHelper.startPage(page, pageSize);
         List<SysGenerateTable> list = sysGenerateTableMapper.queryTableNames(tableName);
         if(CollectionUtils.isNotEmpty(list)){
             list.forEach(sysGenerateTable -> {
-                String entityName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName().toLowerCase());
-                sysGenerateTable.setEntityFlag(IfOrNotFlag.Y);
+                String entityName = CaseFormat.LOWER_UNDERSCORE.to(
+                        CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName().toLowerCase()
+                );
+                IfOrNot Y = IfOrNot.Y;
+                sysGenerateTable.setEntityFlag(Y);
                 sysGenerateTable.setEntityName(entityName);
-                sysGenerateTable.setServiceFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setServiceFlag(Y);
                 sysGenerateTable.setServiceName(entityName+"Service");
-                sysGenerateTable.setServiceImplFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setServiceImplFlag(Y);
                 sysGenerateTable.setServiceImplName(entityName+"ServiceImpl");
-                sysGenerateTable.setMapperJavaFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setMapperJavaFlag(Y);
                 sysGenerateTable.setMapperJavaName(entityName+"Mapper");
-                sysGenerateTable.setMapperXmlFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setMapperXmlFlag(Y);
                 sysGenerateTable.setMapperXmlName(entityName+"Mapper");
-                sysGenerateTable.setControllerFlag(IfOrNotFlag.Y);
+                sysGenerateTable.setControllerFlag(Y);
                 sysGenerateTable.setControllerName(entityName+"Controller");
             });
         }
