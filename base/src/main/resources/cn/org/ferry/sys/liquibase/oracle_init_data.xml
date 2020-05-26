@@ -206,31 +206,6 @@
 		</insert>
 	</changeSet>
 	
-	<!--初始化枚举类型定义表-->
-	<changeSet id="ORACLE_INIT_SYS_ENUM_TYPE" dbms="oracle" author="FERRY">
-		<insert tableName="SYS_ENUM_TYPE">
-			<column name="TYPE_ID" valueComputed="${SYS_ENUM_TYPE_SEQUENCE_NEXT_VALUE}"/>
-			<column name="TYPE_CODE" value="SEX"/>
-			<column name="JAVA_TYPE" value="cn.org.ferry.mybatis.enums.Sex"/>
-			<column name="COLUMN_TYPE" value="VARCHAR2"/>
-			<column name="TYPE_HANDLER" value="cn.org.ferry.mybatis.handlers.SexHandler"/>
-		</insert>
-		<insert tableName="SYS_ENUM_TYPE">
-			<column name="TYPE_ID" valueComputed="${SYS_ENUM_TYPE_SEQUENCE_NEXT_VALUE}"/>
-			<column name="TYPE_CODE" value="IF_OR_NOT"/>
-			<column name="JAVA_TYPE" value="cn.org.ferry.mybatis.enums.IfOrNot"/>
-			<column name="COLUMN_TYPE" value="VARCHAR2"/>
-			<column name="TYPE_HANDLER" value="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
-		</insert>
-		<insert tableName="SYS_ENUM_TYPE">
-			<column name="TYPE_ID" valueComputed="${SYS_ENUM_TYPE_SEQUENCE_NEXT_VALUE}"/>
-			<column name="TYPE_CODE" value="BOOK_MARK_TYPE"/>
-			<column name="JAVA_TYPE" value="cn.org.ferry.doc.enums.BookMarkType"/>
-			<column name="COLUMN_TYPE" value="VARCHAR2"/>
-			<column name="TYPE_HANDLER" value="cn.org.ferry.doc.handlers.BookMarkTypeHandler"/>
-		</insert>
-	</changeSet>
-	
 	<!--初始化数据源表数据-->
 	<changeSet id="ORACLE_INIT_SYS_SQL" dbms="oracle" author="FERRY">
 		<insert tableName="SYS_SQL">

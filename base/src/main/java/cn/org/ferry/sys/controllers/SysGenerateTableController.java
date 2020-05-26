@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "代码生成器控制器")
+@Api(tags = "代码生成器控制器",position = 100)
 @RestController
 @RequestMapping("/api")
 @LoginPass
@@ -31,7 +31,7 @@ public class SysGenerateTableController {
     /**
      * 代码生成器
      */
-    @ApiOperation(value = "代码生成器", position = 10)
+    @ApiOperation(value = "代码生成器", position = 20)
     @RequestMapping(value = "/generate/code", method = RequestMethod.POST)
     public ResponseData generate(HttpServletRequest httpServletRequest,@RequestBody SysGenerateTable sysGenerateTable) throws FileException {
         ResponseData responseData = new ResponseData();

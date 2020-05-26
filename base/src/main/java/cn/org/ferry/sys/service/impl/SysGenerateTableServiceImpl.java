@@ -1,19 +1,20 @@
 package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.dto.BaseDTO;
-import cn.org.ferry.core.exceptions.CommonException;
+import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.mybatis.enums.IfOrNot;
-import cn.org.ferry.sys.dto.SysEnumType;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.exceptions.FileException;
 import cn.org.ferry.sys.mapper.SysGenerateTableMapper;
-import cn.org.ferry.sys.service.SysEnumTypeService;
 import cn.org.ferry.sys.service.SysGenerateTableService;
 import cn.org.ferry.sys.utils.FileUtils;
 import com.github.pagehelper.PageHelper;
 import com.google.common.base.CaseFormat;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -43,7 +43,6 @@ import javax.annotation.Resource;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -57,8 +56,6 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
 
     @Resource
     private SysGenerateTableMapper sysGenerateTableMapper;
-    @Autowired
-    private SysEnumTypeService sysEnumTypeService;
 
     private static final String JAVA_PATH = "src"+File.separator+"main"+File.separator+"java";
     private static final String RESOURCE_PATH = "src"+File.separator+"main"+File.separator+"resources";
@@ -78,7 +75,6 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         logger.info("generate directory is {}", dirPath);
         // 生成实体类文件
         if(IfOrNot.Y == sysGenerateTable.getEntityFlag()){
-
             String entity = buildEntity(sysGenerateTable, list);
             File entityFile = new File(dirPath+File.separator+"dto"+ File.separator+sysGenerateTable.getEntityName()+JAVA_SUFFIX);
             if(entityFile.exists()){
@@ -188,7 +184,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
         }
         // 生成控制器
         if(IfOrNot.Y == sysGenerateTable.getControllerFlag()){
-            String controller = buildConttroller(sysGenerateTable);
+            String controller = buildController(sysGenerateTable);
             File controllerFile = new File(dirPath+File.separator+"controllers"+
                     File.separator+sysGenerateTable.getControllerName()+JAVA_SUFFIX);
             if(controllerFile.exists()){
@@ -208,12 +204,16 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             }
             logger.info("generate controller file end, the file path is {}", controllerFile.getAbsolutePath());
         }
+
+        int count = sysGenerateTableMapper.insertSelective(sysGenerateTable);
+        logger.info("generate code save {} record...", count);
+
     }
 
     /**
      * 构建实体类
      */
-    private String buildEntity(SysGenerateTable sysGenerateTable, List<SysGenerateTable> list) throws FileException {
+    private String buildEntity(SysGenerateTable sysGenerateTable, List<SysGenerateTable> list) {
         StringBuilder entityFile = new StringBuilder();
         StringBuilder packages = new StringBuilder();
         StringBuilder entityBody = new StringBuilder();
@@ -234,14 +234,14 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     map.put("@GeneratedValue", true);
                     packages.append("import ").append(GeneratedValue.class.getName()).append(";\n");
                 }
-                entityBody.append("\t@Id\n\t@GeneratedValue(generator = \"JDBC\")\n");
-            }else if(StringUtils.equals("NO", generateTable.getNullable())){
+                entityBody.append("\t@Id\n\t@GeneratedValue\n");
+            }/*else if(StringUtils.equals("NO", generateTable.getNullable())){
                 if(!map.getOrDefault("@NotNull", false)){
                     map.put("@NotNull", true);
                     packages.append("import ").append(NotNull.class.getName()).append(";\n");
                 }
                 entityBody.append("\t@NotNull\n");
-            }
+            }*/
             if(null != generateTable.getCharacterMaximumLength() && StringUtils.equals("varchar", generateTable.getDataType().toLowerCase())){
                 if(!map.getOrDefault("@Length", false)){
                     map.put("@Length", true);
@@ -299,34 +299,6 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = dateClass.getSimpleName();
                     break;
                 case "enum" :
-                    SysEnumType sysEnumType = new SysEnumType();
-                    sysEnumType.setColumnType(generateTable.getColumnType());
-                    List<SysEnumType> sysEnumTypeList = sysEnumTypeService.select(sysEnumType);
-                    if(CollectionUtils.isEmpty(sysEnumTypeList)){
-                        throw new FileException("字段 "+generateTable.getColumnName()+" 类型为 "+generateTable.getColumnType()+"，未在系统中定义此类型!");
-                    }
-                    sysEnumType = sysEnumTypeList.get(0);
-                    try {
-                        Class typeHandlerClass = Class.forName(sysEnumType.getTypeHandler());
-                        if(!map.getOrDefault(typeHandlerClass.getSimpleName(), false)){
-                            map.put(typeHandlerClass.getSimpleName(), true);
-                            packages.append("import ").append(typeHandlerClass.getName()).append(";\n");
-                        }
-                        entityBody.append("\t@ColumnType(typeHandler = ").append(typeHandlerClass.getSimpleName()).append(".class)\n");
-                    } catch (ClassNotFoundException e) {
-                        throw new FileException("未找到 "+sysEnumType.getTypeHandler()+" 类!");
-                    }
-                    try {
-                        Class javaTypeClass = Class.forName(sysEnumType.getJavaType());
-                        if(!map.getOrDefault(javaTypeClass.getSimpleName(), false)){
-                            map.put(javaTypeClass.getSimpleName(), true);
-                            packages.append("import ").append(javaTypeClass.getName()).append(";\n");
-                        }
-                        columnJavaType = javaTypeClass.getSimpleName();
-                    } catch (ClassNotFoundException e) {
-                        throw new FileException("未找到 "+sysEnumType.getJavaType()+" 类!");
-                    }
-                    break;
                 case "char" :
                 case "varchar" :
                 default:
@@ -360,11 +332,15 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     private String buildMapperJava(SysGenerateTable sysGenerateTable){
         StringBuilder mapperJavaFile = new StringBuilder();
         mapperJavaFile.append("package ").append(sysGenerateTable.getPackagePath()).append(".mapper;\n\n")
-                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n")
+                .append("import ").append(Mapper.class.getName()).append(";\n")
+                .append('\n')
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
-                .append(" mybatis 接口层").append("\n").append(" */\n\n")
-                .append("public interface ").append(sysGenerateTable.getMapperJavaName()).append("{\n")
+                .append(" mybatis 接口层").append("\n").append(" */\n")
+                .append('\n')
+                .append("public interface ").append(sysGenerateTable.getMapperJavaName())
+                .append(" extends ").append("Mapper<").append(sysGenerateTable.getEntityName()).append(">").append("{\n")
                 .append("\n")
                 .append("}");
         return mapperJavaFile.toString();
@@ -426,27 +402,6 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = Date.class.getName();
                     break;
                 case "enum" :
-                    columnJdbcType = "ENUM";
-                    SysEnumType sysEnumType = new SysEnumType();
-                    sysEnumType.setColumnType(generateTable.getColumnType());
-                    List<SysEnumType> sysEnumTypeList = sysEnumTypeService.select(sysEnumType);
-                    if(CollectionUtils.isEmpty(sysEnumTypeList)){
-                        throw new CommonException("字段 "+generateTable.getColumnName()+" 类型为 "+generateTable.getColumnType()+"，未在系统中定义此类型!");
-                    }
-                    sysEnumType = sysEnumTypeList.get(0);
-                    try {
-                        Class typeHandlerClass = Class.forName(sysEnumType.getTypeHandler());
-                        mapperXmlFile.append("typeHandler=\"").append(typeHandlerClass.getName()).append("\" ");
-                    } catch (ClassNotFoundException e) {
-                        throw new CommonException("未找到 "+sysEnumType.getTypeHandler()+" 类!");
-                    }
-                    try {
-                        Class javaTypeClass = Class.forName(sysEnumType.getJavaType());
-                        columnJavaType = javaTypeClass.getName();
-                    } catch (ClassNotFoundException e) {
-                        throw new CommonException("未找到 "+sysEnumType.getJavaType()+" 类!");
-                    }
-                    break;
                 case "char" :
                 case "varchar" :
                 default:
@@ -506,7 +461,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     /**
      * 构建控制器
      */
-    private String buildConttroller(SysGenerateTable sysGenerateTable){
+    private String buildController(SysGenerateTable sysGenerateTable){
         String lowerEntityName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, sysGenerateTable.getEntityName());
         String lowerServiceName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, sysGenerateTable.getServiceName());
         StringBuilder controller = new StringBuilder();
@@ -515,15 +470,19 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append("import ").append(RequestMapping.class.getName()).append(";\n")
                 .append("import ").append(RequestParam.class.getName()).append(";\n")
                 .append("import ").append(Autowired.class.getName()).append(";\n")
-                .append("import ").append(ResponseBody.class.getName()).append(";\n")
+                .append("import ").append(Api.class.getName()).append(";\n")
+                .append("import ").append(ApiOperation.class.getName()).append(";\n")
+                .append("import ").append(ApiParam.class.getName()).append(";\n")
                 .append("import ").append(List.class.getName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n")
+                .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(sysGenerateTable.getServiceName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(sysGenerateTable.getServiceName()).append(";\n")
                 .append('\n')
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" 控制器").append("\n").append(" */\n")
                 .append('\n')
+                .append("@Api(tags = \"").append(sysGenerateTable.getTableComment()).append("控制器\", position = 100)\n")
                 .append("@RestController\n")
                 .append("@RequestMapping(\"/api\")\n")
                 .append("public class ").append(sysGenerateTable.getControllerName()).append(" {\n")
@@ -532,12 +491,14 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append(lowerServiceName).append(";\n")
                 .append('\n')
                 .append("\t/**\n\t * 查询\n\t */\n")
-                .append("\t@RequestMapping(\"/").append(sysGenerateTable.getTableName().toLowerCase().replaceAll("_", "/")).append("/query")
-                .append("\")\n")
-                .append("\t@ResponseBody\n")
+                .append("\t@ApiOperation(\"查询").append(sysGenerateTable.getTableComment()).append("\")\n")
+                .append("\t@RequestMapping(\"/").append(
+                            sysGenerateTable.getTableName().toLowerCase().replaceAll("_", "/")
+                        ).append("/query").append("\")\n")
                 .append("\tpublic List<").append(sysGenerateTable.getEntityName()).append("> query(")
-                .append(sysGenerateTable.getEntityName()).append(" ").append(lowerEntityName)
-                .append(", @RequestParam(defaultValue = \"1\") int page, @RequestParam(defaultValue = \"10\") int pageSize){\n")
+                .append(sysGenerateTable.getEntityName()).append(" ").append(lowerEntityName).append(",\n")
+                .append("\t\t\t\t\t\t\t\t@ApiParam(name = \"page\", value = \"当前页\") @RequestParam(defaultValue = \"1\") int page,\n")
+                .append("\t\t\t\t\t\t\t\t@ApiParam(name = \"pageSize\", value = \"页面大小\") @RequestParam(defaultValue = \"10\") int pageSize){\n")
                 .append("\t\treturn ").append(lowerServiceName).append(".select(").append(lowerEntityName).append(", page, pageSize);\n")
                 .append("\t}\n")
                 .append('\n')

@@ -6,9 +6,9 @@
         <result column="category_name" property="categoryName" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="source_type" property="sourceType" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
-                typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
+                typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
         <result column="unique_flag" property="uniqueFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
-                typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
+                typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
         <result column="attachment_path" property="attachmentPath" jdbcType="VARCHAR" />
     </resultMap>
 

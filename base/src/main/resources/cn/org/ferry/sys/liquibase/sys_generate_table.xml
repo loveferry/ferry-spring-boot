@@ -28,7 +28,7 @@
 			<column name="GENERATE_ID" type="BIGINT" autoIncrement="true" remarks="PK">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_GENERATE_TABLE_PK_GI"/>
 			</column>
-			<column name="GENERATE_TABLE" type="VARCHAR(100)" remarks="表名">
+			<column name="TABLE_NAME" type="VARCHAR(100)" remarks="表名">
 				<constraints nullable="false"/>
 			</column>
 			<column name="CONTROLLER_FLAG" type="VARCHAR(1)" remarks="控制器生成标志('Y','N')"/>
@@ -55,7 +55,7 @@
 			<column name="GENERATE_ID" type="BIGINT" remarks="PK">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_GENERATE_TABLE_PK_GI"/>
 			</column>
-			<column name="GENERATE_TABLE" type="VARCHAR2(100)" remarks="表名">
+			<column name="TABLE_NAME" type="VARCHAR2(100)" remarks="表名">
 				<constraints nullable="false"/>
 			</column>
 			<column name="CONTROLLER_FLAG" type="VARCHAR2(1)" remarks="控制器生成标志('Y','N')"/>
@@ -83,7 +83,7 @@
 	
 	<changeSet id="CREATE_SYS_GENERATE_TABLE_INDEX" author="FERRY">
 		<createIndex tableName="SYS_GENERATE_TABLE" indexName="SYS_GENERATE_TABLE_IK_GT">
-			<column name="GENERATE_TABLE"/>
+			<column name="TABLE_NAME"/>
 		</createIndex>
 	</changeSet>
 </databaseChangeLog>

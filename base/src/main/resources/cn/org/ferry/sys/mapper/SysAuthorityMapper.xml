@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.sys.mapper.SysAuthorityMapper">
+	<resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysAuthority">
+		<id column="authority_id" property="authorityId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+		<result column="authority_code" property="authorityCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="authority_name" property="authorityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="description" property="description" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
+				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
+	</resultMap>
+
+</mapper>

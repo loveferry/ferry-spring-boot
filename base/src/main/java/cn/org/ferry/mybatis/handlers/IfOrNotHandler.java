@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * 是否标志类型处理器
  */
-public class IfOrNotFlagHandler extends BaseTypeHandler<IfOrNot> {
+public class IfOrNotHandler extends BaseTypeHandler<IfOrNot> {
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, IfOrNot ifOrNotFlag, JdbcType jdbcType) throws SQLException {
         preparedStatement.setString(i, ifOrNotFlag.name());

@@ -1,9 +1,13 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
+import cn.org.ferry.mybatis.annotations.ColumnType;
 import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.mybatis.enums.Sex;
+import cn.org.ferry.mybatis.handlers.IfOrNotHandler;
+import cn.org.ferry.mybatis.handlers.SexHandler;
 import lombok.Data;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
 import javax.persistence.GeneratedValue;
@@ -49,6 +53,7 @@ public class SysUser extends BaseDTO {
     /**
      * 系统用户性别
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = SexHandler.class)
     private Sex userSex;
 
     /**
@@ -74,5 +79,6 @@ public class SysUser extends BaseDTO {
     /**
      * 启用标识
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot enabledFlag;
 }

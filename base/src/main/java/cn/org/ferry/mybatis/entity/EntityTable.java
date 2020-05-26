@@ -135,16 +135,6 @@ public class EntityTable {
      */
     @SuppressWarnings("unchecked")
     public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
-        if (javaTypeClass != null) {
-            try {
-                Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
-                return (TypeHandler<T>) c.newInstance(javaTypeClass);
-            } catch (NoSuchMethodException ignored) {
-                logger.warn("Can not found constructor for handler " + typeHandlerClass, ignored);
-            } catch (Exception e) {
-                throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
-            }
-        }
         try {
             Constructor<?> c = typeHandlerClass.getConstructor();
             return (TypeHandler<T>) c.newInstance();
