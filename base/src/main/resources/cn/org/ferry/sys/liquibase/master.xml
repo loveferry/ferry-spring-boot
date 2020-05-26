@@ -35,7 +35,6 @@
     <include file="sys_file.xml" relativeToChangelogFile="true" />
     <include file="sys_data_format.xml" relativeToChangelogFile="true" />
     <include file="sys_sql.xml" relativeToChangelogFile="true" />
-    <include file="sys_enum_type.xml" relativeToChangelogFile="true" />
     <include file="sys_generate_table.xml" relativeToChangelogFile="true" />
     
     <include file="log_login.xml" relativeToChangelogFile="true" />

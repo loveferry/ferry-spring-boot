@@ -11,7 +11,7 @@ server:
 logging:
   path: /u01/ferry/logs/
   level:
-    root: DEBUG
+    root: INFO
     cn.org.ferry : DEBUG
     io.swagger.models.parameters.AbstractSerializableParameter: ERROR
 

@@ -1,8 +1,11 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
+import cn.org.ferry.mybatis.annotations.ColumnType;
 import cn.org.ferry.mybatis.enums.IfOrNot;
+import cn.org.ferry.mybatis.handlers.IfOrNotHandler;
 import lombok.Data;
+import org.apache.ibatis.type.JdbcType;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,7 +30,9 @@ public class SysAttachmentCategory extends BaseDTO {
 
     private String attachmentPath;  // 附件相对目录
 
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot enabledFlag;  // 启用标志
 
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot uniqueFlag;  // 唯一标志
 }

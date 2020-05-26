@@ -14,7 +14,7 @@
 		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="user_family_address" property="userFamilyAddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
-				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotFlagHandler"/>
+				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
 	</resultMap>
 	
 	<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>

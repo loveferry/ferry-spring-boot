@@ -1,8 +1,11 @@
 package cn.org.ferry.sys.dto;
 
 import cn.org.ferry.core.dto.BaseDTO;
+import cn.org.ferry.mybatis.annotations.ColumnType;
 import cn.org.ferry.mybatis.enums.IfOrNot;
+import cn.org.ferry.mybatis.handlers.IfOrNotHandler;
 import lombok.Data;
+import org.apache.ibatis.type.JdbcType;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,40 +31,43 @@ public class SysGenerateTable extends BaseDTO {
     /**
      * 表名
      */
-    private String generateTable;
+    private String tableName;
 
     /**
      * 控制器生成标志
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot controllerFlag;
 
     /**
      * 实体类生成标志
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot entityFlag;
 
     /**
      * 业务接口生成标志
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot serviceFlag;
 
     /**
      * 业务实现生成标志
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot serviceImplFlag;
 
     /**
      * mybatis接口生成标志
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot mapperJavaFlag;
 
     /**
      * sql层生成标志
      */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot mapperXmlFlag;
-
-    @Transient
-    private String tableName;
 
     @Transient
     private String tableComment;
