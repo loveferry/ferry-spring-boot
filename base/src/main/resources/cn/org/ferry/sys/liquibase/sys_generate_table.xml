@@ -31,12 +31,12 @@
 			<column name="TABLE_NAME" type="VARCHAR(100)" remarks="表名">
 				<constraints nullable="false"/>
 			</column>
-			<column name="CONTROLLER_FLAG" type="VARCHAR(1)" remarks="控制器生成标志('Y','N')"/>
-			<column name="ENTITY_FLAG" type="VARCHAR(1)" remarks="实体类生成标志('Y','N')"/>
-			<column name="SERVICE_FLAG" type="VARCHAR(1)" remarks="业务接口生成标志('Y','N')"/>
-			<column name="SERVICE_IMPL_FLAG" type="VARCHAR(1)" remarks="业务实现生成标志('Y','N')"/>
-			<column name="MAPPER_JAVA_FLAG" type="VARCHAR(1)" remarks="mybatis接口生成标志('Y','N')"/>
-			<column name="MAPPER_XML_FLAG" type="VARCHAR(1)" remarks="映射器生成标志('Y','N')"/>
+			<column name="CONTROLLER_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="控制器生成标志('Y','N')"/>
+			<column name="ENTITY_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="实体类生成标志('Y','N')"/>
+			<column name="SERVICE_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="业务接口生成标志('Y','N')"/>
+			<column name="SERVICE_IMPL_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="业务实现生成标志('Y','N')"/>
+			<column name="MAPPER_JAVA_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="mybatis接口生成标志('Y','N')"/>
+			<column name="MAPPER_XML_FLAG" type="VARCHAR(1)" defaultValue="N" remarks="映射器生成标志('Y','N')"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
@@ -58,12 +58,12 @@
 			<column name="TABLE_NAME" type="VARCHAR2(100)" remarks="表名">
 				<constraints nullable="false"/>
 			</column>
-			<column name="CONTROLLER_FLAG" type="VARCHAR2(1)" remarks="控制器生成标志('Y','N')"/>
-			<column name="ENTITY_FLAG" type="VARCHAR2(1)" remarks="实体类生成标志('Y','N')"/>
-			<column name="SERVICE_FLAG" type="VARCHAR2(1)" remarks="业务接口生成标志('Y','N')"/>
-			<column name="SERVICE_IMPL_FLAG" type="VARCHAR2(1)" remarks="业务实现生成标志('Y','N')"/>
-			<column name="MAPPER_JAVA_FLAG" type="VARCHAR2(1)" remarks="mybatis接口生成标志('Y','N')"/>
-			<column name="MAPPER_XML_FLAG" type="VARCHAR2(1)" remarks="映射器生成标志('Y','N')"/>
+			<column name="CONTROLLER_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="控制器生成标志('Y','N')"/>
+			<column name="ENTITY_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="实体类生成标志('Y','N')"/>
+			<column name="SERVICE_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="业务接口生成标志('Y','N')"/>
+			<column name="SERVICE_IMPL_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="业务实现生成标志('Y','N')"/>
+			<column name="MAPPER_JAVA_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="mybatis接口生成标志('Y','N')"/>
+			<column name="MAPPER_XML_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="映射器生成标志('Y','N')"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
