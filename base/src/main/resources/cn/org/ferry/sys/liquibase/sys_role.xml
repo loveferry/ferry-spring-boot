@@ -50,7 +50,7 @@
 				<tableExists tableName="SYS_ROLE"/>
 			</not>
 		</preConditions>
-		<createTable tableName="SYS_ROLE" remarks="系统用户表">
+		<createTable tableName="SYS_ROLE" remarks="系统角色表">
 			<column name="ROLE_ID" type="BIGINT" remarks="PK">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_ROLE_PK_UI"/>
 			</column>

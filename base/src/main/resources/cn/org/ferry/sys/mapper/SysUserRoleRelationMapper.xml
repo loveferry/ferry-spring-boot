@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.ferry.sys.mapper.SysUserRoleRelationMapper">
+	<resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysUserRoleRelation">
+		<id column="relation_id" property="relationId" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+		<result column="source_type" property="sourceType" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="source_code" property="sourceCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="role_code" property="roleCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="description" property="description" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
+				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
+	</resultMap>
+
+</mapper>
