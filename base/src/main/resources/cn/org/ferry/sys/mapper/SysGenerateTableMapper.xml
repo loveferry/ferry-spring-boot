@@ -28,22 +28,7 @@
         <result column="nullable" property="nullable" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </resultMap>
     
-    <select id="queryTablesLikeTableComment" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select
-            table_name,
-            table_comment
-        from
-            information_schema.TABLES
-        where
-            table_schema = (select database())
-            and table_name not like 'changelog_%'
-        <if test="tableName != null">
-            <bind name="tableName" value="'%'+tableName+'%'"/>
-            and (table_name like #{tableName} or table_comment like #{tableName})
-        </if>
-    </select>
-    
-    <select id="queryTablesByTableComment" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="queryTablesByTableCommentForMysql" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
             table_name,
             table_comment
@@ -57,7 +42,7 @@
         </if>
     </select>
     
-    <select id="queryTableColumnsByTableName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="queryTableColumnsByTableNameForMysql" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
            table_name,
            column_name,
@@ -76,7 +61,43 @@
     order by ordinal_position
     </select>
     
-    <select id="queryTableNames" parameterType="string" resultMap="BaseResultMap">
+    <select id="queryTablesByTableCommentForOracle" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT table_name, comments as table_comment
+        FROM user_tab_comments
+        WHERE upper(table_name) not like 'CHANGELOG_%'
+        <if test="tableName != null">
+            and upper(table_name) = #{tableName}
+        </if>
+    </select>
+    
+    <select id="queryTableColumnsByTableNameForOracle" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ucc.table_name,
+               ucc.column_name,
+               (case utc.data_type when 'DATE' then 'DATETIME' else utc.data_type end) as data_type,
+               utc.char_col_decl_length                                                as character_maximum_length,
+               utc.data_type                                                           as column_type,
+               (case (select t1.constraint_type
+                      from user_constraints t1,
+                           user_cons_columns t2
+                      where t1.table_name = ucc.table_name
+                        and t1.table_name = t2.table_name
+                        and t1.constraint_name = t2.constraint_name
+                        and t2.column_name = ucc.column_name
+                        and t1.index_name is not null)
+                    when 'P' then 'PRI'
+                    when 'U' then 'UNI' end)                                             as column_key,
+               ucc.comments                                                            as column_comment,
+               (case utc.nullable when 'Y' then 'YES' else 'NO' end)                   as nullable
+        from user_col_comments ucc,
+             user_tab_cols utc
+        where upper(ucc.table_name) = #{tableName}
+          and ucc.table_name = utc.table_name
+          and ucc.column_name = utc.column_name
+          and lower(ucc.column_name) not in ('created_by', 'creation_date', 'last_updated_by', 'last_update_date')
+        order by utc.segment_column_id
+    </select>
+    
+    <select id="queryTableNamesForMysql" parameterType="string" resultMap="BaseResultMap">
         select
             table_name,
             table_comment
@@ -91,4 +112,16 @@
             and table_name not like 'changelog_%'
         order by table_name
     </select>
+    
+    <select id="queryTableNamesForOracle" parameterType="string" resultMap="BaseResultMap">
+        SELECT table_name, comments as table_comment
+        FROM user_tab_comments
+        WHERE upper(table_name) not like 'CHANGELOG_%'
+        <if test="tableName != null and tableName != ''">
+            <bind name="tableName" value="'%'+tableName+'%'"/>
+            and upper(table_name) like #{tableName}
+        </if>
+    </select>
+    
+    
 </mapper>

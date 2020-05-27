@@ -1,9 +1,11 @@
 package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.dto.BaseDTO;
+import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
+import cn.org.ferry.core.utils.ConstantUtils;
 import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.exceptions.FileException;
@@ -32,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
@@ -43,6 +46,7 @@ import javax.annotation.Resource;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.sql.DataSource;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -56,6 +60,8 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
 
     @Resource
     private SysGenerateTableMapper sysGenerateTableMapper;
+    @Autowired
+    private DataSource dataSource;
 
     private static final String JAVA_PATH = "src"+File.separator+"main"+File.separator+"java";
     private static final String RESOURCE_PATH = "src"+File.separator+"main"+File.separator+"resources";
@@ -63,10 +69,38 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     private static final String XML_SUFFIX = ".xml";
 
     @Override
+    public SysGenerateTable queryTablesByTableComment(String tableName) {
+        try {
+            String databaseProductName = dataSource.getConnection().getMetaData().getDatabaseProductName();
+            if(StringUtils.equalsIgnoreCase(ConstantUtils.DataBaseConstant.MYSQL, databaseProductName)){
+                return sysGenerateTableMapper.queryTablesByTableCommentForMysql(tableName);
+            }else{
+                return sysGenerateTableMapper.queryTablesByTableCommentForOracle(tableName.toUpperCase());
+            }
+        } catch (SQLException e) {
+            throw new CommonException("获取数据库连接异常", e);
+        }
+    }
+
+    @Override
+    public List<SysGenerateTable> queryTableColumnsByTableName(String tableName) {
+        try {
+            String databaseProductName = dataSource.getConnection().getMetaData().getDatabaseProductName();
+            if(StringUtils.equalsIgnoreCase(ConstantUtils.DataBaseConstant.MYSQL, databaseProductName)){
+                return sysGenerateTableMapper.queryTableColumnsByTableNameForMysql(tableName);
+            }else{
+                return sysGenerateTableMapper.queryTableColumnsByTableNameForOracle(tableName.toUpperCase());
+            }
+        } catch (SQLException e) {
+            throw new CommonException("获取数据库连接异常", e);
+        }
+    }
+
+    @Override
     public void generate(SysGenerateTable sysGenerateTable) throws FileException {
         logger.info("generate code start...");
-        sysGenerateTable.setTableComment(sysGenerateTableMapper.queryTablesByTableComment(sysGenerateTable.getTableName()).getTableComment());
-        List<SysGenerateTable> list = sysGenerateTableMapper.queryTableColumnsByTableName(sysGenerateTable.getTableName());
+        sysGenerateTable.setTableComment(queryTablesByTableComment(sysGenerateTable.getTableName()).getTableComment());
+        List<SysGenerateTable> list = queryTableColumnsByTableName(sysGenerateTable.getTableName());
         if(CollectionUtils.isEmpty(list)){
             throw new FileException("未发现表"+sysGenerateTable.getTableName()+"上的字段");
         }
@@ -242,7 +276,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 }
                 entityBody.append("\t@NotNull\n");
             }*/
-            if(null != generateTable.getCharacterMaximumLength() && StringUtils.equals("varchar", generateTable.getDataType().toLowerCase())){
+            if(null != generateTable.getCharacterMaximumLength() && StringUtils.containsIgnoreCase(generateTable.getDataType().toLowerCase(), "varchar")){
                 if(!map.getOrDefault("@Length", false)){
                     map.put("@Length", true);
                     packages.append("import ").append(Length.class.getName()).append(";\n");
@@ -264,6 +298,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = Long.class.getSimpleName();
                     break;
                 case "double" :
+                case "number" :
                     columnJavaType = Double.class.getSimpleName();
                     break;
                 case "decimal" :
@@ -291,6 +326,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = localDateClass.getSimpleName();
                     break;
                 case "datetime" :
+                case "timestamp" :
                     Class<Date> dateClass = Date.class;
                     if(!map.getOrDefault(dateClass.getSimpleName(), false)){
                         map.put(dateClass.getSimpleName(), true);
@@ -382,6 +418,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = Long.class.getName();
                     break;
                 case "double" :
+                case "number" :
                     columnJdbcType = "DOUBLE";
                     columnJavaType = Double.class.getName();
                     break;
@@ -398,6 +435,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                     columnJavaType = LocalDate.class.getName();
                     break;
                 case "datetime" :
+                case "timestamp" :
                     columnJdbcType = "DATE";
                     columnJavaType = Date.class.getName();
                     break;
@@ -510,27 +548,37 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     public List<SysGenerateTable> queryTableNames(String tableName, int page, int pageSize) {
         logger.info("query table name start");
         PageHelper.startPage(page, pageSize);
-        List<SysGenerateTable> list = sysGenerateTableMapper.queryTableNames(tableName);
-        if(CollectionUtils.isNotEmpty(list)){
-            list.forEach(sysGenerateTable -> {
-                String entityName = CaseFormat.LOWER_UNDERSCORE.to(
-                        CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName().toLowerCase()
-                );
-                IfOrNot Y = IfOrNot.Y;
-                sysGenerateTable.setEntityFlag(Y);
-                sysGenerateTable.setEntityName(entityName);
-                sysGenerateTable.setServiceFlag(Y);
-                sysGenerateTable.setServiceName(entityName+"Service");
-                sysGenerateTable.setServiceImplFlag(Y);
-                sysGenerateTable.setServiceImplName(entityName+"ServiceImpl");
-                sysGenerateTable.setMapperJavaFlag(Y);
-                sysGenerateTable.setMapperJavaName(entityName+"Mapper");
-                sysGenerateTable.setMapperXmlFlag(Y);
-                sysGenerateTable.setMapperXmlName(entityName+"Mapper");
-                sysGenerateTable.setControllerFlag(Y);
-                sysGenerateTable.setControllerName(entityName+"Controller");
-            });
+        List<SysGenerateTable> list;
+        try {
+            String databaseProductName = dataSource.getConnection().getMetaData().getDatabaseProductName();
+            if(StringUtils.equalsIgnoreCase(ConstantUtils.DataBaseConstant.MYSQL, databaseProductName)){
+                list = sysGenerateTableMapper.queryTableNamesForMysql(tableName);
+            }else{
+                list = sysGenerateTableMapper.queryTableNamesForOracle(tableName.toUpperCase());
+            }
+            if(CollectionUtils.isNotEmpty(list)){
+                list.forEach(sysGenerateTable -> {
+                    String entityName = CaseFormat.LOWER_UNDERSCORE.to(
+                            CaseFormat.UPPER_CAMEL, sysGenerateTable.getTableName().toLowerCase()
+                    );
+                    IfOrNot Y = IfOrNot.Y;
+                    sysGenerateTable.setEntityFlag(Y);
+                    sysGenerateTable.setEntityName(entityName);
+                    sysGenerateTable.setServiceFlag(Y);
+                    sysGenerateTable.setServiceName(entityName+"Service");
+                    sysGenerateTable.setServiceImplFlag(Y);
+                    sysGenerateTable.setServiceImplName(entityName+"ServiceImpl");
+                    sysGenerateTable.setMapperJavaFlag(Y);
+                    sysGenerateTable.setMapperJavaName(entityName+"Mapper");
+                    sysGenerateTable.setMapperXmlFlag(Y);
+                    sysGenerateTable.setMapperXmlName(entityName+"Mapper");
+                    sysGenerateTable.setControllerFlag(Y);
+                    sysGenerateTable.setControllerName(entityName+"Controller");
+                });
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new CommonException("获取数据库连接异常", e);
         }
-        return list;
     }
 }
