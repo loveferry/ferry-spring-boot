@@ -15,7 +15,7 @@
     <!--初始化一些属性-->
     <!--当前日期-->
     <property name="now" value="NOW()" dbms="mysql"/>
-    <property name="now" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property name="now" value="SYSDATE" dbms="oracle"/>
     
     <!--createby默认值-->
     <property name="create_by_default_value" value="-1"/>

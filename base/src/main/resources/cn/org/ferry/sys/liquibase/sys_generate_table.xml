@@ -65,10 +65,10 @@
 			<column name="MAPPER_JAVA_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="mybatis接口生成标志('Y','N')"/>
 			<column name="MAPPER_XML_FLAG" type="VARCHAR2(1)" defaultValue="N" remarks="映射器生成标志('Y','N')"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
-			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="CREATION_DATE" type="DATE" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
 					remarks="最后更新人"/>
-			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+			<column name="LAST_UPDATE_DATE" type="DATE" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	

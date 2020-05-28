@@ -3,6 +3,7 @@ package cn.org.ferry;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -102,5 +103,12 @@ public class ArithmeticTest {
 
 
 
+    }
+
+    @Test
+    public void dabbc(){
+        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
+        logger.info(b.encode("ferry"));
+        logger.info(b.encode("admin"));
     }
 }

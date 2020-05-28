@@ -1,4 +1,4 @@
-package cn.org.ferry.core.configurations;
+package cn.org.ferry.core.security.configurations;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +38,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .formLogin()
+                .failureForwardUrl("/login/failure")
+                .successForwardUrl("/login/success")
                 .and()
                 .httpBasic();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

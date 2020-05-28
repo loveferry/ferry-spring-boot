@@ -52,15 +52,15 @@
 				<constraints nullable="false" primaryKey="true" primaryKeyName="LOG_LOGIN_PK_LI"/>
 			</column>
 			<column name="USER_CODE" type="VARCHAR2(100)" remarks="用户代码"/>
-			<column name="LOGIN_DATE" type="TIMESTAMP" remarks="登陆时间"/>
-			<column name="LOGOUT_DATE" type="TIMESTAMP" remarks="登出时间"/>
+			<column name="LOGIN_DATE" type="DATE" remarks="登陆时间"/>
+			<column name="LOGOUT_DATE" type="DATE" remarks="登出时间"/>
 			<column name="IP" type="VARCHAR2(100)" remarks="登陆地址"/>
 			<column name="USER_AGENT" type="VARCHAR2(1000)" remarks="代理"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
-			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="CREATION_DATE" type="DATE" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
 					remarks="最后更新人"/>
-			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+			<column name="LAST_UPDATE_DATE" type="DATE" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	

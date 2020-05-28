@@ -6,11 +6,12 @@ import org.apache.ibatis.annotations.Param;
 
 public interface SysUserMapper extends Mapper<SysUser> {
     /**
-     * 查询员工信息
-     * @param userName 员工名称
-     * @return 返回员工信息
+     * 查询用户信息
+     *      - security 认证
+     * @param userName 用户名称
+     * @return 用户个人信息
      */
-    SysUser queryByUserNameWithEnabled(@Param("userName") String userName);
+    SysUser queryByUserNameForSecurityAuthentication(@Param("userName") String userName);
 
 
 }
