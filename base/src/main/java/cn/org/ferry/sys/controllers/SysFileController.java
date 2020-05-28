@@ -14,11 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Api(tags = "文件控制器")
+@Api(tags = "文件控制器", position = 1000)
 @RestController
 public class SysFileController {
     @Autowired
     private SysFileService iSysFileService;
+
+    /**
+     * 附件查询
+     */
+    @ApiOperation(value = "文件查询", position = 1010)
+    @RequestMapping(value = "/api/sys/attachment/query", method = RequestMethod.GET)
+    public ResponseData queryBySourceTypeAndSourceKey(@RequestParam("sourceKey") String sourceKey, @RequestParam("sourceType") String sourceType){
+        return new ResponseData(iSysFileService.queryBySourceTypeAndSourceKey(sourceType, sourceKey));
+    }
 
     /**
      * 文件下载
@@ -26,18 +35,11 @@ public class SysFileController {
      * @param fileId 文件表主键,必须传递该参数
      */
     @LoginPass
-    @ApiOperation("文件下载")
+    @ApiOperation(value = "文件下载", position = 1020)
     @RequestMapping(value = "/api/sys/file/download", method = RequestMethod.GET)
     public void download(HttpServletResponse response, Long fileId) throws FileException {
         iSysFileService.download(response, fileId);
     }
 
-    /**
-     * 附件查询
-     */
-    @ApiOperation("附件查询")
-    @RequestMapping(value = "/api/sys/attachment/query", method = RequestMethod.GET)
-    public ResponseData queryBySourceTypeAndSourceKey(@RequestParam("sourceKey") String sourceKey, @RequestParam("sourceType") String sourceType){
-        return new ResponseData(iSysFileService.queryBySourceTypeAndSourceKey(sourceType, sourceKey));
-    }
+
 }

@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 
 @Data
-@Table(name = "sys_sql")
+@Table(name = "sys_data_format")
 public class SysDataFormat extends BaseDTO {
     /**
      * primary key

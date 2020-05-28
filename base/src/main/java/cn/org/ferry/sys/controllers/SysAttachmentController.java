@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api(tags = "附件控制器", position = 10)
+@Api(tags = "附件控制器", position = 900)
 @Controller
 @RequestMapping("/api/sys/attachment")
 public class SysAttachmentController {
@@ -26,7 +26,7 @@ public class SysAttachmentController {
     /**
      * 文件上传,可以上传多个文件
      */
-    @ApiOperation(value = "附件上传", position = 10)
+    @ApiOperation(value = "附件上传", position = 910)
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @LoginPass
     @ResponseBody
@@ -38,7 +38,7 @@ public class SysAttachmentController {
     /**
      * 附件下载
      */
-    @ApiOperation(value = "附件下载", position = 20)
+    @ApiOperation(value = "附件下载", position = 920)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "附件类型"),
             @ApiImplicitParam(name = "sourceKey", value = "附件编码")

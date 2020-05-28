@@ -23,24 +23,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @RestController
-@Api(tags = "附件类型控制器")
+@Api(tags = "附件类型控制器", position = 800)
 public class SysAttachmentCategoryController extends BaseDTO {
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;
 
     /**
-     * 更新附件类型定义
-     */
-    @ApiOperation("更新附件类型")
-    @RequestMapping(value = "/api/attachment/category/save", method = RequestMethod.POST)
-    public ResponseData save(HttpServletRequest httpServletRequest,@RequestBody SysAttachmentCategory sysAttachmentCategory){
-        return sysAttachmentCategoryService.save(sysAttachmentCategory);
-    }
-
-    /**
      * 查询附件类型
      */
-    @ApiOperation("查询附件类型")
+    @ApiOperation(value = "查询附件类型", position = 810)
     @LoginPass
     @RequestMapping(value = "/api/attachment/category/query", method = RequestMethod.GET)
     public ResponseData query(SysAttachmentCategory sysAttachmentCategory,
@@ -48,4 +39,15 @@ public class SysAttachmentCategoryController extends BaseDTO {
                               @RequestParam(value = "pageSize", defaultValue = "10")int pageSize){
         return  new ResponseData(sysAttachmentCategoryService.query(sysAttachmentCategory, page, pageSize));
     }
+
+    /**
+     * 更新附件类型定义
+     */
+    @ApiOperation(value = "更新附件类型", position = 820)
+    @RequestMapping(value = "/api/attachment/category/save", method = RequestMethod.POST)
+    public ResponseData save(HttpServletRequest httpServletRequest,@RequestBody SysAttachmentCategory sysAttachmentCategory){
+        return sysAttachmentCategoryService.save(sysAttachmentCategory);
+    }
+
+
 }

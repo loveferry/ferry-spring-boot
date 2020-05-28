@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -507,6 +508,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append("import ").append(RestController.class.getName()).append(";\n")
                 .append("import ").append(RequestMapping.class.getName()).append(";\n")
                 .append("import ").append(RequestParam.class.getName()).append(";\n")
+                .append("import ").append(RequestMethod.class.getName()).append(";\n")
                 .append("import ").append(Autowired.class.getName()).append(";\n")
                 .append("import ").append(Api.class.getName()).append(";\n")
                 .append("import ").append(ApiOperation.class.getName()).append(";\n")
@@ -530,9 +532,9 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append('\n')
                 .append("\t/**\n\t * 查询\n\t */\n")
                 .append("\t@ApiOperation(\"查询").append(sysGenerateTable.getTableComment()).append("\")\n")
-                .append("\t@RequestMapping(\"/").append(
+                .append("\t@RequestMapping(value = \"/").append(
                             sysGenerateTable.getTableName().toLowerCase().replaceAll("_", "/")
-                        ).append("/query").append("\")\n")
+                        ).append("/query").append("\", method = RequestMethod.GET)\n")
                 .append("\tpublic List<").append(sysGenerateTable.getEntityName()).append("> query(")
                 .append(sysGenerateTable.getEntityName()).append(" ").append(lowerEntityName).append(",\n")
                 .append("\t\t\t\t\t\t\t\t@ApiParam(name = \"page\", value = \"当前页\") @RequestParam(defaultValue = \"1\") int page,\n")
