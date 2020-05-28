@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 
-@Api(tags = "代码生成器控制器",position = 100)
+@Api(tags = "代码生成器控制器",position = 1300)
 @RestController
 @RequestMapping("/api")
 @LoginPass
@@ -29,9 +29,25 @@ public class SysGenerateTableController {
     private SysGenerateTableService sysGenerateTableService;
 
     /**
+     * 查询表名
+     */
+    @ApiOperation(value = "表名查询", position = 1310)
+    @RequestMapping(value = "/table/name/query", method = RequestMethod.GET)
+    public ResponseData queryAllTableNames(HttpServletRequest httpServletRequest,
+                                           @ApiParam(name = "tableName", value = "表名")
+                                           @RequestParam(value = "tableName")String tableName,
+                                           @ApiParam(name = "page", value = "当前页")
+                                           @RequestParam(value = "page", defaultValue = "1")int page,
+                                           @ApiParam(name = "pageSize", value = "页面大小")
+                                           @RequestParam(value = "pageSize", defaultValue = "5")int pageSize
+    ) {
+        return new ResponseData(sysGenerateTableService.queryTableNames(tableName, page, pageSize));
+    }
+
+    /**
      * 代码生成器
      */
-    @ApiOperation(value = "代码生成器", position = 20)
+    @ApiOperation(value = "代码生成器", position = 1320)
     @RequestMapping(value = "/generate/code", method = RequestMethod.POST)
     public ResponseData generate(HttpServletRequest httpServletRequest,@RequestBody SysGenerateTable sysGenerateTable) throws FileException {
         ResponseData responseData = new ResponseData();
@@ -89,24 +105,4 @@ public class SysGenerateTableController {
         responseData.setSuccess(true);
         return responseData;
     }
-
-    /**
-     * 查询表名
-     */
-    @ApiOperation(value = "表名查询", position = 10)
-    @RequestMapping(value = "/table/name/query", method = RequestMethod.GET)
-    public ResponseData queryAllTableNames(HttpServletRequest httpServletRequest,
-                                          @ApiParam(name = "tableName", value = "表名")
-                                          @RequestParam(value = "tableName")String tableName,
-                                          @ApiParam(name = "page", value = "当前页")
-                                          @RequestParam(value = "page", defaultValue = "1")int page,
-                                          @ApiParam(name = "pageSize", value = "页面大小")
-                                          @RequestParam(value = "pageSize", defaultValue = "5")int pageSize
-                                          ) {
-        return new ResponseData(sysGenerateTableService.queryTableNames(tableName, page, pageSize));
-    }
-
-
-
-
 }

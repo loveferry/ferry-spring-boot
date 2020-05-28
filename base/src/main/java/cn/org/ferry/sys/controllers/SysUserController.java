@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "用户控制器")
+@Api(tags = "用户控制器", position = 100)
 @RestController(value = "/api")
 public class SysUserController {
     @Autowired
@@ -21,7 +21,7 @@ public class SysUserController {
     /**
      * 用户信息查询
      */
-    @ApiOperation("用户信息查询")
+    @ApiOperation(value = "用户信息查询", position = 110)
     @LoginPass
     @RequestMapping(value = "/sys/user/query", method = RequestMethod.GET)
     public ResponseData query(@ApiParam(name = "userNameEn", value = "英文名") @RequestParam(value = "userNameEn",required = false)String userName,
