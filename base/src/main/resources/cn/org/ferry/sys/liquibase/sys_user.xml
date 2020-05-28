@@ -44,6 +44,9 @@
 			<column name="USER_PHONE" type="VARCHAR(100)" remarks="联系电话"/>
 			<column name="USER_FAMILY_ADDRESS" type="VARCHAR(1000)" remarks="家庭住址"/>
 			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+			<column name="CREDENTIALS_BLOCK" type="VARCHAR2(1)" defaultValue="N" remarks="账户是否锁定('Y','N')"/>
+			<column name="VALIDITY_DATE_FROM" type="DATETIME" remarks="有效期从"/>
+			<column name="VALIDITY_DATE_TO" type="DATETIME" remarks="有效期到"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
 			<column name="CREATION_DATE" type="DATETIME" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
@@ -73,16 +76,19 @@
 			<column name="USER_SEX" type="VARCHAR2(6)" remarks="用户性别('MALE','FEMALE')" defaultValue="MALE">
 				<constraints nullable="false"/>
 			</column>
-			<column name="USER_BIRTHDAY" type="TIMESTAMP" remarks="用户出生日期"/>
+			<column name="USER_BIRTHDAY" type="DATE" remarks="用户出生日期"/>
 			<column name="USER_EMAIL" type="VARCHAR2(100)" remarks="邮箱"/>
 			<column name="USER_PHONE" type="VARCHAR2(100)" remarks="联系电话"/>
 			<column name="USER_FAMILY_ADDRESS" type="VARCHAR2(1000)" remarks="家庭住址"/>
 			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
+			<column name="CREDENTIALS_BLOCK" type="VARCHAR2(1)" defaultValue="N" remarks="账户是否锁定('Y','N')"/>
+			<column name="VALIDITY_DATE_FROM" type="DATE" remarks="有效期从"/>
+			<column name="VALIDITY_DATE_TO" type="DATE" remarks="有效期到"/>
 			<column name="CREATED_BY" type="BIGINT" defaultValue="${create_by_default_value}" remarks="创建人"/>
-			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="创建时间"/>
+			<column name="CREATION_DATE" type="DATE" defaultValueDate="${now}" remarks="创建时间"/>
 			<column name="LAST_UPDATED_BY" type="BIGINT" defaultValue="${last_updated_by_default_value}"
 					remarks="最后更新人"/>
-			<column name="LAST_UPDATE_DATE" type="TIMESTAMP" defaultValueDate="${now}" remarks="最后更新时间"/>
+			<column name="LAST_UPDATE_DATE" type="DATE" defaultValueDate="${now}" remarks="最后更新时间"/>
 		</createTable>
 	</changeSet>
 	

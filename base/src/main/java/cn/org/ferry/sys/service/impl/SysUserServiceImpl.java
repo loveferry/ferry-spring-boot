@@ -30,8 +30,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     }
 
     @Override
-    public SysUser queryByUserNameWithEnabled(String userName) {
-        return sysUserMapper.queryByUserNameWithEnabled(userName);
+    public SysUser queryByUserNameForSecurityAuthentication(String userName) {
+        return sysUserMapper.queryByUserNameForSecurityAuthentication(userName);
     }
 
     @Transactional(rollbackFor = Exception.class)

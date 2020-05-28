@@ -6,7 +6,7 @@ public class ResponseData {
     /**
      * 状态码
      */
-    private Integer code;
+    private Integer code = 200;
 
     /**
      * 提示信息

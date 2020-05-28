@@ -81,4 +81,20 @@ public class SysUser extends BaseDTO {
      */
     @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
     private IfOrNot enabledFlag;
+
+    /**
+     * 账户是否锁定('Y','N')
+     */
+    @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = IfOrNotHandler.class)
+    private IfOrNot credentialsBlock;
+
+    /**
+     * 有效期从
+     */
+    private Date validityDateFrom;
+
+    /**
+     * 有效期到
+     */
+    private Date validityDateTo;
 }

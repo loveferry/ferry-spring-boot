@@ -15,15 +15,30 @@
 		<result column="user_family_address" property="userFamilyAddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
 				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
+		<result column="credentials_block" property="credentialsBlock" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
+				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
+		<result column="validity_date_from" property="validityDateFrom" jdbcType="DATE" javaType="java.util.Date"/>
+		<result column="validity_date_to" property="validityDateTo" jdbcType="DATE" javaType="java.util.Date"/>
 	</resultMap>
 	
-	<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>
+	<!--<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>-->
 	
-	<select id="queryByUserNameWithEnabled" parameterType="string" resultMap="BaseResultMap">
-        select t.*
-        from sys_user t
-        where t.USER_NAME = #{userName} and t.ENABLED_FLAG = 'Y'
+	<select id="queryByUserNameForSecurityAuthentication" parameterType="string" resultMap="BaseResultMap">
+		SELECT t.USER_ID,
+			   t.USER_CODE,
+			   t.USER_NAME,
+			   t.PASSWORD,
+			   t.DESCRIPTION,
+			   t.USER_SEX,
+			   t.USER_BIRTHDAY,
+			   t.USER_EMAIL,
+			   t.USER_PHONE,
+			   t.USER_FAMILY_ADDRESS,
+			   t.ENABLED_FLAG,
+			   t.VALIDITY_DATE_FROM,
+			   t.VALIDITY_DATE_TO,
+			   t.CREDENTIALS_BLOCK
+		FROM sys_user t
+		WHERE t.user_name = #{userName}
     </select>
-	
-	
 </mapper>

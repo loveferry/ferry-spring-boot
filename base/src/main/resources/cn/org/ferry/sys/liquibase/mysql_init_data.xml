@@ -24,13 +24,13 @@
 	<changeSet id="MYSQL_INIT_SYS_USER" dbms="mysql" author="FERRY">
 		<insert tableName="SYS_USER">
 			<column name="USER_CODE" value="ADMIN"/>
-			<column name="PASSWORD" value="ADMIN"/>
+			<column name="PASSWORD" value="$2a$10$d7Pjo5nMX2xCSvBIs5bpQuyy.UQRVMpc5GidqzX8bziRYBMG9AjD6"/>
 			<column name="USER_NAME" value="admin"/>
 			<column name="DESCRIPTION" value="管理员"/>
 		</insert>
 		<insert tableName="SYS_USER">
 			<column name="USER_CODE" value="FERRY"/>
-			<column name="PASSWORD" value="FERRY"/>
+			<column name="PASSWORD" value="$2a$10$TiIBEGpFZyhY9fKg6aqKhOpO4D30H/ovjles3t/0fdr8WMfvjS5AS"/>
 			<column name="USER_NAME" value="ferry"/>
 			<column name="DESCRIPTION" value="摆渡"/>
 			<column name="USER_SEX" value="MALE"/>
