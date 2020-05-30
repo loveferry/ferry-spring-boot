@@ -1,7 +1,6 @@
 package cn.org.ferry.mybatis.resolve;
 
 import cn.org.ferry.mybatis.annotations.ColumnType;
-import cn.org.ferry.mybatis.code.IdentityDialect;
 import cn.org.ferry.mybatis.entity.Config;
 import cn.org.ferry.mybatis.entity.EntityColumn;
 import cn.org.ferry.mybatis.entity.EntityField;
@@ -22,7 +21,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;

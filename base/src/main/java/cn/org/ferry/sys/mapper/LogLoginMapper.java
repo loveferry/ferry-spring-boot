@@ -11,8 +11,4 @@ import cn.org.ferry.sys.dto.LogLogin;
 
 public interface LogLoginMapper extends Mapper<LogLogin> {
 
-    /**
-     * 登陆日志记录
-     */
-    int insertLogLogin(LogLogin logLogin);
 }
