@@ -13,5 +13,11 @@ public interface SysUserMapper extends Mapper<SysUser> {
      */
     SysUser queryByUserNameForSecurityAuthentication(@Param("userName") String userName);
 
-
+    /**
+     * 查询用户信息
+     *  登录成功返回数据
+     * @param userName 用户名称
+     * @return 用户个人信息
+     */
+    SysUser queryForLoginSuccess(@Param("userName") String userName);
 }

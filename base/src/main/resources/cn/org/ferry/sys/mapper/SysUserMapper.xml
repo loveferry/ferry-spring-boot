@@ -41,4 +41,21 @@
 		FROM sys_user t
 		WHERE t.user_name = #{userName}
     </select>
+	
+	<select id="queryForLoginSuccess" parameterType="string" resultMap="BaseResultMap">
+		SELECT t.USER_CODE,
+			   t.USER_NAME,
+			   t.DESCRIPTION,
+			   t.USER_SEX,
+			   t.USER_BIRTHDAY,
+			   t.USER_EMAIL,
+			   t.USER_PHONE,
+			   t.USER_FAMILY_ADDRESS,
+			   t.ENABLED_FLAG,
+			   t.VALIDITY_DATE_FROM,
+			   t.VALIDITY_DATE_TO,
+			   t.CREDENTIALS_BLOCK
+		FROM sys_user t
+		WHERE t.user_name = #{userName}
+	</select>
 </mapper>

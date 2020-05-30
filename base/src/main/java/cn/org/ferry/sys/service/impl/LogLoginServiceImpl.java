@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
+import cn.org.ferry.core.utils.DateUtils;
 import cn.org.ferry.sys.dto.LogLogin;
 import cn.org.ferry.sys.mapper.LogLoginMapper;
 import cn.org.ferry.sys.service.LogLoginService;
@@ -36,7 +37,7 @@ public class LogLoginServiceImpl extends BaseServiceImpl<LogLogin> implements Lo
         logLogin.setUserAgent(userAgent);
         logLogin.setLoginDate(new Date());
         int count = logLoginMapper.insertSelective(logLogin);
-        logger.info("登陆日志记录：成功插表 {} 条，{}", count, logLogin);
+        logger.info("login log update {} item: {} login service at {}", count, userCode, DateUtils.format(logLogin.getLoginDate()));
         return true;
     }
 }

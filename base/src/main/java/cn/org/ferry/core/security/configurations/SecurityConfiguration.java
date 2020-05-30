@@ -1,5 +1,7 @@
 package cn.org.ferry.core.security.configurations;
 
+import cn.org.ferry.core.security.handlers.LogoutHandler;
+import cn.org.ferry.core.security.handlers.LogoutSuccessHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +42,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .failureForwardUrl("/login/failure")
                 .successForwardUrl("/login/success")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(new LogoutHandler())
+                .logoutSuccessHandler(new LogoutSuccessHandler())
                 .and()
                 .httpBasic();
     }

@@ -33,11 +33,6 @@ public class LogLogin extends BaseDTO {
 	private Date loginDate;
 
 	/**
-	 * 登出时间
-	 */
-	private Date logoutDate;
-
-	/**
 	 * 登陆地址
 	 */
 	@Length(max = 100)
