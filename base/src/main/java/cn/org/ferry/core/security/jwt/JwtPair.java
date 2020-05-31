@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * <p>java web token 对
+ * <p>json web token 对
  *
  * @author ferry ferry_sy@163.com
  * created by 2020/05/30 14:17

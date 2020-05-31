@@ -10,7 +10,9 @@ package cn.org.ferry.core.security.dto;
 public enum LoginType {
     FORM("表单"),
 
-    JSON("json");
+    JSON("json"),
+
+    CAPTCHA("验证码");
 
     String description;
 

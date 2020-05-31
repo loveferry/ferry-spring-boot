@@ -48,7 +48,7 @@ public class JwtGenerator {
 
 
     /**
-     * generate java web token pair
+     * generate json web token pair
      * @param aud 目标用户
      * @param authorities 权限集
      * @param additional 额外的属性

@@ -2,6 +2,8 @@ package cn.org.ferry.core.security.configurations;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.org.ferry.core.dto.ResponseData;
+import cn.org.ferry.core.security.filters.LoginPostProcessor;
+import cn.org.ferry.core.security.filters.PreLoginFilter;
 import cn.org.ferry.core.security.handlers.LogoutHandler;
 import cn.org.ferry.core.security.handlers.LogoutSuccessHandler;
 import cn.org.ferry.core.security.jwt.JwtCache;
@@ -32,6 +34,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -61,6 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
+    public static final String LOGIN_URL = "/login";
+
     @Resource
     private JwtProperties jwtProperties;
 
@@ -75,6 +80,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource
     private LogLoginService logLoginService;
+
+    @Resource
+    private Collection<LoginPostProcessor> loginPostProcessors;
 
     @Bean
     public JwtGenerator jwtGenerator(){
@@ -136,15 +144,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         };
     }
 
+    @Bean
+    public PreLoginFilter preLoginFilter(){
+        return new PreLoginFilter(LOGIN_URL,loginPostProcessors);
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         logger.info("start config spring security.");
         http
+                .csrf()
+                .disable()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
                 .and()
+                .addFilterBefore(preLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
+                .loginProcessingUrl(LOGIN_URL)
                 .successHandler(authenticationSuccessHandler(jwtGenerator()))
                 .failureHandler(authenticationFailureHandler())
                 .and()
