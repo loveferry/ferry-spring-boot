@@ -19,6 +19,10 @@ import java.security.spec.RSAPublicKeySpec;
 class KeyPairFactory {
 
     /**
+     *  keytool -genkey -alias ferry -keypass loveferry -storetype PKCS12 -keyalg RSA -keysize 1024 -validity 1 -keystore /Users/ferry/ferry.jks -storepass loveferry  -dname "CN=(ferry), OU=(ferry), O=(ferry), L=(suzhou), ST=(jiangsu), C=(cn)"
+     */
+
+    /**
      * 获取公私钥.
      *
      * @param keyPath  证书路径
