@@ -11,7 +11,7 @@ server:
 logging:
   path: /u01/ferry/logs/
   level:
-    root: INFO
+    root: DEBUG
     cn.org.ferry : DEBUG
     io.swagger.models.parameters.AbstractSerializableParameter: ERROR
 
@@ -30,6 +30,7 @@ spring:
     port: 6379
     database: 0
     timeout: 5000ms
+#    password: ferry
     client-name: ferry
     jedis:
       pool:

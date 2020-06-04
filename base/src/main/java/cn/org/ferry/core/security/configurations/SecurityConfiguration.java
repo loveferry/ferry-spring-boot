@@ -2,10 +2,9 @@ package cn.org.ferry.core.security.configurations;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.org.ferry.core.dto.ResponseData;
+import cn.org.ferry.core.security.filters.JwtAuthenticationFilter;
 import cn.org.ferry.core.security.filters.LoginPostProcessor;
 import cn.org.ferry.core.security.filters.PreLoginFilter;
-import cn.org.ferry.core.security.handlers.LogoutHandler;
-import cn.org.ferry.core.security.handlers.LogoutSuccessHandler;
 import cn.org.ferry.core.security.jwt.JwtCache;
 import cn.org.ferry.core.security.jwt.JwtGenerator;
 import cn.org.ferry.core.security.jwt.JwtPair;
@@ -16,34 +15,36 @@ import cn.org.ferry.sys.service.LogLoginService;
 import cn.org.ferry.sys.service.SysUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -84,8 +85,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
     private Collection<LoginPostProcessor> loginPostProcessors;
 
+    /**
+     * jwt 生成器
+     */
     @Bean
     public JwtGenerator jwtGenerator(){
+        logger.info("init spring bean of {}", JwtGenerator.class.getName());
         return new JwtGenerator(jwtCache, jwtProperties);
     }
 
@@ -94,6 +99,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler(JwtGenerator jwtGenerator) {
+        logger.info("init spring bean of {}", AuthenticationSuccessHandler.class.getName());
         return (request, response, authentication) -> {
             if (response.isCommitted()) {
                 logger.debug("Response has already been committed");
@@ -122,7 +128,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             logLoginService.insertLogLogin(sysUser.getUserCode(), NetWorkUtils.getIpAddress(request), NetWorkUtils.getUserAgent(request));
             logger.info("user {} login success.", sysUser.getDescription());
-            responseJsonWriter(response, responseData);
+            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_OK, responseData);
         };
     }
 
@@ -131,6 +137,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
+        logger.info("init spring bean of {}", AuthenticationFailureHandler.class.getName());
         return (request, response, exception) -> {
             if (response.isCommitted()) {
                 logger.debug("Response has already been committed");
@@ -140,26 +147,99 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             responseData.setCode(HttpStatus.UNAUTHORIZED.value());
             responseData.setSuccess(false);
             responseData.setMessage("login failure");
-            responseJsonWriter(response, responseData);
+            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_OK, responseData);
         };
     }
 
+    /**
+     * 用户认证的时候出现错误时抛出的异常
+     */
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        logger.info("init spring bean of {}", AuthenticationEntryPoint.class.getName());
+        return (request, response, authException) -> {
+            ResponseData responseData = new ResponseData();
+            responseData.setCode(HttpStatus.UNAUTHORIZED.value());
+            responseData.setSuccess(false);
+            responseData.setMessage("认证失败");
+            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_UNAUTHORIZED, responseData);
+        };
+    }
+
+    /**
+     * 访问受保护资源时被拒绝而抛出的异常
+     */
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        logger.info("init spring bean of {}", AccessDeniedHandler.class.getName());
+        return (request, response, accessDeniedException) -> {
+            ResponseData responseData = new ResponseData();
+            responseData.setCode(HttpStatus.FORBIDDEN.value());
+            responseData.setSuccess(false);
+            responseData.setMessage("访问权限不足");
+            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_FORBIDDEN, responseData);
+        };
+    }
+
+    /**
+     * 登录前置过滤器
+     */
     @Bean
     public PreLoginFilter preLoginFilter(){
+        logger.info("init spring bean of {}", PreLoginFilter.class.getName());
         return new PreLoginFilter(LOGIN_URL,loginPostProcessors);
+    }
+
+    /**
+     * jwt 认证过滤器
+     */
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(){
+        logger.info("init spring bean of {}", JwtAuthenticationFilter.class.getName());
+        return new JwtAuthenticationFilter(jwtGenerator(), jwtCache);
+    }
+
+    /**
+     * 登出拦截器
+     */
+    @Bean
+    public LogoutHandler logoutHandler(){
+        logger.info("init spring bean of {}", LogoutHandler.class.getName());
+        return (request, response, authentication) -> {
+            if(Objects.isNull(authentication)){
+                logger.info("Never logged in, no need to log out.Then Please login.");
+                return ;
+            }
+            User user = (User)authentication.getPrincipal();
+            logger.info("{} logout service.", user.getUsername());
+            ResponseData responseData = new ResponseData();
+            responseData.setMessage("登出成功");
+            responseData.setCode(HttpStatus.OK.value());
+            try {
+                NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_OK, responseData);
+            } catch (IOException e) {
+                logger.error("logout error", e);
+            }
+        };
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         logger.info("start config spring security.");
+        JwtAuthenticationFilter jwtAuthenticationFilter = jwtAuthenticationFilter();
         http
                 .csrf()
                 .disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .addFilterBefore(preLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(authenticationEntryPoint())
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(preLoginFilter(), JwtAuthenticationFilter.class)
                 .formLogin()
                 .loginProcessingUrl(LOGIN_URL)
                 .successHandler(authenticationSuccessHandler(jwtGenerator()))
@@ -167,8 +247,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .addLogoutHandler(new LogoutHandler())
-                .logoutSuccessHandler(new LogoutSuccessHandler())
+                .addLogoutHandler(logoutHandler())
                 .and()
                 .httpBasic();
     }
@@ -176,15 +255,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-    }
-
-    private static void responseJsonWriter(HttpServletResponse response, ResponseData responseData) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setCharacterEncoding("utf-8");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        PrintWriter printWriter = response.getWriter();
-        printWriter.print(new ObjectMapper().writeValueAsString(responseData));
-        printWriter.flush();
-        printWriter.close();
     }
 }

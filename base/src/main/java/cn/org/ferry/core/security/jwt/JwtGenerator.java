@@ -12,9 +12,6 @@ import org.springframework.util.Assert;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -92,26 +89,11 @@ public class JwtGenerator {
     /**
      * 解码 并校验签名 过期不予解析
      */
-    public JSONObject decodeAndVerify(String token) {
+    public JSONObject decode(String token) {
         Assert.hasText(token, "jwt token must not be bank");
         RSAPublicKey rsaPublicKey = (RSAPublicKey) this.keyPair.getPublic();
         SignatureVerifier rsaVerifier = new RsaVerifier(rsaPublicKey);
         Jwt jwt = JwtHelper.decodeAndVerify(token, rsaVerifier);
-        JSONObject jsonObject = JSON.parseObject(jwt.getClaims());
-        Object exp = jsonObject.get("exp");
-
-        if (isExpired(exp)) {
-            throw new IllegalStateException("jwt token is expired");
-        }
-        return jsonObject;
+        return JSON.parseObject(jwt.getClaims());
     }
-
-    /**
-     * 判断jwt token是否过期.
-     */
-    private boolean isExpired(Object exp) {
-        Objects.requireNonNull(exp, "jwt have not exp parameter.");
-        return LocalDateTime.now().isAfter(LocalDateTime.parse(exp.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-    }
-
 }

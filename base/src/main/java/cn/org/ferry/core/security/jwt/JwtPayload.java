@@ -18,6 +18,15 @@ import java.util.Set;
  */
 
 public class JwtPayload {
+    public static final String ISS = "iss";
+    public static final String SUB = "sub";
+    public static final String AUD = "aud";
+    public static final String IAT = "iat";
+    public static final String EXP = "exp";
+    public static final String AUTHORITIES = "authorities";
+    public static final String JTI = "jti";
+    public static final String ADDITIONAL = "additional";
+
     private JSONObject payload = new JSONObject(10);
 
     /**
@@ -77,17 +86,17 @@ public class JwtPayload {
     }
 
     public String toJSON(){
-        payload.put("iss", this.iss);
-        payload.put("sub", this.sub);
-        payload.put("aud", this.aud);
-        payload.put("exp", this.exp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        payload.put("iat", this.iat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        payload.put("jti", this.jti);
+        payload.put(ISS, this.iss);
+        payload.put(SUB, this.sub);
+        payload.put(AUD, this.aud);
+        payload.put(EXP, this.exp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        payload.put(IAT, this.iat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        payload.put(JTI, this.jti);
 
         if (!MapUtils.isEmpty(additional)) {
             payload.putAll(additional);
         }
-        payload.put("authorities", JSONObject.toJSONString(this.authorities));
+        payload.put(AUTHORITIES, JSONObject.toJSONString(this.authorities));
         return payload.toJSONString();
     }
 
