@@ -1,6 +1,5 @@
 package cn.org.ferry.core.configurations;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -47,15 +47,16 @@ public class SpringCacheConfiguration {
 //        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // 序列化类
-        FastJsonRedisSerializer<T> fastJsonRedisSerializer = new FastJsonRedisSerializer(Object.class);
+//        FastJsonRedisSerializer<T> fastJsonRedisSerializer = new FastJsonRedisSerializer(Object.class);
+        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
 
         // 序列化类，对象映射设置
         // 设置 value 的转化格式和 key 的转化格式
         redisTemplate.setKeySerializer(stringRedisSerializer);
-        redisTemplate.setValueSerializer(fastJsonRedisSerializer);
+        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
 
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
-        redisTemplate.setHashValueSerializer(fastJsonRedisSerializer);
+        redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
 
         redisTemplate.afterPropertiesSet();
         return redisTemplate;

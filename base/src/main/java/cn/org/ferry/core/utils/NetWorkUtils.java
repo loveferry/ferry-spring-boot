@@ -1,9 +1,15 @@
 package cn.org.ferry.core.utils;
 
+import cn.org.ferry.core.dto.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 网路工具类
@@ -18,6 +24,7 @@ public final class NetWorkUtils {
     private static final String HTTP_X_FORWARDED_FOR = "HTTP_X_FORWARDED_FOR";
     private static final String UNKNOWN = "unknown";
     private static final String USER_AGENT = "user-agent";
+    public static final String DEFAULT_UNICODE = "utf-8";
 
     private NetWorkUtils(){}
 
@@ -51,5 +58,21 @@ public final class NetWorkUtils {
 
     public static String getUserAgent(HttpServletRequest httpServletRequest){
         return httpServletRequest.getHeader(USER_AGENT);
+    }
+
+    /**
+     * 将 json 数据写入 response 中
+     * @param response 响应
+     * @param status 状态码
+     * @param responseData 响应数据
+     */
+    public static void responseJsonWriter(HttpServletResponse response, int status, ResponseData responseData) throws IOException {
+        response.setStatus(status);
+        response.setCharacterEncoding(DEFAULT_UNICODE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        PrintWriter printWriter = response.getWriter();
+        printWriter.print(new ObjectMapper().writeValueAsString(responseData));
+        printWriter.flush();
+        printWriter.close();
     }
 }
