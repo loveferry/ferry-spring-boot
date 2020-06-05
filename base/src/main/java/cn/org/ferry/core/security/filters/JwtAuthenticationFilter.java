@@ -19,7 +19,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -48,14 +47,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private static final String AUTHENTICATION_PREFIX = "Bearer ";
-    private AuthenticationEntryPoint authenticationEntryPoint = new Http403ForbiddenEntryPoint();
+    private AuthenticationEntryPoint authenticationEntryPoint;
     private JwtGenerator jwtGenerator;
     private JwtCache jwtCache;
 
 
-    public JwtAuthenticationFilter(JwtGenerator jwtGenerator, JwtCache jwtCache) {
+    public JwtAuthenticationFilter(JwtGenerator jwtGenerator, JwtCache jwtCache, AuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtGenerator = jwtGenerator;
         this.jwtCache = jwtCache;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
 
@@ -70,16 +70,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(header) && header.startsWith(AUTHENTICATION_PREFIX)) {
             String jwtToken = header.replace(AUTHENTICATION_PREFIX, "");
-            if (StringUtils.hasText(jwtToken)) {
-                try {
-                    authenticationTokenHandle(jwtToken, request);
-                } catch (AuthenticationException e) {
-                    authenticationEntryPoint.commence(request, response, e);
-                }
-            } else {
+            if (!StringUtils.hasText(jwtToken)) {
                 authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is not found"));
+                return ;
             }
-
+            try {
+                authenticationTokenHandle(jwtToken, request);
+            } catch (AuthenticationException e) {
+                authenticationEntryPoint.commence(request, response, e);
+                return ;
+            }
         }
         chain.doFilter(request, response);
     }
@@ -91,22 +91,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("token authorization start");
         // 解析 token
         JSONObject jsonObject = jwtGenerator.decode(token);
-        String sessionId;
+        String username;
         try {
             Objects.requireNonNull(jsonObject);
-            sessionId = jsonObject.get(JwtPayload.AUD).toString();
+            username = jsonObject.get(JwtPayload.AUD).toString();
         }catch (Exception e){
-            throw new BadCredentialsException("token is invalid");
+            throw new BadCredentialsException("token is invalid", e);
         }
         // 从缓存获取 token
-        JwtPair jwtPair = jwtCache.get(sessionId);
-        // 如果前端传递的token解析出来已经失效，或者从缓存中未取到token，则抛出异常
+        JwtPair jwtPair = jwtCache.get(username);
+        // token 失效，刷新token
         if(LocalDateTime.now().isAfter(
                 LocalDateTime.parse(
                         jsonObject.get(JwtPayload.EXP).toString(),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 )
         ) || Objects.isNull(jwtPair)){
+            jwtCache.expire(username);
             throw new CredentialsExpiredException("token is expired");
         }
         String accessToken = jwtPair.getAccessToken();
@@ -119,7 +120,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authoritiesArray[i] = jsonArray.getString(i);
         }
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(authoritiesArray);
-        User user = new User(sessionId, "[PROTECTED]", authorities);
+        User user = new User(username, "[PROTECTED]", authorities);
         // 构建用户认证token
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

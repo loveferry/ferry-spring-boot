@@ -158,10 +158,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationEntryPoint authenticationEntryPoint(){
         logger.info("init spring bean of {}", AuthenticationEntryPoint.class.getName());
         return (request, response, authException) -> {
+            logger.warn(authException.getMessage());
             ResponseData responseData = new ResponseData();
             responseData.setCode(HttpStatus.UNAUTHORIZED.value());
             responseData.setSuccess(false);
-            responseData.setMessage("认证失败");
+            responseData.setMessage(authException.getMessage());
             NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_UNAUTHORIZED, responseData);
         };
     }
@@ -173,10 +174,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AccessDeniedHandler accessDeniedHandler(){
         logger.info("init spring bean of {}", AccessDeniedHandler.class.getName());
         return (request, response, accessDeniedException) -> {
+            logger.warn(accessDeniedException.getMessage());
             ResponseData responseData = new ResponseData();
             responseData.setCode(HttpStatus.FORBIDDEN.value());
             responseData.setSuccess(false);
-            responseData.setMessage("访问权限不足");
+            responseData.setMessage(accessDeniedException.getMessage());
             NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_FORBIDDEN, responseData);
         };
     }
@@ -196,7 +198,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(){
         logger.info("init spring bean of {}", JwtAuthenticationFilter.class.getName());
-        return new JwtAuthenticationFilter(jwtGenerator(), jwtCache);
+        return new JwtAuthenticationFilter(jwtGenerator(), jwtCache, authenticationEntryPoint());
     }
 
     /**
