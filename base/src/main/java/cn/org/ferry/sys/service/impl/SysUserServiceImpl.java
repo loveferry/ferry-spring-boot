@@ -4,14 +4,14 @@ import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.mapper.SysUserMapper;
 import cn.org.ferry.sys.service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import javax.annotation.Resource;
 
 @Service
 public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysUserService {
-    @Resource
+    @Autowired
     private SysUserMapper sysUserMapper;
 
     @Override

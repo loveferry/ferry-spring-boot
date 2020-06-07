@@ -78,5 +78,9 @@
 		</preConditions>
 		<createSequence sequenceName="SYS_RESOURCE_S" startValue="1" minValue="1" incrementBy="1"/>
 	</changeSet>
-
+	
+	<changeSet id="CREATE_SYS_RESOURCE_INDEX" author="FERRY">
+		<addUniqueConstraint tableName="SYS_RESOURCE" columnNames="RESOURCE_TYPE,RESOURCE_PATH" constraintName="SYS_RESOURCE_UK_RT_RP"/>
+	</changeSet>
+	
 </databaseChangeLog>

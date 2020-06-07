@@ -9,15 +9,15 @@ import cn.org.ferry.sys.mapper.SysAttachmentCategoryMapper;
 import cn.org.ferry.sys.service.SysAttachmentCategoryService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import javax.annotation.Resource;
 
 @Service
 public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachmentCategory> implements SysAttachmentCategoryService {
-    @Resource
+    @Autowired
     private SysAttachmentCategoryMapper sysAttachmentCategoryMapper;
 
     @Override

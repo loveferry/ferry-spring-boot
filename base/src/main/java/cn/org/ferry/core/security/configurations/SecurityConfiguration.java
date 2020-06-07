@@ -2,6 +2,7 @@ package cn.org.ferry.core.security.configurations;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.org.ferry.core.dto.ResponseData;
+import cn.org.ferry.core.security.dynamic.DynamicFilterInvocationSecurityMetadataSource;
 import cn.org.ferry.core.security.filters.JwtAuthenticationFilter;
 import cn.org.ferry.core.security.filters.LoginPostProcessor;
 import cn.org.ferry.core.security.filters.PreLoginFilter;
@@ -17,10 +18,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +39,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -67,23 +76,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String LOGIN_URL = "/login";
 
-    @Resource
+    @Autowired
     private JwtProperties jwtProperties;
 
-    @Resource(name = "jwtRedisCache")
-    private JwtCache jwtCache;
-
-    @Resource(name = "securityUserDetailServiceImpl")
-    private UserDetailsService userDetailsService;
+    @Resource
+    private JwtCache jwtRedisCache;
 
     @Resource
+    private UserDetailsService securityUserDetailServiceImpl;
+
+    @Autowired
     private SysUserService sysUserService;
 
-    @Resource
+    @Autowired
     private LogLoginService logLoginService;
 
-    @Resource
+    @Autowired
     private Collection<LoginPostProcessor> loginPostProcessors;
+
+    @Autowired
+    private List<AccessDecisionVoter<?>> decisionVoters;
 
     /**
      * jwt 生成器
@@ -91,7 +103,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtGenerator jwtGenerator(){
         logger.info("init spring bean of {}", JwtGenerator.class.getName());
-        return new JwtGenerator(jwtCache, jwtProperties);
+        return new JwtGenerator(jwtRedisCache, jwtProperties);
     }
 
     /**
@@ -198,7 +210,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(){
         logger.info("init spring bean of {}", JwtAuthenticationFilter.class.getName());
-        return new JwtAuthenticationFilter(jwtGenerator(), jwtCache, authenticationEntryPoint());
+        return new JwtAuthenticationFilter(jwtGenerator(), jwtRedisCache, authenticationEntryPoint());
     }
 
     /**
@@ -225,6 +237,44 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         };
     }
 
+    /**
+     * 动态元数据加载器
+     */
+    @Bean
+    public FilterInvocationSecurityMetadataSource dynamicFilterInvocationSecurityMetadataSource() {
+        return new DynamicFilterInvocationSecurityMetadataSource();
+    }
+
+    /**
+     * 角色投票器
+     */
+    @Bean
+    public RoleVoter roleVoter() {
+        return new RoleVoter();
+    }
+
+    /**
+     * 基于肯定的访问决策器
+     */
+    @Bean
+    public AccessDecisionManager affirmativeBased() {
+        return new AffirmativeBased(decisionVoters);
+    }
+
+    /**
+     * 自定义 FilterSecurityInterceptor  ObjectPostProcessor 以替换默认配置达到动态权限的目的
+     */
+    private ObjectPostProcessor<FilterSecurityInterceptor> filterSecurityInterceptorObjectPostProcessor() {
+        return new ObjectPostProcessor<FilterSecurityInterceptor>() {
+            @Override
+            public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                object.setAccessDecisionManager(affirmativeBased());
+                object.setSecurityMetadataSource(dynamicFilterInvocationSecurityMetadataSource());
+                return object;
+            }
+        };
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         logger.info("start config spring security.");
@@ -235,8 +285,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/sys/attachment/query").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
+                .withObjectPostProcessor(filterSecurityInterceptorObjectPostProcessor())
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(authenticationEntryPoint())
                 .and()
@@ -256,6 +308,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(securityUserDetailServiceImpl).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

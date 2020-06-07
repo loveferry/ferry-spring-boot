@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> implements SysAttachmentService {
     private static final Logger logger = LoggerFactory.getLogger(SysAttachmentServiceImpl.class);
 
-    @Resource
+    @Autowired
     private SysAttachmentMapper sysAttachmentMapper;
     @Autowired
     private SysAttachmentCategoryService sysAttachmentCategoryService;

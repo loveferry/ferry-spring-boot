@@ -59,7 +59,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
      */
     private static final Logger logger = getLogger(SysGenerateTableServiceImpl.class);
 
-    @Resource
+    @Autowired
     private SysGenerateTableMapper sysGenerateTableMapper;
     @Autowired
     private DataSource dataSource;
