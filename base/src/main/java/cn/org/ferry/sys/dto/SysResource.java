@@ -20,6 +20,8 @@ import javax.persistence.Table;
 @Data
 @Table(name = "SYS_RESOURCE")
 public class SysResource extends BaseDTO {
+	public static final String RESOURCE_TYPE_REST = "REST";
+
 	@Id
 	@GeneratedValue
 	private Long resourceId;

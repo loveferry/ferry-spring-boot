@@ -5,6 +5,7 @@ import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import javax.annotation.Resource;
 
 /**
  * <p>description
@@ -29,7 +29,7 @@ public class SecurityUserDetailServiceImpl implements UserDetailsService {
      */
     private static final Logger logger = LoggerFactory.getLogger(SecurityUserDetailServiceImpl.class);
 
-    @Resource
+    @Autowired
     private SysUserService sysUserService;
 
     @Override

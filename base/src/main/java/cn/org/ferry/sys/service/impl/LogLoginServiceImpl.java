@@ -7,11 +7,11 @@ import cn.org.ferry.sys.mapper.LogLoginMapper;
 import cn.org.ferry.sys.service.LogLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import javax.annotation.Resource;
 
 /**
  * Generate by code generator
@@ -25,7 +25,7 @@ public class LogLoginServiceImpl extends BaseServiceImpl<LogLogin> implements Lo
      **/
     private static final Logger logger = LoggerFactory.getLogger(LogLoginServiceImpl.class);
 
-    @Resource
+    @Autowired
     private LogLoginMapper logLoginMapper;
 
     @Transactional(rollbackFor = Exception.class)

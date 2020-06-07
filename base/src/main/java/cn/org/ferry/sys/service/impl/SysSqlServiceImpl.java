@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 @Service
 public class SysSqlServiceImpl extends BaseServiceImpl<SysSql> implements SysSqlService {
     private static final Logger logger = LoggerFactory.getLogger(SysSqlServiceImpl.class);
-    @Resource
+    @Autowired
     private SysSqlMapper sysSqlMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;

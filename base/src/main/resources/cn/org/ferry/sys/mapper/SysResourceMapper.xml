@@ -9,5 +9,13 @@
 		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
 				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
 	</resultMap>
-
+	
+	<!--<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>-->
+	
+	<select id="queryAllEnabledResourceByType" parameterType="string" resultType="string" >
+		select r.RESOURCE_PATH
+		from SYS_RESOURCE r
+		where r.ENABLED_FLAG = 'Y'
+		  and r.RESOURCE_TYPE = #{type}
+	</select>
 </mapper>

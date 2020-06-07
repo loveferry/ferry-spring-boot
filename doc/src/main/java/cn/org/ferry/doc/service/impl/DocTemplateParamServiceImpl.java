@@ -8,10 +8,10 @@ import cn.org.ferry.doc.mapper.DocTemplateParamMapper;
 import cn.org.ferry.doc.service.DocTemplateParamService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author ferry ferry_sy@163.com
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 
 @Service
 public class DocTemplateParamServiceImpl extends BaseServiceImpl<DocTemplateParam> implements DocTemplateParamService {
-    @Resource
+    @Autowired
     private DocTemplateParamMapper docTemplateParamMapper;
 
     @Override
