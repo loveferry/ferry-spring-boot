@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,8 +75,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    public static final String LOGIN_URL = "/login";
-
     @Autowired
     private JwtProperties jwtProperties;
 
@@ -96,6 +95,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private List<AccessDecisionVoter<?>> decisionVoters;
+
+    @Value("${server.login-url}")
+    private String loginUrl;
+
+    @Value("${server.logout-url}")
+    private String logoutUrl;
 
     /**
      * jwt 生成器
@@ -201,7 +206,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public PreLoginFilter preLoginFilter(){
         logger.info("init spring bean of {}", PreLoginFilter.class.getName());
-        return new PreLoginFilter(LOGIN_URL,loginPostProcessors);
+        return new PreLoginFilter(loginUrl,loginPostProcessors);
     }
 
     /**
@@ -295,12 +300,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(preLoginFilter(), JwtAuthenticationFilter.class)
                 .formLogin()
-                .loginProcessingUrl(LOGIN_URL)
+                .loginProcessingUrl(loginUrl)
                 .successHandler(authenticationSuccessHandler(jwtGenerator()))
                 .failureHandler(authenticationFailureHandler())
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl(logoutUrl)
                 .addLogoutHandler(logoutHandler())
                 .and()
                 .httpBasic();
