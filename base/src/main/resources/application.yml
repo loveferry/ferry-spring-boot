@@ -1,3 +1,8 @@
 spring:
   profiles:
     active: ${activeProfile}
+
+
+server:
+  login-url: /login
+  logout-url: /logout
