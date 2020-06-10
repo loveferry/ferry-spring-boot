@@ -1,6 +1,8 @@
 package cn.org.ferry.core.security.filters;
 
 import cn.org.ferry.core.security.dto.LoginType;
+import cn.org.ferry.core.security.processors.DefaultLoginPostProcessor;
+import cn.org.ferry.core.security.processors.LoginPostProcessor;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
@@ -17,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * <p>登录前过滤器
@@ -53,5 +56,21 @@ public class PreLoginFilter extends GenericFilterBean {
             requestWrapper.setAttribute(LoginPostProcessor.PASSWORD, loginPostProcessor.password(request));
         }
         chain.doFilter(requestWrapper, response);
+    }
+
+    /**
+     * 请求包装类
+     *      将参数放入attribute中，重写获取参数方法，直接从attribute中获取
+     */
+    class ParameterRequestWrapper extends HttpServletRequestWrapper {
+        ParameterRequestWrapper(HttpServletRequest request ) {
+            super(request);
+
+        }
+
+        @Override
+        public String getParameter(String name) {
+            return (String) super.getAttribute(name);
+        }
     }
 }
