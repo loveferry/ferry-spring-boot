@@ -1,4 +1,4 @@
-package cn.org.ferry.core.security.filters;
+package cn.org.ferry.core.security.processors;
 
 import cn.org.ferry.core.security.dto.LoginType;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import javax.servlet.ServletRequest;
  */
 
 @Component("loginPostProcessor")
-public class DefaultLoginPostProcessor implements LoginPostProcessor{
+public class DefaultLoginPostProcessor implements LoginPostProcessor {
     @Override
     public LoginType loginType() {
         return LoginType.FORM;

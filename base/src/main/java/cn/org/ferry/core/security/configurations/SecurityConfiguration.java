@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.security.dynamic.DynamicFilterInvocationSecurityMetadataSource;
 import cn.org.ferry.core.security.filters.JwtAuthenticationFilter;
-import cn.org.ferry.core.security.filters.LoginPostProcessor;
+import cn.org.ferry.core.security.processors.LoginPostProcessor;
 import cn.org.ferry.core.security.filters.PreLoginFilter;
 import cn.org.ferry.core.security.jwt.JwtCache;
 import cn.org.ferry.core.security.jwt.JwtGenerator;

@@ -1,4 +1,4 @@
-package cn.org.ferry.core.security.filters;
+package cn.org.ferry.core.security.processors;
 
 import cn.org.ferry.core.security.dto.LoginType;
 import com.alibaba.fastjson.JSONObject;
