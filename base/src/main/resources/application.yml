@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: ${activeProfile}
+  cache:
+    redis:
+      cache-null-values: true
+      key-prefix: 'ferry:'
+      use-key-prefix: true
 
 
 server:

@@ -36,10 +36,6 @@ spring:
         max-idle: 5
         min-idle: 0
         max-wait: 3000ms
-  cache:
-    redis:
-      time-to-live: 1d
-      use-key-prefix: true
   liquibase:
     enabled: false
 

@@ -1,14 +1,20 @@
 package cn.org.ferry.core.configurations;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.Objects;
 
 /**
  * <p>spring cache 配置累
@@ -19,17 +25,32 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableCaching
+@EnableConfigurationProperties({CacheProperties.class})
 public class SpringCacheConfiguration {
 
+    @Autowired
     private Environment environment;
 
-    public SpringCacheConfiguration(Environment environment){
-        this.environment = environment;
-    }
-
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        return RedisCacheManager.create(redisConnectionFactory);
+    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties) {
+        CacheProperties.Redis redis = cacheProperties.getRedis();
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        if(Objects.nonNull(redis.getTimeToLive())){
+            redisCacheConfiguration = redisCacheConfiguration.entryTtl(redis.getTimeToLive());
+        }
+        if(Objects.nonNull(redis.getKeyPrefix())){
+            redisCacheConfiguration = redisCacheConfiguration.computePrefixWith(name -> redis.getKeyPrefix() + name + ':');
+        }
+        if(!redis.isCacheNullValues()){
+            redisCacheConfiguration.disableCachingNullValues();
+        }
+        if(!redis.isUseKeyPrefix()){
+            redisCacheConfiguration.disableKeyPrefix();
+        }
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnectionFactory)
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
     }
 
     @Bean
