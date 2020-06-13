@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>jwt 认证拦截器
+ * <p>jwt 认证过滤器
  *
  * @author ferry ferry_sy@163.com
  * created by 2020/06/01 16:17
