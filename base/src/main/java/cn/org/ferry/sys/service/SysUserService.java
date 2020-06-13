@@ -26,4 +26,9 @@ public interface SysUserService extends BaseService<SysUser> {
      * 用户信息查询
      */
     List<SysUser> query(String userName, String description);
+
+    /**
+     * 查询用户具有的角色
+     */
+    List<String> queryRoleCodesByUserCode(String userCode);
 }

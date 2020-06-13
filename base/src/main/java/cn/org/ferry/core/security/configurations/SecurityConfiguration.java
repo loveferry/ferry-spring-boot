@@ -75,24 +75,45 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
+    /**
+     * jwt 属性文件
+     */
     @Autowired
     private JwtProperties jwtProperties;
 
+    /**
+     * jwt 缓存 redis 实现类
+     */
     @Resource
     private JwtCache jwtRedisCache;
 
+    /**
+     * 用户详细信息组件
+     */
     @Resource
     private UserDetailsService securityUserDetailServiceImpl;
 
+    /**
+     * 用户服务
+     */
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * 登录日志
+     */
     @Autowired
     private LogLoginService logLoginService;
 
+    /**
+     * 登录前置处理器
+     */
     @Autowired
     private Collection<LoginPostProcessor> loginPostProcessors;
 
+    /**
+     * 投票器
+     */
     @Autowired
     private List<AccessDecisionVoter<?>> decisionVoters;
 
@@ -255,7 +276,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public RoleVoter roleVoter() {
-        return new RoleVoter();
+        RoleVoter roleVoter = new RoleVoter();
+        roleVoter.setRolePrefix("");
+        return roleVoter;
     }
 
     /**
@@ -290,7 +313,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/sys/attachment/query").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .withObjectPostProcessor(filterSecurityInterceptorObjectPostProcessor())

@@ -4,6 +4,8 @@ import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.sys.dto.SysUser;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface SysUserMapper extends Mapper<SysUser> {
     /**
      * 查询用户信息
@@ -20,4 +22,9 @@ public interface SysUserMapper extends Mapper<SysUser> {
      * @return 用户个人信息
      */
     SysUser queryForLoginSuccess(@Param("userName") String userName);
+
+    /**
+     * 查询用户具有的角色
+     */
+    List<String> queryRoleCodesByUserCode(@Param("userCode") String userCode);
 }

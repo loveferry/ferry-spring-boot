@@ -6,7 +6,6 @@ import cn.org.ferry.sys.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * <p>description
+ * <p>用户详细信息组件， 动态加载用户的认证和鉴权相关信息
  *
  * @author ferry ferry_sy@163.com
  * created by 2020/05/18 20:29
@@ -52,7 +51,7 @@ public class SecurityUserDetailServiceImpl implements UserDetailsService {
                 .accountExpired(!accountNonExpired)
                 .credentialsExpired(false)
                 .accountLocked(sysUser.getCredentialsBlock()==IfOrNot.Y)
-                .authorities(AuthorityUtils.NO_AUTHORITIES)
+                .authorities(sysUser.getAuthorities())
                 .build();
     }
 }
