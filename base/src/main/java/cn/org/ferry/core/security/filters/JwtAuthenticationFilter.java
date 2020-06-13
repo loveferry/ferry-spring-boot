@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Objects.requireNonNull(jsonObject);
             username = jsonObject.get(JwtPayload.AUD).toString();
         }catch (Exception e){
-            throw new BadCredentialsException("token is invalid", e);
+            throw new BadCredentialsException("Invalid token.", e);
         }
         // 从缓存获取 token
         JwtPair jwtPair = jwtCache.get(username);
@@ -108,11 +108,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 )
         ) || Objects.isNull(jwtPair)){
             jwtCache.expire(username);
-            throw new CredentialsExpiredException("token is expired");
+            throw new CredentialsExpiredException("Expired token.");
         }
         String accessToken = jwtPair.getAccessToken();
         if (!token.equals(accessToken)) {
-            throw new BadCredentialsException("token is invalid");
+            throw new BadCredentialsException("Invalid token.");
         }
         JSONArray jsonArray = jsonObject.getJSONArray(JwtPayload.AUTHORITIES);
         String[] authoritiesArray = new String[jsonArray.size()];
