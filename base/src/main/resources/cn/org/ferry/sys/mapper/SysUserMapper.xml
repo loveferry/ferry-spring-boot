@@ -58,4 +58,24 @@
 		FROM sys_user t
 		WHERE t.user_name = #{userName}
 	</select>
+	
+	<select id="queryRoleCodesByUserCode" parameterType="string" resultType="string">
+		select r.ROLE_CODE
+		from SYS_USER_ROLE_RELATION r
+		where r.SOURCE_TYPE = 'SYS_USER'
+		  and r.SOURCE_CODE = #{userCode}
+		  and r.ENABLED_FLAG = 'Y'
+		  and exists(select 1 from SYS_ROLE ro where ro.ENABLED_FLAG = 'Y'
+												 and ro.ROLE_CODE = r.ROLE_CODE)
+		union select r.ROLE_CODE
+		from SYS_USER_GROUP_RELATION gr,
+			 SYS_USER_ROLE_RELATION r
+		where gr.USER_CODE = #{userCode}
+		  and gr.ENABLED_FLAG = 'Y'
+		  and gr.GROUP_CODE = r.SOURCE_CODE
+		  and r.SOURCE_TYPE = 'SYS_USER_GROUP'
+		  and r.ENABLED_FLAG = 'Y'
+		  and exists(select 1 from SYS_ROLE ro where ro.ENABLED_FLAG = 'Y'
+												 and ro.ROLE_CODE = r.ROLE_CODE)
+	</select>
 </mapper>

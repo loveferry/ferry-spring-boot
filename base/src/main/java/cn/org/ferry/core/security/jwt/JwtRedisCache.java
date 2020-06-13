@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>description
+ * <p>jwt 缓存 redis 实现类
  *
  * @author ferry ferry_sy@163.com
  * created by 2020/05/31 14:10

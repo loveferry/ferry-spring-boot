@@ -4,9 +4,13 @@ import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.mapper.SysUserMapper;
 import cn.org.ferry.sys.service.SysUserService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,24 +25,17 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
 
     @Override
     public SysUser queryByUserNameForSecurityAuthentication(String userName) {
-        return sysUserMapper.queryByUserNameForSecurityAuthentication(userName);
-    }
-
-    /*@Transactional(rollbackFor = Exception.class)
-    @Override
-    public ResponseData login(HttpServletRequest request, SysUser sysUser) {
-        String password = sysUser.getPassword();
-        ResponseData responseData = new ResponseData();
-        sysUser = queryByUserCode(sysUser.getUserCode());
-        if(sysUser == null || !StringUtils.equals(password, sysUser.getPassword())){
-            responseData.setSuccess(false);
-            responseData.setMessage("用户不存在或密码输入错误!");
-            return responseData;
+        SysUser sysUser = sysUserMapper.queryByUserNameForSecurityAuthentication(userName);
+        List<String> roleCodes = queryRoleCodesByUserCode(sysUser.getUserCode());
+        if(CollectionUtils.isEmpty(roleCodes)){
+            sysUser.setAuthorities(AuthorityUtils.NO_AUTHORITIES);
+        }else{
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roleCodes.size());
+            roleCodes.forEach(roleCode -> grantedAuthorities.add(() -> roleCode));
+            sysUser.setAuthorities(grantedAuthorities);
         }
-        logLoginService.insertLogLogin(sysUser.getUserCode(), NetWorkUtils.getIpAddress(request), NetWorkUtils.getUserAgent(request));
-        responseData.setMessage("登陆成功!");
-        return responseData;
-    }*/
+        return sysUser;
+    }
 
     @Override
     public List<SysUser> query(String userName, String description) {
@@ -46,5 +43,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         sysUser.setUserName(userName);
         sysUser.setDescription(description);
         return sysUserMapper.select(sysUser);
+    }
+
+    @Override
+    public List<String> queryRoleCodesByUserCode(String userCode) {
+        return sysUserMapper.queryRoleCodesByUserCode(userCode);
     }
 }

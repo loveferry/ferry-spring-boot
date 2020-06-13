@@ -95,12 +95,14 @@
 			<column name="SOURCE_TYPE" value="SYS_USER"/>
 			<column name="SOURCE_CODE" value="ADMIN"/>
 			<column name="ROLE_CODE" value="ADMIN"/>
+			<column name="DESCRIPTION" value="将 ADMIN 角色分配给 ADMIN用户"/>
 		</insert>
 		<insert tableName="SYS_USER_ROLE_RELATION">
 			<column name="RELATION_ID" valueComputed="${SYS_USER_ROLE_RELATION_SEQUENCE_NEXT_VALUE}"/>
 			<column name="SOURCE_TYPE" value="SYS_USER_GROUP"/>
 			<column name="SOURCE_CODE" value="ADMIN"/>
 			<column name="ROLE_CODE" value="ADMIN"/>
+			<column name="DESCRIPTION" value="将 ADMIN 角色分配给 ADMIN用户组"/>
 		</insert>
 	</changeSet>
 	

@@ -49,7 +49,10 @@ public class DynamicFilterInvocationSecurityMetadataSource implements FilterInvo
         ).findAny().orElseThrow(() -> new AccessDeniedException("Resource is not defined."));
         AntPathRequestMatcher antPathRequestMatcher = (AntPathRequestMatcher) reqMatcher;
         List<String> roles = sysRoleService.obtainEnabledRolesByPattern(SysResource.RESOURCE_TYPE_REST, antPathRequestMatcher.getPattern());
-        return CollectionUtils.isEmpty(roles) ? null : SecurityConfig.createList(roles.toArray(new String[0]));
+        if(CollectionUtils.isEmpty(roles)){
+            throw new AccessDeniedException("Unauthorized resources 【" + antPathRequestMatcher.getPattern() + "】.");
+        }
+        return SecurityConfig.createList(roles.toArray(new String[roles.size()]));
     }
 
     @Override

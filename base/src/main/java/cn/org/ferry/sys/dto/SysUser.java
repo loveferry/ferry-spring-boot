@@ -8,11 +8,14 @@ import cn.org.ferry.mybatis.handlers.IfOrNotHandler;
 import cn.org.ferry.mybatis.handlers.SexHandler;
 import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 系统用户 创建于 2018-09-11
@@ -97,4 +100,7 @@ public class SysUser extends BaseDTO {
      * 有效期到
      */
     private Date validityDateTo;
+
+    @Transient
+    private List<GrantedAuthority> authorities;
 }
