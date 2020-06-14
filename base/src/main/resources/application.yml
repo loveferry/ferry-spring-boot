@@ -10,4 +10,4 @@ spring:
 
 server:
   login-url: /api/login
-  logout-url: /logout
+  logout-url: /api/logout

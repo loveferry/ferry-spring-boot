@@ -1,21 +1,24 @@
 package cn.org.ferry.core.security.configurations;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.org.ferry.core.dto.CorsProp;
 import cn.org.ferry.core.dto.ResponseData;
+import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.security.dynamic.DynamicFilterInvocationSecurityMetadataSource;
 import cn.org.ferry.core.security.filters.JwtAuthenticationFilter;
-import cn.org.ferry.core.security.processors.LoginPostProcessor;
 import cn.org.ferry.core.security.filters.PreLoginFilter;
 import cn.org.ferry.core.security.jwt.JwtCache;
 import cn.org.ferry.core.security.jwt.JwtGenerator;
 import cn.org.ferry.core.security.jwt.JwtPair;
 import cn.org.ferry.core.security.jwt.JwtProperties;
+import cn.org.ferry.core.security.processors.LoginPostProcessor;
 import cn.org.ferry.core.utils.NetWorkUtils;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.LogLoginService;
 import cn.org.ferry.sys.service.SysUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,11 +123,55 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private List<AccessDecisionVoter<?>> decisionVoters;
 
+    /**
+     * 跨域访问配置属性类
+     */
+    @Autowired
+    private CorsProp corsProp;
+
     @Value("${server.login-url}")
     private String loginUrl;
 
     @Value("${server.logout-url}")
     private String logoutUrl;
+
+    /**
+     * 跨域请求配置
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        // 设置允许的网站域名，如果全允许则设为 *
+        if(CollectionUtils.isEmpty(corsProp.getAllowedOrigins())){
+            config.addAllowedOrigin("*");
+        }else{
+            for (String allowedOrigin : corsProp.getAllowedOrigins()) {
+                config.addAllowedOrigin(allowedOrigin);
+            }
+        }
+        // 设置请求头允许范围
+        if(CollectionUtils.isEmpty(corsProp.getAllowedHeaders())){
+            throw new CommonException("未设置允许的请求头!");
+        }else{
+            for (String allowedHeader : corsProp.getAllowedHeaders()) {
+                config.addAllowedHeader(allowedHeader);
+            }
+        }
+        // 设置请求方式的允许范围
+        if(CollectionUtils.isEmpty(corsProp.getAllowedMethods())){
+            throw new CommonException("未设置允许的请求方式!");
+        }else{
+            for (String allowedMethod : corsProp.getAllowedMethods()) {
+                config.addAllowedMethod(allowedMethod);
+            }
+        }
+        // 设置预检请求的最大缓存范围
+        config.setMaxAge(corsProp.getMaxAge());
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration(corsProp.getUrl(), config);
+        return source;
+    }
 
     /**
      * jwt 生成器
@@ -310,6 +360,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf()
                 .disable()
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()

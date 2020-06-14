@@ -3,6 +3,7 @@ package cn.org.ferry.core.security.filters;
 import cn.org.ferry.core.security.dto.LoginType;
 import cn.org.ferry.core.security.processors.DefaultLoginPostProcessor;
 import cn.org.ferry.core.security.processors.LoginPostProcessor;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
@@ -38,7 +39,7 @@ public class PreLoginFilter extends GenericFilterBean {
 
     public PreLoginFilter(String loginProcessingUrl, Collection<LoginPostProcessor> loginPostProcessors) {
         Assert.notNull(loginProcessingUrl, "loginProcessingUrl must not be null");
-        requiresAuthenticationRequestMatcher = new AntPathRequestMatcher(loginProcessingUrl, "POST");
+        requiresAuthenticationRequestMatcher = new AntPathRequestMatcher(loginProcessingUrl, HttpMethod.POST.name());
         if (CollectionUtils.isEmpty(loginPostProcessors)) {
             DefaultLoginPostProcessor loginPostProcessor = new DefaultLoginPostProcessor();
             processors.put(loginPostProcessor.loginType(), loginPostProcessor);
