@@ -6,12 +6,14 @@ import cn.org.ferry.sys.mapper.SysUserMapper;
 import cn.org.ferry.sys.service.SysUserService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysUserService {
@@ -26,6 +28,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Override
     public SysUser queryByUserNameForSecurityAuthentication(String userName) {
         SysUser sysUser = sysUserMapper.queryByUserNameForSecurityAuthentication(userName);
+        if(Objects.isNull(sysUser)){
+            throw new BadCredentialsException("User does not exist or password error.");
+        }
         List<String> roleCodes = queryRoleCodesByUserCode(sysUser.getUserCode());
         if(CollectionUtils.isEmpty(roleCodes)){
             sysUser.setAuthorities(AuthorityUtils.NO_AUTHORITIES);

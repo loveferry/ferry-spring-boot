@@ -184,7 +184,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             ResponseData responseData = new ResponseData();
             responseData.setCode(HttpStatus.UNAUTHORIZED.value());
             responseData.setSuccess(false);
-            responseData.setMessage("login failure");
+            responseData.setMessage(exception.getMessage());
             NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_OK, responseData);
         };
     }
