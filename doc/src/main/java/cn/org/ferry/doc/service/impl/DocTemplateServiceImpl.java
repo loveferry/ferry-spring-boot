@@ -1,7 +1,6 @@
 package cn.org.ferry.doc.service.impl;
 
 import cn.org.ferry.core.dto.ResponseData;
-import cn.org.ferry.core.exceptions.ParameterException;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
 import cn.org.ferry.doc.enums.BookMarkType;
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -74,18 +74,12 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         ResponseData responseData = new ResponseData();
         responseData.setSuccess(true);
         responseData.setMessage("模版定义成功");
-        if(null == definition){
-            throw new ParameterException("模版参数必填！");
-        }
-        if(StringUtils.isBlank(definition.getTemplateCode())){
-            throw new ParameterException("模版代码必填!");
-        }
-        if(StringUtils.isBlank(definition.getTemplateName())){
-            throw new ParameterException("模版名称必填!");
-        }
-        if(StringUtils.isBlank(definition.getDescription())){
-            throw new ParameterException("模版说明必填!");
-        }
+
+        Assert.notNull(definition, "模版参数必填！");
+        Assert.hasLength(definition.getTemplateCode(), "模版代码必填！");
+        Assert.hasLength(definition.getTemplateName(), "模版名称必填！");
+        Assert.hasLength(definition.getDescription(), "模版说明必填！");
+
         DocTemplate docTemplate = docTemplateMapper.queryByTemplateCode(definition.getTemplateCode());
         if(null == docTemplate){
             docTemplate = new DocTemplate();

@@ -3,9 +3,9 @@ package cn.org.ferry.core.advice;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.exceptions.BaseException;
 import cn.org.ferry.core.exceptions.CommonException;
-import cn.org.ferry.core.exceptions.ParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,11 +50,11 @@ public class WebExceptionHandler {
 
     @ExceptionHandler
     @ResponseBody
-    public ResponseData handlerException(ParameterException e){
+    public ResponseData handlerException(IllegalArgumentException e){
         logger.error("抛出的运行时参数异常：{}", e);
         ResponseData responseData = new ResponseData();
         responseData.setSuccess(false);
-        responseData.setCode(e.getCode());
+        responseData.setCode(HttpStatus.OK.value());
         responseData.setMessage(e.getMessage());
         return responseData;
     }
