@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service.impl;
 
 import cn.org.ferry.core.dto.BaseDTO;
+import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.core.service.BaseService;
@@ -513,7 +514,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append("import ").append(Api.class.getName()).append(";\n")
                 .append("import ").append(ApiOperation.class.getName()).append(";\n")
                 .append("import ").append(ApiParam.class.getName()).append(";\n")
-                .append("import ").append(List.class.getName()).append(";\n")
+                .append("import ").append(ResponseData.class.getName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(sysGenerateTable.getServiceName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".service.").append(sysGenerateTable.getServiceName()).append(";\n")
@@ -535,11 +536,12 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append("\t@RequestMapping(value = \"/").append(
                             sysGenerateTable.getTableName().toLowerCase().replaceAll("_", "/")
                         ).append("/query").append("\", method = RequestMethod.GET)\n")
-                .append("\tpublic List<").append(sysGenerateTable.getEntityName()).append("> query(")
+                .append("\tpublic ").append(ResponseData.class.getSimpleName()).append(" query(")
                 .append(sysGenerateTable.getEntityName()).append(" ").append(lowerEntityName).append(",\n")
                 .append("\t\t\t\t\t\t\t\t@ApiParam(name = \"page\", value = \"当前页\") @RequestParam(defaultValue = \"1\") int page,\n")
                 .append("\t\t\t\t\t\t\t\t@ApiParam(name = \"pageSize\", value = \"页面大小\") @RequestParam(defaultValue = \"10\") int pageSize){\n")
-                .append("\t\treturn ").append(lowerServiceName).append(".select(").append(lowerEntityName).append(", page, pageSize);\n")
+                .append("\t\treturn new ").append(ResponseData.class.getSimpleName()).append('(')
+                .append(lowerServiceName).append(".select(").append(lowerEntityName).append(", page, pageSize));\n")
                 .append("\t}\n")
                 .append('\n')
                 .append("}");
