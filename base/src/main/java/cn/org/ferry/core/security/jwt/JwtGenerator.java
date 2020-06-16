@@ -1,7 +1,9 @@
 package cn.org.ferry.core.security.jwt;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.RsaSigner;
@@ -12,6 +14,8 @@ import org.springframework.util.Assert;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -50,10 +54,16 @@ public class JwtGenerator {
      * @param authorities 权限集
      * @param additional 额外的属性
      */
-    public JwtPair jwtPair(String aud, Set<String> authorities, JSONObject additional) {
+    public JwtPair jwtPair(String aud, Collection<GrantedAuthority> authorities, JSONObject additional) {
+        Set<String> authoritySet = new HashSet<>();
+        if (CollectionUtil.isNotEmpty(authorities)) {
+            for (GrantedAuthority authority : authorities) {
+                authoritySet.add(authority.getAuthority());
+            }
+        }
         JwtPair jwtPair = new JwtPair();
-        jwtPair.setAccessToken(jwtToken(aud, jwtProperties.getAccessExp(), authorities, additional));
-        jwtPair.setRefreshToken(jwtToken(aud, jwtProperties.getRefreshExp(), authorities, additional));
+        jwtPair.setAccessToken(jwtToken(aud, jwtProperties.getAccessExp(), authoritySet, additional));
+        jwtPair.setRefreshToken(jwtToken(aud, jwtProperties.getRefreshExp(), authoritySet, additional));
         // 放入缓存
         jwtCache.put(jwtPair, aud);
         return jwtPair;

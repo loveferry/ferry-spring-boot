@@ -1,23 +1,18 @@
 package cn.org.ferry.core.security.configurations;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.org.ferry.core.dto.CorsProp;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.security.dynamic.DynamicFilterInvocationSecurityMetadataSource;
 import cn.org.ferry.core.security.filters.JwtAuthenticationFilter;
 import cn.org.ferry.core.security.filters.PreLoginFilter;
+import cn.org.ferry.core.security.handlers.SecurityAuthenticationFailureHandler;
+import cn.org.ferry.core.security.handlers.SecurityAuthenticationSuccessHandler;
 import cn.org.ferry.core.security.jwt.JwtCache;
 import cn.org.ferry.core.security.jwt.JwtGenerator;
-import cn.org.ferry.core.security.jwt.JwtPair;
 import cn.org.ferry.core.security.jwt.JwtProperties;
 import cn.org.ferry.core.security.processors.LoginPostProcessor;
 import cn.org.ferry.core.utils.NetWorkUtils;
-import cn.org.ferry.sys.dto.SysUser;
-import cn.org.ferry.sys.service.LogLoginService;
-import cn.org.ferry.sys.service.SysUserService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +32,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,14 +48,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
@@ -98,18 +87,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Resource
     private UserDetailsService securityUserDetailServiceImpl;
-
-    /**
-     * 用户服务
-     */
-    @Autowired
-    private SysUserService sysUserService;
-
-    /**
-     * 登录日志
-     */
-    @Autowired
-    private LogLoginService logLoginService;
 
     /**
      * 登录前置处理器
@@ -186,38 +163,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * 登录认证成功拦截器
      */
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(JwtGenerator jwtGenerator) {
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
         logger.info("init spring bean of {}", AuthenticationSuccessHandler.class.getName());
-        return (request, response, authentication) -> {
-            if (response.isCommitted()) {
-                logger.debug("Response has already been committed");
-                return;
-            }
-            Map<String, Object> map = new HashMap<>();
-            User principal = (User) authentication.getPrincipal();
-
-            Collection<GrantedAuthority> authorities = principal.getAuthorities();
-            Set<String> authoritySet = new HashSet<>();
-            if (CollectionUtil.isNotEmpty(authorities)) {
-                for (GrantedAuthority authority : authorities) {
-                    authoritySet.add(authority.getAuthority());
-                }
-            }
-
-            SysUser sysUser = sysUserService.queryForLoginSuccess(principal.getUsername());
-            JwtPair jwtPair = jwtGenerator.jwtPair(principal.getUsername(), authoritySet, JSON.parseObject(JSONObject.toJSONString(sysUser)));
-            map.put("access_token", jwtPair.getAccessToken());
-            map.put("refresh_token", jwtPair.getRefreshToken());
-
-            List<Map<String, Object>> list = new ArrayList<>(1);
-            list.add(map);
-            ResponseData responseData = new ResponseData(list);
-            responseData.setMessage("login success");
-
-            logLoginService.insertLogLogin(sysUser.getUserCode(), NetWorkUtils.getIpAddress(request), NetWorkUtils.getUserAgent(request));
-            logger.info("user {} login success.", sysUser.getDescription());
-            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_OK, responseData);
-        };
+        return new SecurityAuthenticationSuccessHandler();
     }
 
     /**
@@ -226,17 +174,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         logger.info("init spring bean of {}", AuthenticationFailureHandler.class.getName());
-        return (request, response, exception) -> {
-            if (response.isCommitted()) {
-                logger.debug("Response has already been committed");
-                return;
-            }
-            ResponseData responseData = new ResponseData();
-            responseData.setCode(HttpStatus.UNAUTHORIZED.value());
-            responseData.setSuccess(false);
-            responseData.setMessage(exception.getMessage());
-            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_OK, responseData);
-        };
+        return new SecurityAuthenticationFailureHandler();
     }
 
     /**
@@ -376,7 +314,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(preLoginFilter(), JwtAuthenticationFilter.class)
                 .formLogin()
                 .loginProcessingUrl(loginUrl)
-                .successHandler(authenticationSuccessHandler(jwtGenerator()))
+                .successHandler(authenticationSuccessHandler())
                 .failureHandler(authenticationFailureHandler())
                 .and()
                 .logout()

@@ -46,7 +46,7 @@ public class DynamicFilterInvocationSecurityMetadataSource implements FilterInvo
                 .stream().map(AntPathRequestMatcher::new).collect(Collectors.toSet());
         RequestMatcher reqMatcher = requestMatchers.stream().filter(
                 requestMatcher -> requestMatcher.matches(request)
-        ).findAny().orElseThrow(() -> new AccessDeniedException("Resource is not defined."));
+        ).findAny().orElseThrow(() -> new AccessDeniedException("Undefined resources [" + request.getRequestURI() + "]."));
         AntPathRequestMatcher antPathRequestMatcher = (AntPathRequestMatcher) reqMatcher;
         List<String> roles = sysRoleService.obtainEnabledRolesByPattern(SysResource.RESOURCE_TYPE_REST, antPathRequestMatcher.getPattern());
         if(CollectionUtils.isEmpty(roles)){

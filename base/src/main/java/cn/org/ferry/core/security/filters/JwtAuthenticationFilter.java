@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(header) && header.startsWith(AUTHENTICATION_PREFIX)) {
             String jwtToken = header.replace(AUTHENTICATION_PREFIX, "");
             if (!StringUtils.hasText(jwtToken)) {
-                authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("token is not found"));
+                authenticationEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("Not found token."));
                 return ;
             }
             try {
