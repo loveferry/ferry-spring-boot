@@ -31,7 +31,7 @@
 			<column name="AUTHORITY_CODE" type="VARCHAR(100)" remarks="权限编码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RESOURCE_ID" type="BIGINT" remarks="资源id">
+			<column name="RESOURCE_PATH" type="VARCHAR(200)" remarks="资源路径">
 				<constraints nullable="false"/>
 			</column>
 			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
@@ -53,10 +53,10 @@
 			<column name="RELATION_ID" type="BIGINT" autoIncrement="true" remarks="PK">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_AUTH_RES_REL_PK_RI"/>
 			</column>
-			<column name="AUTHORITY_CODE" type="BIGINT" remarks="权限编码">
+			<column name="AUTHORITY_CODE" type="VARCHAR(100)" remarks="权限编码">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RESOURCE_ID" type="BIGINT" remarks="资源id">
+			<column name="RESOURCE_PATH" type="VARCHAR(200)" remarks="资源路径">
 				<constraints nullable="false"/>
 			</column>
 			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
@@ -76,5 +76,8 @@
 		</preConditions>
 		<createSequence sequenceName="SYS_AUTHORITY_RESOURCE_REL_S" startValue="1" minValue="1" incrementBy="1"/>
 	</changeSet>
-
+	
+	<changeSet id="CREATE_SYS_AUTHORITY_RESOURCE_REL_INDEX" author="FERRY">
+		<addUniqueConstraint tableName="SYS_AUTHORITY_RESOURCE_REL" columnNames="RESOURCE_PATH,AUTHORITY_CODE" constraintName="SYS_AUTH_RES_REL_UK_RP_AC"/>
+	</changeSet>
 </databaseChangeLog>

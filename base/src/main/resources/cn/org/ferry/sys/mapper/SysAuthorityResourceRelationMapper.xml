@@ -4,7 +4,7 @@
 	<resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysAuthorityResourceRelation">
 		<id column="relation_id" property="relationId" javaType="java.lang.Long" jdbcType="BIGINT"/>
 		<result column="authority_code" property="authorityCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="resource_id" property="resourceId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+		<result column="RESOURCE_PATH" property="resourcePath" javaType="java.lang.String" jdbcType="VARCHAR"/>
 		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
 				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
 	</resultMap>

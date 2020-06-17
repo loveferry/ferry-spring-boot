@@ -28,17 +28,17 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
 
-	@Cacheable(value = "role", key = "#type.concat(':').#pattern")
+	@Cacheable(value = "role", key = "#pattern")
 	@Override
-	public List<String> obtainEnabledRolesByPattern(String type, String pattern) {
-		logger.info("obtain enabled roles by pattern, type: {}, pattern: {}", type, pattern);
-		return sysRoleMapper.obtainEnabledRolesByPattern(type, pattern);
+	public List<String> obtainEnabledRolesByPattern(String pattern) {
+		logger.info("obtain enabled roles by pattern: {}", pattern);
+		return sysRoleMapper.obtainEnabledRolesByPattern(pattern);
 	}
 
-	@CacheEvict(value = "role", key = "#type.concat(':').#pattern")
+	@CacheEvict(value = "role", key = "#pattern")
 	@Override
-	public void expireEnabledRolesByPattern(String type, String pattern) {
-		logger.info("Clean the role of pattern cache.");
+	public void expireEnabledRolesByPattern(String pattern) {
+		logger.info("Clean the role of pattern cache {}.", pattern);
 	}
 
 	@Override

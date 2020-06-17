@@ -20,23 +20,16 @@ import javax.persistence.Table;
 @Data
 @Table(name = "SYS_RESOURCE")
 public class SysResource extends BaseDTO {
-	public static final String RESOURCE_TYPE_REST = "rest";
 
 	@Id
 	@GeneratedValue
 	private Long resourceId;
 
 	/**
-	 * 资源类型
-	 */
-	@Length(max = 10)
-	private String resourceType;
-
-	/**
 	 * 资源路径
 	 */
 	@Length(max = 200)
-	private String resourcePath;
+	private String path;
 
 	/**
 	 * 描述

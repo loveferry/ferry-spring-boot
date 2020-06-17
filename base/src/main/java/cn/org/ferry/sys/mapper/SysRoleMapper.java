@@ -15,7 +15,7 @@ public interface SysRoleMapper extends Mapper<SysRole>{
     /**
      * 根据给定的资源路径，获取授权的角色
      */
-    List<String> obtainEnabledRolesByPattern(@Param("type") String type, @Param("pattern") String pattern);
+    List<String> obtainEnabledRolesByPattern(@Param("pattern") String pattern);
 
     /**
      * 获取所有角色

@@ -3,8 +3,7 @@
 <mapper namespace="cn.org.ferry.sys.mapper.SysResourceMapper">
 	<resultMap id="BaseResultMap" type="cn.org.ferry.sys.dto.SysResource">
 		<id column="resource_id" property="resourceId" javaType="java.lang.Long" jdbcType="BIGINT"/>
-		<result column="resource_type" property="resourceType" javaType="java.lang.String" jdbcType="VARCHAR"/>
-		<result column="resource_path" property="resourcePath" javaType="java.lang.String" jdbcType="VARCHAR"/>
+		<result column="path" property="path" javaType="java.lang.String" jdbcType="VARCHAR"/>
 		<result column="description" property="description" javaType="java.lang.String" jdbcType="VARCHAR"/>
 		<result column="enabled_flag" property="enabledFlag" jdbcType="VARCHAR" javaType="cn.org.ferry.mybatis.enums.IfOrNot"
 				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
@@ -12,10 +11,9 @@
 	
 	<!--<cache type="cn.org.ferry.mybatis.cache.RedisCache"/>-->
 	
-	<select id="queryAllEnabledResourceByType" parameterType="string" resultType="string" >
-		select r.RESOURCE_PATH
+	<select id="queryAllEnabledResource" resultType="string" >
+		select r.PATH
 		from SYS_RESOURCE r
 		where r.ENABLED_FLAG = 'Y'
-		  and r.RESOURCE_TYPE = #{type}
 	</select>
 </mapper>

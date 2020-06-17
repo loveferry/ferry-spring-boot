@@ -30,9 +30,9 @@ public class SysAuthorityResourceRelation extends BaseDTO {
 	private String authorityCode;
 
 	/**
-	 * 资源id
+	 * 资源路径
 	 */
-	private Long resourceId;
+	private String resourcePath;
 
 	/**
 	 * 启用标志('Y','N')

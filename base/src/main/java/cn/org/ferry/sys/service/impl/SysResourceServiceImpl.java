@@ -1,12 +1,12 @@
 package cn.org.ferry.sys.service.impl;
 
-import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
 import cn.org.ferry.core.utils.ConstantUtils;
 import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysResource;
 import cn.org.ferry.sys.mapper.SysResourceMapper;
 import cn.org.ferry.sys.service.SysResourceService;
+import cn.org.ferry.sys.service.SysRoleService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,7 +20,6 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotEmpty;
 
@@ -44,17 +43,20 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
 	@Autowired
 	private SysResourceMapper sysResourceMapper;
 
-	@Cacheable(value = "resource", key = "#type")
+	@Autowired
+	private SysRoleService sysRoleService;
+
+	@Cacheable(value = "resource", key = "'all'")
 	@Override
-	public List<String> queryAllEnabledResourceByType(String type) {
+	public List<String> queryAllEnabledResource() {
 		logger.info("query all enabled rest resource.");
-		return sysResourceMapper.queryAllEnabledResourceByType(type);
+		return sysResourceMapper.queryAllEnabledResource();
 	}
 
-	@CacheEvict(value = "resource", key = "#type")
+	@CacheEvict(value = "resource", key = "'all'")
 	@Override
-	public void expireAllEnabledResourceByType(String type) {
-		logger.info("expire cache of resource:{}", type);
+	public void expireAllEnabledResource() {
+		logger.info("expire cache of all resource.");
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -107,23 +109,19 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
 				ArrayUtils.isNotEmpty(parts) && parts.length == 4,
 				"资源定义脚本语句【"+script+"】不合法：脚本形式如 resource_definition(type,path,description,enabled_flag) 。"
 		);
-		String type = parts[0];
-		String path = parts[1];
-		String description = parts[2];
-		String enabledFlag = parts[3];
-		Assert.hasText(type, "资源定义脚本语句【"+script+"】资源类型不能为空");
+		String path = parts[0];
+		String description = parts[1];
+		String enabledFlag = parts[2];
 		Assert.hasText(path, "资源定义脚本语句【"+script+"】资源路径不能为空");
 		final String[] yAndN = new String[]{"Y", "N"};
 		Assert.isTrue(StringUtils.equalsAny(enabledFlag, yAndN), "资源定义脚本语句【"+script+"】是否启用枚举值为：Y,N");
 		// 插入表
 		SysResource sysResource = new SysResource();
-		sysResource.setResourceType(type);
-		sysResource.setResourcePath(path);
+		sysResource.setPath(path);
 		sysResource = sysResourceMapper.selectOne(sysResource);
 		if(Objects.isNull(sysResource)){
 			sysResource = new SysResource();
-			sysResource.setResourceType(type);
-			sysResource.setResourcePath(path);
+			sysResource.setPath(path);
 			sysResource.setDescription(description);
 			sysResource.setEnabledFlag(IfOrNot.valueOf(enabledFlag));
 			insertSelective(sysResource);
@@ -135,6 +133,7 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
 			logger.info("resource update {} record.", i);
 		}
 		// 将缓存中的资源
-		expireAllEnabledResourceByType(type);
+		expireAllEnabledResource();
+		sysRoleService.expireEnabledRolesByPattern(path);
 	}
 }

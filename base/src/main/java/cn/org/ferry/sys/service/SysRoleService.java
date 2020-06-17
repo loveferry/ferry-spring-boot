@@ -14,12 +14,12 @@ public interface SysRoleService extends BaseService<SysRole> {
     /**
      * 根据给定的资源路径，获取授权的角色
      */
-    List<String> obtainEnabledRolesByPattern(String type, String pattern);
+    List<String> obtainEnabledRolesByPattern(String pattern);
 
     /**
      * 清除缓存
      */
-    void expireEnabledRolesByPattern(String type, String pattern);
+    void expireEnabledRolesByPattern(String pattern);
 
     /**
      * 获取所有角色

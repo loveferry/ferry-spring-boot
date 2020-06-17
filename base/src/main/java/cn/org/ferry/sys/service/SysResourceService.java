@@ -14,12 +14,12 @@ public interface SysResourceService extends BaseService<SysResource> {
     /**
      * 查询所有的资源列表
      */
-    List<String> queryAllEnabledResourceByType(String type);
+    List<String> queryAllEnabledResource();
 
     /**
      * 清除缓存
      */
-    void expireAllEnabledResourceByType(String type);
+    void expireAllEnabledResource();
 
 
     /**

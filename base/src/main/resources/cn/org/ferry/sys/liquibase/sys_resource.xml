@@ -28,11 +28,8 @@
 			<column name="RESOURCE_ID" type="BIGINT" autoIncrement="true" remarks="PK">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_RESOURCE_PK_RI"/>
 			</column>
-			<column name="RESOURCE_TYPE" type="VARCHAR(10)" remarks="资源类型">
-				<constraints nullable="false"/>
-			</column>
-			<column name="RESOURCE_PATH" type="VARCHAR(200)" remarks="资源路径">
-				<constraints nullable="false"/>
+			<column name="PATH" type="VARCHAR(200)" remarks="资源路径">
+				<constraints nullable="false" unique="true" uniqueConstraintName="SYS_RESOURCE_UK_PATH"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR(200)" remarks="描述"/>
 			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
@@ -54,11 +51,8 @@
 			<column name="RESOURCE_ID" type="BIGINT" autoIncrement="true" remarks="PK">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_AUTHORITY_PK_UI"/>
 			</column>
-			<column name="RESOURCE_TYPE" type="VARCHAR(10)" remarks="资源类型">
-				<constraints nullable="false"/>
-			</column>
-			<column name="RESOURCE_PATH" type="VARCHAR(200)" remarks="RESOURCE_PATH">
-				<constraints nullable="false"/>
+			<column name="PATH" type="VARCHAR(200)" remarks="资源路径">
+				<constraints nullable="false" unique="true" uniqueConstraintName="SYS_RESOURCE_UK_PATH"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR(200)" remarks="描述"/>
 			<column name="ENABLED_FLAG" type="VARCHAR2(1)" defaultValue="Y" remarks="启用标志('Y','N')"/>
@@ -77,10 +71,6 @@
 			</not>
 		</preConditions>
 		<createSequence sequenceName="SYS_RESOURCE_S" startValue="1" minValue="1" incrementBy="1"/>
-	</changeSet>
-	
-	<changeSet id="CREATE_SYS_RESOURCE_INDEX" author="FERRY">
-		<addUniqueConstraint tableName="SYS_RESOURCE" columnNames="RESOURCE_TYPE,RESOURCE_PATH" constraintName="SYS_RESOURCE_UK_RT_RP"/>
 	</changeSet>
 	
 </databaseChangeLog>

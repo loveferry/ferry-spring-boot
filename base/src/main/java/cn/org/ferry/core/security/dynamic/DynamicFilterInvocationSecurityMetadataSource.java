@@ -1,6 +1,5 @@
 package cn.org.ferry.core.security.dynamic;
 
-import cn.org.ferry.sys.dto.SysResource;
 import cn.org.ferry.sys.service.SysResourceService;
 import cn.org.ferry.sys.service.SysRoleService;
 import org.slf4j.Logger;
@@ -42,13 +41,13 @@ public class DynamicFilterInvocationSecurityMetadataSource implements FilterInvo
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         final HttpServletRequest request = ((FilterInvocation) object).getRequest();
-        Set<RequestMatcher> requestMatchers = sysResourceService.queryAllEnabledResourceByType(SysResource.RESOURCE_TYPE_REST)
+        Set<RequestMatcher> requestMatchers = sysResourceService.queryAllEnabledResource()
                 .stream().map(AntPathRequestMatcher::new).collect(Collectors.toSet());
         RequestMatcher reqMatcher = requestMatchers.stream().filter(
                 requestMatcher -> requestMatcher.matches(request)
         ).findAny().orElseThrow(() -> new AccessDeniedException("Undefined resources [" + request.getRequestURI() + "]."));
         AntPathRequestMatcher antPathRequestMatcher = (AntPathRequestMatcher) reqMatcher;
-        List<String> roles = sysRoleService.obtainEnabledRolesByPattern(SysResource.RESOURCE_TYPE_REST, antPathRequestMatcher.getPattern());
+        List<String> roles = sysRoleService.obtainEnabledRolesByPattern(antPathRequestMatcher.getPattern());
         if(CollectionUtils.isEmpty(roles)){
             throw new AccessDeniedException("Unauthorized resources 【" + antPathRequestMatcher.getPattern() + "】.");
         }

@@ -10,7 +10,7 @@
 				typeHandler="cn.org.ferry.mybatis.handlers.IfOrNotHandler"/>
 	</resultMap>
 
-	<select id="obtainEnabledRolesByPattern" resultType="string">
+	<select id="obtainEnabledRolesByPattern" parameterType="string" resultType="string">
 		select sr.ROLE_CODE
 		from SYS_ROLE sr
 		where sr.ENABLED_FLAG = 'Y'
@@ -25,9 +25,8 @@
 								  from SYS_RESOURCE resource,
 									   SYS_AUTHORITY_RESOURCE_REL sarr
 								  where resource.ENABLED_FLAG = 'Y'
-									and resource.RESOURCE_TYPE = #{type}
-									and resource.RESOURCE_PATH = #{pattern}
-									and resource.RESOURCE_ID = sarr.RESOURCE_ID
+									and resource.PATH = #{pattern}
+									and resource.PATH = sarr.RESOURCE_PATH
 									and sarr.AUTHORITY_CODE = sa.AUTHORITY_CODE
 									and sarr.ENABLED_FLAG = 'Y'))
 	</select>
