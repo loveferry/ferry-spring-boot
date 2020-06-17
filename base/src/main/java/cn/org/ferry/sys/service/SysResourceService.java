@@ -22,4 +22,15 @@ public interface SysResourceService extends BaseService<SysResource> {
     void expireAllEnabledResourceByType(String type);
 
 
+    /**
+     *  脚本注册
+     *  形如：resource_definition(resource_type, resource_path, enabled_flag)
+     *  此方法具有原子性，脚本错误通过 {@link IllegalArgumentException} 抛出
+     */
+    void scriptRegister(String scripts);
+
+    /**
+     * 资源定义
+     */
+    void scriptDefinition(String script);
 }

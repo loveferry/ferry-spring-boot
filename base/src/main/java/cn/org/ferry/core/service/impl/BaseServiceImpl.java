@@ -87,7 +87,7 @@ public abstract class BaseServiceImpl<T extends BaseDTO> implements BaseService<
         return mapper.selectCount(record);
     }
 
-    protected void updateBaseField(T record, String type){
+    private void updateBaseField(T record, String type){
         Date now = new Date();
         if(UPDATE.equals(type)){
             setBaseField(BaseDTO.LAST_UPDATED_BY, 10001L, record.getClass(), record);
