@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysAuthority;
 
 /**
@@ -8,6 +9,6 @@ import cn.org.ferry.sys.dto.SysAuthority;
  * 系统权限表 业务接口
  */
 
-public interface SysAuthorityService extends BaseService<SysAuthority> {
+public interface SysAuthorityService extends BaseService<SysAuthority>, ProxySelf<SysAuthorityService> {
 
 }

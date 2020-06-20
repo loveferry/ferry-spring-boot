@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysResource;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * 系统资源表 业务接口
  */
 
-public interface SysResourceService extends BaseService<SysResource> {
+public interface SysResourceService extends BaseService<SysResource>, ProxySelf<SysResourceService> {
     /**
      * 查询所有的资源列表
      */

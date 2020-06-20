@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysRole;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * 系统角色表 业务接口
  */
 
-public interface SysRoleService extends BaseService<SysRole> {
+public interface SysRoleService extends BaseService<SysRole>, ProxySelf<SysRoleService> {
     /**
      * 根据给定的资源路径，获取授权的角色
      */

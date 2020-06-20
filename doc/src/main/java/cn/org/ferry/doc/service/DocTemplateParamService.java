@@ -1,6 +1,7 @@
 package cn.org.ferry.doc.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.doc.dto.DocTemplateParam;
 import cn.org.ferry.doc.dto.model.DocTemplateParamQuery;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @description 文档模版参数业务接口层
  */
 
-public interface DocTemplateParamService extends BaseService<DocTemplateParam> {
+public interface DocTemplateParamService extends BaseService<DocTemplateParam>, ProxySelf<DocTemplateParamService> {
     /**
      * 查询模版参数
      */

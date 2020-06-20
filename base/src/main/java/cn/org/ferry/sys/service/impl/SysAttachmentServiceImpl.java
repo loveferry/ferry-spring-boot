@@ -70,9 +70,9 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
             attachment = new SysAttachment();
             attachment.setSourceType(sysAttachment.getSourceType());
             attachment.setSourceKey(sysAttachment.getSourceKey());
-            mapper.insertSelective(attachment);
+            self().insertSelective(attachment);
         }else{
-            mapper.updateByPrimaryKeySelective(attachment);
+            self().updateByPrimaryKeySelective(attachment);
         }
         if(IfOrNot.Y == sysAttachmentCategory.getUniqueFlag()){
             if(files.size() > 1){
@@ -166,7 +166,7 @@ public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> imp
     public int deleteAttachment(String sourceType, String sourceKey) {
         SysAttachment sysAttachment = sysAttachmentMapper.queryBySourceTypeAndSourceKey(sourceType, sourceKey);
         if(null != sysAttachment){
-            return deleteAttachment(sysAttachment.getAttachmentId());
+            return self().deleteAttachment(sysAttachment.getAttachmentId());
         }else{
             return 0;
         }

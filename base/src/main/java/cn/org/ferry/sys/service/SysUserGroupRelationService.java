@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysUserGroupRelation;
 
 /**
@@ -8,6 +9,6 @@ import cn.org.ferry.sys.dto.SysUserGroupRelation;
  * 用户和用户组关系表 业务接口
  */
 
-public interface SysUserGroupRelationService extends BaseService<SysUserGroupRelation> {
+public interface SysUserGroupRelationService extends BaseService<SysUserGroupRelation>, ProxySelf<SysUserGroupRelationService> {
 
 }

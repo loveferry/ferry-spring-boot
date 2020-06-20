@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysAttachment;
 import cn.org.ferry.sys.dto.model.SysAttachmentUploadOrDownload;
 
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 附件的接口层
  */
-public interface SysAttachmentService extends BaseService<SysAttachment> {
+public interface SysAttachmentService extends BaseService<SysAttachment>, ProxySelf<SysAttachmentService> {
     /**
      * 文件上传
      */

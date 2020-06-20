@@ -84,15 +84,14 @@ public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> impleme
         if(null == docTemplate){
             docTemplate = new DocTemplate();
             BeanUtils.copyProperties(definition, docTemplate);
-            int count = mapper.insertSelective(docTemplate);
-            logger.info("模版定义{}条", count);
+            self().insertSelective(docTemplate);
         }else{
             docTemplate.setTemplateName(definition.getTemplateName());
             docTemplate.setDescription(definition.getDescription());
             docTemplate.setTemplateImage(definition.getTemplateImage());
-            int count = docTemplateMapper.updateByPrimaryKey(docTemplate);
-            logger.info("模版更新{}条", count);
+            self().updateByPrimaryKey(docTemplate);
         }
+        logger.info("模版定义成功， template_code: ", docTemplate.getTemplateCode());
         return responseData;
     }
 

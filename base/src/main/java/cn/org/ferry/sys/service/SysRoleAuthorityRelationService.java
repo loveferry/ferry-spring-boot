@@ -1,6 +1,7 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysRoleAuthorityRelation;
 
 /**
@@ -8,6 +9,6 @@ import cn.org.ferry.sys.dto.SysRoleAuthorityRelation;
  * 系统角色权限关系表 业务接口
  */
 
-public interface SysRoleAuthorityRelationService extends BaseService<SysRoleAuthorityRelation> {
+public interface SysRoleAuthorityRelationService extends BaseService<SysRoleAuthorityRelation>, ProxySelf<SysRoleAuthorityRelationService> {
 
 }

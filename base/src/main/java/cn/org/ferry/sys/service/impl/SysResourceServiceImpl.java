@@ -124,16 +124,16 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
 			sysResource.setPath(path);
 			sysResource.setDescription(description);
 			sysResource.setEnabledFlag(IfOrNot.valueOf(enabledFlag));
-			insertSelective(sysResource);
+			self().insertSelective(sysResource);
 			logger.info("resource definition success.");
 		}else{
 			sysResource.setEnabledFlag(IfOrNot.valueOf(enabledFlag));
 			sysResource.setDescription(description);
-			int i = updateByPrimaryKey(sysResource);
+			int i = self().updateByPrimaryKey(sysResource);
 			logger.info("resource update {} record.", i);
 		}
 		// 将缓存中的资源
-		expireAllEnabledResource();
+		self().expireAllEnabledResource();
 		sysRoleService.expireEnabledRolesByPattern(path);
 	}
 }

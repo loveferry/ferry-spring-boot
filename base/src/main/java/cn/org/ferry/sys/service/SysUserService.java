@@ -1,11 +1,12 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysUser;
 
 import java.util.List;
 
-public interface SysUserService extends BaseService<SysUser> {
+public interface SysUserService extends BaseService<SysUser>, ProxySelf<SysUserService> {
     /**
      * 查询用户信息
      *  登录成功返回数据

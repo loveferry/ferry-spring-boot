@@ -1,12 +1,13 @@
 package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysGenerateTable;
 import cn.org.ferry.sys.exceptions.FileException;
 
 import java.util.List;
 
-public interface SysGenerateTableService extends BaseService<SysGenerateTable> {
+public interface SysGenerateTableService extends BaseService<SysGenerateTable>, ProxySelf<SysGenerateTableService> {
 
     /**
      * 查询当前数据库表名及其注释

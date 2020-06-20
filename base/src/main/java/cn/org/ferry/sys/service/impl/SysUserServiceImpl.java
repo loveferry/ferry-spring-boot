@@ -31,7 +31,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         if(Objects.isNull(sysUser)){
             throw new BadCredentialsException("User does not exist or password error.");
         }
-        List<String> roleCodes = queryRoleCodesByUserCode(sysUser.getUserCode());
+        List<String> roleCodes = self().queryRoleCodesByUserCode(sysUser.getUserCode());
         if(CollectionUtils.isEmpty(roleCodes)){
             sysUser.setAuthorities(AuthorityUtils.NO_AUTHORITIES);
         }else{

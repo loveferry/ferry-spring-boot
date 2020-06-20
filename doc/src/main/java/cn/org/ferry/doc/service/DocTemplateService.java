@@ -2,6 +2,7 @@ package cn.org.ferry.doc.service;
 
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * @description 文档模版业务接口层
  */
 
-public interface DocTemplateService extends BaseService<DocTemplate> {
+public interface DocTemplateService extends BaseService<DocTemplate>, ProxySelf<DocTemplateService> {
     /**
      * 文档模版的附件类型
      */

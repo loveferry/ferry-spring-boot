@@ -241,8 +241,8 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
             logger.info("generate controller file end, the file path is {}", controllerFile.getAbsolutePath());
         }
 
-        int count = sysGenerateTableMapper.insertSelective(sysGenerateTable);
-        logger.info("generate code save {} record...", count);
+        self().insertSelective(sysGenerateTable);
+        logger.info("generate code save record...");
 
     }
 

@@ -71,7 +71,7 @@ public class SysAttachmentCategoryServiceImpl extends BaseServiceImpl<SysAttachm
         if(null == sysAttachmentCategory.getCategoryId()){
             sysAttachmentCategoryMapper.insertOne(sysAttachmentCategory);
         }else{
-            updateByPrimaryKeySelective(sysAttachmentCategory);
+            self().updateByPrimaryKeySelective(sysAttachmentCategory);
         }
         return responseData;
     }

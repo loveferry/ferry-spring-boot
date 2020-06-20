@@ -48,7 +48,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
 
     @Override
     public void download(HttpServletResponse httpServletResponse, Long fileId) throws FileException {
-        SysFile sysFile = this.selectByPrimaryKey(fileId);
+        SysFile sysFile = self().selectByPrimaryKey(fileId);
         if(null == sysFile){
             throw new FileException("未找到文件");
         }
@@ -99,15 +99,15 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysF
             sysAttachment.setSourceType(sourceType);
             sysAttachmentService.insertSelective(sysAttachment);
             sysFile.setAttachmentId(sysAttachment.getAttachmentId());
-            insertSelective(sysFile);
+            self().insertSelective(sysFile);
         }else{
             sysFile.setAttachmentId(sysAttachment.getAttachmentId());
             SysAttachmentCategory sysAttachmentCategory = sysAttachmentCategoryService.queryBySourceType(sourceType);
             if(sysAttachmentCategory.getUniqueFlag() == IfOrNot.N){
-                insertSelective(sysFile);
+                self().insertSelective(sysFile);
             }else{
-                deleteByAttachmentId(sysAttachment.getAttachmentId());
-                insertSelective(sysFile);
+                self().deleteByAttachmentId(sysAttachment.getAttachmentId());
+                self().insertSelective(sysFile);
             }
         }
     }

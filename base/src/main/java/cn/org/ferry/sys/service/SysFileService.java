@@ -2,6 +2,7 @@ package cn.org.ferry.sys.service;
 
 import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.SysFile;
 import cn.org.ferry.sys.exceptions.FileException;
 
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 文件处理的接口层
  */
-public interface SysFileService extends BaseService<SysFile> {
+public interface SysFileService extends BaseService<SysFile>, ProxySelf<SysFileService> {
     /**
      * 文件下载
      */

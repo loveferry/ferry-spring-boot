@@ -36,8 +36,7 @@ public class LogLoginServiceImpl extends BaseServiceImpl<LogLogin> implements Lo
         logLogin.setIp(ip);
         logLogin.setUserAgent(userAgent);
         logLogin.setLoginDate(new Date());
-        int count = logLoginMapper.insertSelective(logLogin);
-        logger.info("login log update {} item: {} login service at {}", count, userCode, DateUtils.format(logLogin.getLoginDate()));
+        self().insertSelective(logLogin);
         return true;
     }
 }

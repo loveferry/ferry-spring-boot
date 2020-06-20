@@ -2,6 +2,7 @@ package cn.org.ferry.sys.service;
 
 
 import cn.org.ferry.core.service.BaseService;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.sys.dto.LogSoap;
 
 /**
@@ -9,7 +10,7 @@ import cn.org.ferry.sys.dto.LogSoap;
  * soap接口日志记录表 业务接口
  */
 
-public interface LogSoapService extends BaseService<LogSoap> {
+public interface LogSoapService extends BaseService<LogSoap>, ProxySelf<LogSoapService> {
     /**
      * 插入日志
      */

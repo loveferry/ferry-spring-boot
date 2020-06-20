@@ -39,7 +39,7 @@ public class LogSoapServiceImpl extends BaseServiceImpl<LogSoap> implements LogS
 		logSoap.setContentType(contentType);
 		logSoap.setInputContent(inputContent);
 		logSoap.setOutputContent(outputContent);
-		insert(logSoap);
+		self().insert(logSoap);
 		logger.info("web service log record.");
 	}
 }
