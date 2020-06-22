@@ -2,12 +2,14 @@ package cn.org.ferry.core.service.impl;
 
 import cn.org.ferry.core.dto.BaseDTO;
 import cn.org.ferry.core.mapper.Mapper;
+import cn.org.ferry.core.security.dto.SecurityUser;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.core.utils.BeanUtils;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
@@ -19,7 +21,7 @@ import java.util.List;
  */
 
 public abstract class BaseServiceImpl<T extends BaseDTO> implements BaseService<T> {
-    private static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected Mapper<T> mapper;
@@ -89,12 +91,17 @@ public abstract class BaseServiceImpl<T extends BaseDTO> implements BaseService<
 
     private void updateBaseField(T record, String type){
         Date now = new Date();
-        if(UPDATE.equals(type)){
-            setBaseField(BaseDTO.LAST_UPDATED_BY, 10001L, record.getClass(), record);
-            setBaseField(BaseDTO.LAST_UPDATE_DATE, now, record.getClass(), record);
-        }else if(INSERT.equals(type)){
-            setBaseField(BaseDTO.CREATED_BY, 10001L, record.getClass(), record);
-            setBaseField(BaseDTO.CREATION_DATE, now, record.getClass(), record);
+        SecurityUser principal = (SecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        switch (type){
+            case INSERT:
+                setBaseField(BaseDTO.CREATED_BY, principal.getUserId(), record.getClass(), record);
+                setBaseField(BaseDTO.CREATION_DATE, now, record.getClass(), record);
+            case UPDATE:
+                setBaseField(BaseDTO.LAST_UPDATED_BY, principal.getUserId(), record.getClass(), record);
+                setBaseField(BaseDTO.LAST_UPDATE_DATE, now, record.getClass(), record);
+                break;
+            default:
+                break;
         }
     }
 
@@ -105,15 +112,15 @@ public abstract class BaseServiceImpl<T extends BaseDTO> implements BaseService<
             }
         }catch (NoSuchMethodException e) {
             if(cls == Object.class){
-                logger.error("该实体类未继承 BaseDto 类,不赋值基础字段: {}", fieldName);
+                log.error("该实体类未继承 BaseDto 类,不赋值基础字段: {}", fieldName);
                 return false;
             }
             setBaseField(fieldName, value, cls.getSuperclass(), record);
         } catch (IllegalAccessException e) {
-            logger.error("不能访问字段 {} 的 getter/setter 方法", fieldName);
+            log.error("不能访问字段 {} 的 getter/setter 方法", fieldName);
             return false;
         } catch (InvocationTargetException e) {
-            logger.error("调用字段 {} 的 getter/setter 方法失败", fieldName);
+            log.error("调用字段 {} 的 getter/setter 方法失败", fieldName);
             return false;
         }
         return true;

@@ -5,6 +5,7 @@ import cn.org.ferry.soap.dto.OutHeaderMessage;
 import cn.org.ferry.soap.dto.PrjProject;
 import cn.org.ferry.soap.service.PrjProjectSoapService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import javax.xml.ws.BindingType;
@@ -19,6 +20,7 @@ import javax.xml.ws.soap.SOAPBinding;
 
 @Service
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
+@Transactional
 public class PrjProjectSoapServiceImpl implements PrjProjectSoapService {
 
     @Override

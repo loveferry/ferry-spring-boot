@@ -37,12 +37,12 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
 @PropertySource("classpath:config_base.properties")
+@Transactional
 public class SysAttachmentServiceImpl extends BaseServiceImpl<SysAttachment> implements SysAttachmentService {
     private static final Logger logger = LoggerFactory.getLogger(SysAttachmentServiceImpl.class);
 

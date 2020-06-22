@@ -1,12 +1,12 @@
 package cn.org.ferry.core.security.service.impl;
 
+import cn.org.ferry.core.security.dto.SecurityUser;
 import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysUser;
 import cn.org.ferry.sys.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,7 +44,7 @@ public class SecurityUserDetailServiceImpl implements UserDetailsService {
         }else{
             accountNonExpired = false;
         }
-        return User
+        /*return User
                 .withUsername(sysUser.getUserName())
                 .password(sysUser.getPassword())
                 .disabled(sysUser.getEnabledFlag()==IfOrNot.N)
@@ -52,6 +52,16 @@ public class SecurityUserDetailServiceImpl implements UserDetailsService {
                 .credentialsExpired(false)
                 .accountLocked(sysUser.getCredentialsBlock()==IfOrNot.Y)
                 .authorities(sysUser.getAuthorities())
-                .build();
+                .build();*/
+        return new SecurityUser(
+                sysUser.getUserId(),
+                sysUser.getUserName(),
+                sysUser.getPassword(),
+                sysUser.getEnabledFlag()==IfOrNot.Y,
+                accountNonExpired,
+                true,
+                sysUser.getCredentialsBlock()==IfOrNot.N,
+                sysUser.getAuthorities()
+        );
     }
 }

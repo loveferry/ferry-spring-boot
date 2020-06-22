@@ -19,6 +19,7 @@ import java.util.Date;
  */
 
 @Service
+@Transactional
 public class LogLoginServiceImpl extends BaseServiceImpl<LogLogin> implements LogLoginService {
     /**
      * 日志处理对象

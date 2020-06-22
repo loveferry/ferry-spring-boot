@@ -9,6 +9,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -24,6 +25,7 @@ import java.util.List;
  * 拦截器配置类
  */
 @Configuration
+@EnableAspectJAutoProxy(exposeProxy = true)
 public class FerryWebConfiguration implements WebMvcConfigurer {
     /**
      * 会话 bean

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,9 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Resource;
 
 @Service
+@Transactional
 public class SysSqlServiceImpl extends BaseServiceImpl<SysSql> implements SysSqlService {
     private static final Logger logger = LoggerFactory.getLogger(SysSqlServiceImpl.class);
     @Autowired

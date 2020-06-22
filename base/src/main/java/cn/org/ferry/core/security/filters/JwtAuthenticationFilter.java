@@ -1,5 +1,6 @@
 package cn.org.ferry.core.security.filters;
 
+import cn.org.ferry.core.security.dto.SecurityUser;
 import cn.org.ferry.core.security.jwt.JwtCache;
 import cn.org.ferry.core.security.jwt.JwtGenerator;
 import cn.org.ferry.core.security.jwt.JwtPair;
@@ -17,7 +18,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
@@ -120,7 +120,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authoritiesArray[i] = jsonArray.getString(i);
         }
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(authoritiesArray);
-        User user = new User(username, "[PROTECTED]", authorities);
+        SecurityUser user = new SecurityUser(jsonObject.getLong("userId"), username, "[PROTECTED]", authorities);
         // 构建用户认证token
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

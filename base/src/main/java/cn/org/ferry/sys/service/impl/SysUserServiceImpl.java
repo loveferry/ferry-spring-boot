@@ -10,12 +10,14 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@Transactional
 public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysUserService {
     @Autowired
     private SysUserMapper sysUserMapper;

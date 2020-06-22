@@ -36,6 +36,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
+@Transactional
 public class SysFileServiceImpl extends BaseServiceImpl<SysFile> implements SysFileService {
     private static final Logger logger = LoggerFactory.getLogger(SysFileServiceImpl.class);
 

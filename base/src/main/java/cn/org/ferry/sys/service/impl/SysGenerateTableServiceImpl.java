@@ -6,6 +6,7 @@ import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.mapper.Mapper;
 import cn.org.ferry.core.service.BaseService;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
+import cn.org.ferry.core.service.impl.ProxySelf;
 import cn.org.ferry.core.utils.ConstantUtils;
 import cn.org.ferry.mybatis.enums.IfOrNot;
 import cn.org.ferry.sys.dto.SysGenerateTable;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Resource;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -53,7 +54,7 @@ import javax.sql.DataSource;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
-@Slf4j
+@Transactional
 public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTable> implements SysGenerateTableService {
     /**
      * 日志对象
@@ -461,12 +462,15 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     private String buildService(SysGenerateTable sysGenerateTable){
         StringBuilder serviceFile = new StringBuilder();
         serviceFile.append("package ").append(sysGenerateTable.getPackagePath()).append(".service;\n\n")
+                .append("import ").append(ProxySelf.class.getName()).append(";\n")
                 .append("import ").append(BaseService.class.getName()).append(";\n")
                 .append("import ").append(sysGenerateTable.getPackagePath()).append(".dto.").append(sysGenerateTable.getEntityName()).append(";\n\n")
                 .append("/**\n * Generate by code generator\n")
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" 业务接口").append("\n").append(" */\n\n")
-                .append("public interface ").append(sysGenerateTable.getServiceName()).append(" extends BaseService<").append(sysGenerateTable.getEntityName()).append("> {\n")
+                .append("public interface ").append(sysGenerateTable.getServiceName())
+                .append(" extends BaseService<").append(sysGenerateTable.getEntityName()).append(">, ")
+                .append(ProxySelf.class.getSimpleName()).append("<").append(sysGenerateTable.getServiceName()).append("> {\n")
                 .append("\n")
                 .append("}");
         return serviceFile.toString();
@@ -478,6 +482,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
     private String buildServiceImpl(SysGenerateTable sysGenerateTable){
         return new StringBuilder().append("package ").append(sysGenerateTable.getPackagePath()).append(".service.impl;\n\n")
                 .append("import ").append(Service.class.getName()).append(";\n")
+                .append("import ").append(Transactional.class.getName()).append(";\n")
                 .append("import ").append(Logger.class.getName()).append(";\n")
                 .append("import ").append(LoggerFactory.class.getName()).append(";\n")
                 .append("import ").append(Autowired.class.getName()).append(";\n")
@@ -489,6 +494,7 @@ public class SysGenerateTableServiceImpl extends BaseServiceImpl<SysGenerateTabl
                 .append(" * ").append(Optional.ofNullable(sysGenerateTable.getTableComment()).orElse(""))
                 .append(" 业务接口实现类").append("\n").append(" */\n\n")
                 .append("@Service\n")
+                .append("@Transactional\n")
                 .append("public class ").append(sysGenerateTable.getServiceImplName()).append(" extends BaseServiceImpl<")
                 .append(sysGenerateTable.getEntityName()).append("> implements ").append(sysGenerateTable.getServiceName()).append(" {\n")
                 .append("\t/**\n\t * 日志处理对象\n\t **/\n")

@@ -29,6 +29,7 @@ import javax.validation.constraints.NotEmpty;
  */
 
 @Service
+@Transactional
 public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> implements SysResourceService {
 	/**
 	 * 日志处理对象

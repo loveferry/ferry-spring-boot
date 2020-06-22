@@ -5,6 +5,7 @@ import cn.org.ferry.soap.dto.InHeaderMessage;
 import cn.org.ferry.soap.dto.OutHeaderMessage;
 import cn.org.ferry.soap.service.ConContractSoapService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  */
 
 @Service
+@Transactional
 public class ConContractSoapServiceImpl implements ConContractSoapService {
 
     @Override

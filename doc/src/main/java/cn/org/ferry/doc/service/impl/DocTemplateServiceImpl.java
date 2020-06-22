@@ -2,10 +2,10 @@ package cn.org.ferry.doc.service.impl;
 
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.service.impl.BaseServiceImpl;
-import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
-import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.dto.DocTemplate;
 import cn.org.ferry.doc.dto.DocTemplateParam;
+import cn.org.ferry.doc.dto.model.DocTemplateDefinition;
+import cn.org.ferry.doc.enums.BookMarkType;
 import cn.org.ferry.doc.exceptions.DocException;
 import cn.org.ferry.doc.mapper.DocTemplateMapper;
 import cn.org.ferry.doc.service.DocTemplateParamService;
@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.io.File;
@@ -46,6 +47,7 @@ import java.util.UUID;
 
 @Service
 @PropertySource("classpath:config_base.properties")
+@Transactional
 public class DocTemplateServiceImpl extends BaseServiceImpl<DocTemplate> implements DocTemplateService {
     protected static final Logger logger = LoggerFactory.getLogger(DocTemplateServiceImpl.class);
 

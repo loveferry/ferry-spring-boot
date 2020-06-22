@@ -6,8 +6,10 @@ import cn.org.ferry.sys.mapper.SysDataFormatMapper;
 import cn.org.ferry.sys.service.SysDataFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class SysDataFormatServiceImpl extends BaseServiceImpl<SysDataFormat> implements SysDataFormatService {
     @Autowired
     private SysDataFormatMapper sysDataFormatMapper;

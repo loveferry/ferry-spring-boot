@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @Service
+@Transactional
 public class LogSoapServiceImpl extends BaseServiceImpl<LogSoap> implements LogSoapService {
 	/**
 	 * 日志处理对象
