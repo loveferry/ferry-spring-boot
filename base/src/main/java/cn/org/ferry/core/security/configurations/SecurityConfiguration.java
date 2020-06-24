@@ -316,6 +316,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl(loginUrl)
                 .successHandler(authenticationSuccessHandler())
                 .failureHandler(authenticationFailureHandler())
+                .permitAll()
                 .and()
                 .logout()
                 .logoutUrl(logoutUrl)

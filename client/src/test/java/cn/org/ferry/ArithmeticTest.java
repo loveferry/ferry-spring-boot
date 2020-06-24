@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -110,5 +112,47 @@ public class ArithmeticTest {
         BCryptPasswordEncoder b = new BCryptPasswordEncoder();
         logger.info(b.encode("ferry"));
         logger.info(b.encode("admin"));
+    }
+
+
+    @Test
+    public void scskcj(){
+//        System.out.println(fib1(45));
+//         System.out.println(fib2(4010));
+         System.out.println(fib3(4010));
+    }
+
+
+    private int fib1(int n){
+        if(n <= 1) return n;
+        return fib1(n-1)+fib1(n-2);
+    }
+    private Map<Long, Long> map = new LinkedHashMap<>();
+    private long fib2(long n){
+        if(n <= 1){
+            map.put(n, n);
+            return n;
+        }
+        if(map.get(n-1) == null){
+            map.put(n-1, fib2(n-1));
+        }
+        if(map.get(n-2) == null){
+            map.put(n-2, fib2(n-2));
+        }
+        return map.get(n-1)+map.get(n-2);
+    }
+
+    private Long temp1 = null,temp2 = null;
+    private long fib3(long n){
+        if(n <= 1) return n;
+        long temp1 = 0;
+        long temp2 = 1;
+        long temp3 = 1;
+        for(long i = 2; i <= n; i++){
+            temp3 = temp1+temp2;
+            temp1 = temp2;
+            temp2 = temp3;
+        }
+        return temp3;
     }
 }
