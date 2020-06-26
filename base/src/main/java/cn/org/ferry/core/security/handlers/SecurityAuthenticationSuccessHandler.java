@@ -1,6 +1,7 @@
 package cn.org.ferry.core.security.handlers;
 
 import cn.org.ferry.core.dto.ResponseData;
+import cn.org.ferry.core.security.dto.SecurityUser;
 import cn.org.ferry.core.security.jwt.JwtGenerator;
 import cn.org.ferry.core.security.jwt.JwtPair;
 import cn.org.ferry.core.utils.NetWorkUtils;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
@@ -65,7 +65,7 @@ public class SecurityAuthenticationSuccessHandler implements AuthenticationSucce
             return;
         }
         Map<String, Object> map = new HashMap<>();
-        User principal = (User) authentication.getPrincipal();
+        SecurityUser principal = (SecurityUser) authentication.getPrincipal();
 
         Collection<GrantedAuthority> authorities = principal.getAuthorities();
         SysUser sysUser = sysUserService.queryForLoginSuccess(principal.getUsername());

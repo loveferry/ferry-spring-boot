@@ -4,14 +4,11 @@ import cn.org.ferry.core.dto.CorsProp;
 import cn.org.ferry.core.dto.ResponseData;
 import cn.org.ferry.core.exceptions.CommonException;
 import cn.org.ferry.core.security.dynamic.DynamicFilterInvocationSecurityMetadataSource;
-import cn.org.ferry.core.security.filters.JwtAuthenticationFilter;
-import cn.org.ferry.core.security.filters.PreLoginFilter;
 import cn.org.ferry.core.security.handlers.SecurityAuthenticationFailureHandler;
 import cn.org.ferry.core.security.handlers.SecurityAuthenticationSuccessHandler;
 import cn.org.ferry.core.security.jwt.JwtCache;
 import cn.org.ferry.core.security.jwt.JwtGenerator;
 import cn.org.ferry.core.security.jwt.JwtProperties;
-import cn.org.ferry.core.security.processors.LoginPostProcessor;
 import cn.org.ferry.core.utils.NetWorkUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -22,6 +19,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
@@ -31,7 +29,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,14 +38,23 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.accept.HeaderContentNegotiationStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Resource;
@@ -89,12 +95,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService securityUserDetailServiceImpl;
 
     /**
-     * 登录前置处理器
-     */
-    @Autowired
-    private Collection<LoginPostProcessor> loginPostProcessors;
-
-    /**
      * 投票器
      */
     @Autowired
@@ -106,11 +106,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private CorsProp corsProp;
 
-    @Value("${server.login-url}")
-    private String loginUrl;
+    @Value("${server.api-login-uri}")
+    private String apiLoginUri;
 
-    @Value("${server.logout-url}")
-    private String logoutUrl;
+    @Value("${server.api-logout-uri}")
+    private String apiLogoutUri;
+
+    @Value("${server.form-login-uri}")
+    private String formLoginUri;
+
+    @Value("${server.need-form-login-uri}")
+    private List<String> needFormLoginUri;
+
+
 
     /**
      * 跨域请求配置
@@ -180,7 +188,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * 用户认证的时候出现错误时抛出的异常
      */
-    @Bean
+    /*@Bean
     public AuthenticationEntryPoint authenticationEntryPoint(){
         logger.info("init spring bean of {}", AuthenticationEntryPoint.class.getName());
         return (request, response, authException) -> {
@@ -191,6 +199,37 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             responseData.setMessage(authException.getMessage());
             NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_UNAUTHORIZED, responseData);
         };
+    }*/
+
+    @Bean
+    public DelegatingAuthenticationEntryPoint delegatingAuthenticationEntryPoint(){
+        LinkedHashMap<RequestMatcher, AuthenticationEntryPoint> map = new LinkedHashMap<>(2);
+        // 第三方插件访问跳转 spring security 默认登录页面完成登录认证
+        LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint = new LoginUrlAuthenticationEntryPoint(formLoginUri);
+        if(CollectionUtils.isNotEmpty(needFormLoginUri)){
+            for (String uri : needFormLoginUri) {
+                map.put(new AntPathRequestMatcher(uri), loginUrlAuthenticationEntryPoint);
+            }
+        }
+        // 若不是ajax请求并且请求内容是静态资源则跳转至spring security 默认登录页面完成登录认证
+        NegatedRequestMatcher negatedRequestMatcher = new NegatedRequestMatcher(
+                new RequestHeaderRequestMatcher("X-Requested-With", "XMLHttpRequest")
+        );
+        MediaTypeRequestMatcher mediaMatcher = new MediaTypeRequestMatcher(new HeaderContentNegotiationStrategy(), MediaType.APPLICATION_XHTML_XML,
+                new MediaType("image", "*"), MediaType.TEXT_HTML, MediaType.TEXT_PLAIN);
+        mediaMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+        map.put(new AndRequestMatcher(negatedRequestMatcher, mediaMatcher), loginUrlAuthenticationEntryPoint);
+
+        DelegatingAuthenticationEntryPoint delegatingAuthenticationEntryPoint = new DelegatingAuthenticationEntryPoint(map);
+        delegatingAuthenticationEntryPoint.setDefaultEntryPoint((request, response, authException) -> {
+            logger.warn(authException.getMessage());
+            ResponseData responseData = new ResponseData();
+            responseData.setCode(HttpStatus.UNAUTHORIZED.value());
+            responseData.setSuccess(false);
+            responseData.setMessage(authException.getMessage());
+            NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_UNAUTHORIZED, responseData);
+        });
+        return delegatingAuthenticationEntryPoint;
     }
 
     /**
@@ -207,24 +246,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             responseData.setMessage(accessDeniedException.getMessage());
             NetWorkUtils.responseJsonWriter(response, HttpServletResponse.SC_FORBIDDEN, responseData);
         };
-    }
-
-    /**
-     * 登录前置过滤器
-     */
-    @Bean
-    public PreLoginFilter preLoginFilter(){
-        logger.info("init spring bean of {}", PreLoginFilter.class.getName());
-        return new PreLoginFilter(loginUrl,loginPostProcessors);
-    }
-
-    /**
-     * jwt 认证过滤器
-     */
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(){
-        logger.info("init spring bean of {}", JwtAuthenticationFilter.class.getName());
-        return new JwtAuthenticationFilter(jwtGenerator(), jwtRedisCache, authenticationEntryPoint());
     }
 
     /**
@@ -285,7 +306,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             @Override
             public <O extends FilterSecurityInterceptor> O postProcess(O object) {
                 object.setAccessDecisionManager(affirmativeBased());
-                object.setSecurityMetadataSource(dynamicFilterInvocationSecurityMetadataSource());
+//                object.setSecurityMetadataSource(dynamicFilterInvocationSecurityMetadataSource());
                 return object;
             }
         };
@@ -294,32 +315,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         logger.info("start config spring security.");
-        JwtAuthenticationFilter jwtAuthenticationFilter = jwtAuthenticationFilter();
         http
                 .csrf()
                 .disable()
                 .cors()
                 .configurationSource(corsConfigurationSource())
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
                 .authorizeRequests()
-                .anyRequest()
-                .authenticated()
+//                .anyRequest()
+//                .authenticated()
+                .antMatchers("/swagger**").permitAll().anyRequest().authenticated()
                 .withObjectPostProcessor(filterSecurityInterceptorObjectPostProcessor())
                 .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(authenticationEntryPoint())
-                .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(preLoginFilter(), JwtAuthenticationFilter.class)
                 .formLogin()
-                .loginProcessingUrl(loginUrl)
-                .successHandler(authenticationSuccessHandler())
-                .failureHandler(authenticationFailureHandler())
+//                .successHandler(authenticationSuccessHandler())
+//                .failureHandler(authenticationFailureHandler())
                 .permitAll()
                 .and()
+//                .exceptionHandling()
+//                .defaultAuthenticationEntryPointFor(delegatingAuthenticationEntryPoint(), AnyRequestMatcher.INSTANCE)
+//                .accessDeniedHandler(accessDeniedHandler())
+//                .and()
                 .logout()
-                .logoutUrl(logoutUrl)
                 .addLogoutHandler(logoutHandler())
                 .and()
                 .httpBasic();

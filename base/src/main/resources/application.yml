@@ -9,5 +9,7 @@ spring:
 
 
 server:
-  login-url: /api/login
-  logout-url: /api/logout
+  api-login-uri: /api/login
+  api-logout-uri: /api/logout
+  form-login-uri: /login
+  need-form-login-uri: /swagger**
