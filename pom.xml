@@ -119,5 +119,18 @@
 		<module>doc</module>
 		<module>client</module>
 	</modules>
-	
+
+	<repositories>
+		<repository>
+			<id>group-ferry</id>
+			<url>http://ferry.org.cn:8081/repository/group-ferry/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>ferry</id>
+			<url>http://ferry.org.cn:8081/repository/ferry-releases/</url>
+		</repository>
+	</distributionManagement>
 </project>
